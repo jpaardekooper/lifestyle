@@ -82,14 +82,17 @@ class _SignInState extends State<SignIn> {
               ),
               Spacer(flex: 1),
               InkWell(
+                splashColor: Colors.blue,
                 onTap: () {
                   print("Hello");
                 },
                 child: smallblackButton(context),
               ),
+
               SizedBox(
                 height: 24,
               ),
+
               InkWell(
                 onTap: () {
                   Navigator.pop(context);

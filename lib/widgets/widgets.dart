@@ -35,7 +35,7 @@ Widget whiteButton(BuildContext context) {
   return Container(
     padding: EdgeInsets.symmetric(vertical: 18),
     decoration: BoxDecoration(
-      color: Colors.transparent,
+      color: Color.fromRGBO(255, 129, 128, 1),
       borderRadius: BorderRadius.circular(40),
       border: Border.all(color: Colors.white, width: 4),
     ),
@@ -78,7 +78,7 @@ Widget smallwhiteButton(BuildContext context) {
   return Container(
     padding: EdgeInsets.symmetric(vertical: 8),
     decoration: BoxDecoration(
-      color: Colors.transparent,
+      color: Color.fromRGBO(255, 129, 128, 1),
       borderRadius: BorderRadius.circular(40),
       border: Border.all(color: Colors.white, width: 2),
     ),
