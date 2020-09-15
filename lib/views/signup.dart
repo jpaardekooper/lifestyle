@@ -111,5 +111,3 @@ class _SignUpState extends State<SignUp> {
     );
   }
 }
-
-class _formKey {}
