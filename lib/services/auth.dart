@@ -28,7 +28,7 @@ class AuthService {
       ))
           .user;
     } catch (e) {
-      print(e);
+      print(e + "dsa");
     }
   }
 }

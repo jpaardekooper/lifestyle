@@ -58,9 +58,9 @@ class _SignInState extends State<SignIn> {
                   return val.isEmpty ? "Enter correct Emailid" : null;
                 },
                 decoration: inputDecoration(context),
-                onChanged: (val) {
-                  email = val;
-                },
+                // onChanged: (val) {
+                //   email = val;
+                // },
               ),
               SizedBox(
                 height: 6,
@@ -76,15 +76,16 @@ class _SignInState extends State<SignIn> {
               ),
               //Password
               TextFormField(
+                obscureText: true,
                 controller: _passwordController,
                 //return value if theres an value otherwise reutrn error mssge
                 validator: (val) {
                   return val.isEmpty ? "Enter correct password" : null;
                 },
                 decoration: inputDecoration(context),
-                onChanged: (val) {
-                  password = val;
-                },
+                // onChanged: (val) {
+                //   password = val;
+                // },
               ),
               SizedBox(
                 height: 25,
@@ -99,6 +100,10 @@ class _SignInState extends State<SignIn> {
                       if (_formKey.currentState.validate()) {
                         await authService.signInWithEmailAndPassword(
                             _emailController.text, _passwordController.text);
+
+                        Scaffold.of(context).showSnackBar(SnackBar(
+                          content: Text("dsa"),
+                        ));
                       }
                       ;
                     }),
