@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:lifestylescreening/widgets/widgets.dart';
 import 'package:lifestylescreening/services/auth.dart';
@@ -10,7 +11,7 @@ class SignIn extends StatefulWidget {
 }
 
 class _SignInState extends State<SignIn> {
-  AuthService authService;
+  final FirebaseAuth _auth = FirebaseAuth.instance;
   final _formKey = GlobalKey<FormState>();
   String email, password;
   final TextEditingController _emailController = TextEditingController();
@@ -20,6 +21,7 @@ class _SignInState extends State<SignIn> {
   Widget build(BuildContext context) {
     // Scaffold is used to utilize all the material widgets
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       body: Form(
         key: _formKey,
         child: Container(
@@ -96,16 +98,10 @@ class _SignInState extends State<SignIn> {
                 child: InkWell(
                     borderRadius: BorderRadius.circular(40.0),
                     child: smallblackButton(context),
-                    onTap: () async {
+                    onTap: () {
                       if (_formKey.currentState.validate()) {
-                        await authService.signInWithEmailAndPassword(
-                            _emailController.text, _passwordController.text);
-
-                        Scaffold.of(context).showSnackBar(SnackBar(
-                          content: Text("dsa"),
-                        ));
+                        _signInWithEmailAndPassword();
                       }
-                      ;
                     }),
               ),
 
@@ -138,5 +134,20 @@ class _SignInState extends State<SignIn> {
     _emailController.dispose();
     _passwordController.dispose();
     super.dispose();
+  }
+
+  // Example code of how to sign in with email and password.
+  void _signInWithEmailAndPassword() async {
+    try {
+      final User user = (await _auth.signInWithEmailAndPassword(
+        email: _emailController.text,
+        password: _passwordController.text,
+      ))
+          .user;
+
+      return print("scuccesvol");
+    } catch (e) {
+      return print("niet scuccesvol");
+    }
   }
 }
