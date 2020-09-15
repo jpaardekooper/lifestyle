@@ -10,6 +10,7 @@ class SignIn extends StatefulWidget {
 }
 
 class _SignInState extends State<SignIn> {
+  AuthService authService;
   final _formKey = GlobalKey<FormState>();
   String email, password;
   final TextEditingController _emailController = TextEditingController();
@@ -96,8 +97,10 @@ class _SignInState extends State<SignIn> {
                     child: smallblackButton(context),
                     onTap: () async {
                       if (_formKey.currentState.validate()) {
-                      AuthService.signInWithEmailAndPassword(_emailController.text, _passwordController.text);
-                      },
+                        await authService.signInWithEmailAndPassword(
+                            _emailController.text, _passwordController.text);
+                      }
+                      ;
                     }),
               ),
 
