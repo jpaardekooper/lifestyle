@@ -9,45 +9,45 @@ Widget appName(BuildContext context) {
 }
 
 //big
-Widget blackButton(BuildContext context) {
-  return Container(
-    padding: EdgeInsets.symmetric(vertical: 18),
-    decoration: BoxDecoration(
-      borderRadius: BorderRadius.circular(40),
-    ),
-    alignment: Alignment.center,
-    //depending on margin at line number 27 times 2
-    width: MediaQuery.of(context).size.width / 2,
-    child: Text(
-      "Inloggen",
-      style: TextStyle(
-        color: Colors.white,
-        fontSize: 30,
-      ),
-    ),
-  );
-}
+// Widget blackButton(BuildContext context) {
+//   return Container(
+//     padding: EdgeInsets.symmetric(vertical: 18),
+//     decoration: BoxDecoration(
+//       borderRadius: BorderRadius.circular(40),
+//     ),
+//     alignment: Alignment.center,
+//     //depending on margin at line number 27 times 2
+//     width: MediaQuery.of(context).size.width / 2,
+//     child: Text(
+//       "Inloggen",
+//       style: TextStyle(
+//         color: Colors.white,
+//         fontSize: 30,
+//       ),
+//     ),
+//   );
+// }
 
 //big
-Widget whiteButton(BuildContext context) {
-  return Container(
-    padding: EdgeInsets.symmetric(vertical: 18),
-    decoration: BoxDecoration(
-      //    color: Color.fromRGBO(255, 129, 128, 1),
-      borderRadius: BorderRadius.circular(40),
-      border: Border.all(color: Colors.white, width: 4),
-    ),
-    alignment: Alignment.center,
-    width: MediaQuery.of(context).size.width / 2,
-    child: Text(
-      "Aanmelden",
-      style: TextStyle(
-        color: Colors.white,
-        fontSize: 30,
-      ),
-    ),
-  );
-}
+// Widget whiteButton(BuildContext context) {
+//   return Container(
+//     padding: EdgeInsets.symmetric(vertical: 18),
+//     decoration: BoxDecoration(
+//       //    color: Color.fromRGBO(255, 129, 128, 1),
+//       borderRadius: BorderRadius.circular(40),
+//       border: Border.all(color: Colors.white, width: 4),
+//     ),
+//     alignment: Alignment.center,
+//     width: MediaQuery.of(context).size.width / 2,
+//     child: Text(
+//       "Aanmelden",
+//       style: TextStyle(
+//         color: Colors.white,
+//         fontSize: 30,
+//       ),
+//     ),
+//   );
+// }
 
 //small
 Widget smallblackButton(BuildContext context) {

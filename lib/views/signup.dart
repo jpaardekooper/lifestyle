@@ -128,7 +128,7 @@ class _SignUpState extends State<SignUp> {
                     onTap: () async {
                       if (_formKey.currentState.validate()) {
                         await authService
-                            .register(
+                            .signUpWithEmailAndPassword(
                                 _emailController.text, _passwordController.text)
                             .then((value) {
                           if (value != null) {

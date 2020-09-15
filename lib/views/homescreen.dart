@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:lifestylescreening/views/signin.dart';
 import 'package:lifestylescreening/views/signup.dart';
+import 'package:lifestylescreening/widgets/buttons/background_dark_button.dart';
+import 'package:lifestylescreening/widgets/buttons/background_white_button.dart';
 import 'package:lifestylescreening/widgets/widgets.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -32,7 +34,10 @@ class _HomeScreenState extends State<HomeScreen> {
               borderRadius: BorderRadius.circular(40),
               child: InkWell(
                 borderRadius: BorderRadius.circular(40.0),
-                child: blackButton(context),
+                child: BackgroundDarkButton(
+                  text: 'Inloggen',
+                  size: 30,
+                ),
                 onTap: () {
                   Navigator.push(
                     context,
@@ -52,7 +57,7 @@ class _HomeScreenState extends State<HomeScreen> {
               child: InkWell(
                 splashColor: Colors.white,
                 borderRadius: BorderRadius.circular(40.0),
-                child: whiteButton(context),
+                child: BackgroundWhiteButton(text: 'Aanmelden', size: 30),
                 onTap: () {
                   Navigator.push(
                     context,

@@ -26,21 +26,7 @@ class AuthService {
     }
   }
 
-  Future register(String email, String password) async {
-    final User user = (await _auth.createUserWithEmailAndPassword(
-      email: email,
-      password: password,
-    ))
-        .user;
-
-    if (user != null) {
-      return user;
-    } else {
-      return null;
-    }
-  }
-
-  Future _register(String email, String password) async {
+  Future signUpWithEmailAndPassword(String email, String password) async {
     try {
       final User user = (await _auth.createUserWithEmailAndPassword(
         email: email,
