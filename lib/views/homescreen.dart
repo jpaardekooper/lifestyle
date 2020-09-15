@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:lifestylescreening/views/signin.dart';
+import 'package:lifestylescreening/views/signup.dart';
 import 'package:lifestylescreening/widgets/widgets.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -56,7 +57,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => SignIn(),
+                      builder: (context) => SignUp(),
                     ),
                   );
                 },

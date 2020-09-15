@@ -52,11 +52,11 @@ Widget whiteButton(BuildContext context) {
 //small
 Widget smallblackButton(BuildContext context) {
   return Container(
-    padding: EdgeInsets.symmetric(vertical: 8),
+    padding: EdgeInsets.symmetric(vertical: 10),
     decoration: BoxDecoration(
       //     color: Color.fromRGBO(72, 72, 72, 1),
       borderRadius: BorderRadius.circular(40),
-      //     border: Border.all(color: Color.fromRGBO(72, 72, 72, 1), width: 4),
+      //  border: Border.all(color: Color.fromRGBO(72, 72, 72, 1), width: 4),
     ),
     alignment: Alignment.center,
     //depending on margin at line number 27 times 2

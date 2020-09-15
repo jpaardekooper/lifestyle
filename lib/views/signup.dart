@@ -14,46 +14,80 @@ class _SignUpState extends State<SignUp> {
   Widget build(BuildContext context) {
     // Scaffold is used to utilize all the material widgets
     return Scaffold(
-      appBar: AppBar(
-        title: appBar(context),
-        backgroundColor: Colors.transparent,
-        elevation: 0.0,
-        brightness: Brightness.light,
-      ),
       body: Form(
         key: _formKey,
         child: Container(
-          margin: EdgeInsets.symmetric(horizontal: 24),
+          width: MediaQuery.of(context).size.width,
+          padding: EdgeInsets.symmetric(horizontal: 30),
           color: Color.fromRGBO(255, 129, 128, 1),
           child: Column(
             children: [
-              Spacer(),
-              TextFormField(
-                //return value if theres an value otherwise reutrn error mssge
-                validator: (val) {
-                  return val.isEmpty ? "Enter correct Emailid" : null;
-                },
-                decoration: InputDecoration(hintText: "Email"),
-                onChanged: (val) {
-                  email = val;
-                },
-              ),
+              Spacer(flex: 2),
+              appName(context),
               SizedBox(
-                height: 6,
+                height: 16,
               ),
+              Text(
+                "Log in met je account",
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 24,
+                ),
+              ),
+              Spacer(flex: 1),
               //Email
+              Container(
+                width: MediaQuery.of(context).size.width,
+                padding: EdgeInsets.all(14),
+                child: Text(
+                  "Vul hier naam adres in: ",
+                  textAlign: TextAlign.left,
+                  style: TextStyle(color: Colors.white, fontSize: 20),
+                ),
+              ),
+              TextFormField(
+                //return value if theres an value otherwise reutrn error mssge
+                validator: (val) {
+                  return val.isEmpty ? "Enter correct name" : null;
+                },
+                decoration: inputDecoration(context),
+                onChanged: (val) {
+                  name = val;
+                },
+              ),
+              SizedBox(
+                height: 6,
+              ),
+              Container(
+                width: MediaQuery.of(context).size.width,
+                padding: EdgeInsets.all(14),
+                child: Text(
+                  "Vul hier uw e-mail adres in: ",
+                  textAlign: TextAlign.left,
+                  style: TextStyle(color: Colors.white, fontSize: 20),
+                ),
+              ),
               TextFormField(
                 //return value if theres an value otherwise reutrn error mssge
                 validator: (val) {
                   return val.isEmpty ? "Enter correct Emailid" : null;
                 },
-                decoration: InputDecoration(hintText: "Email"),
+                decoration: inputDecoration(context),
                 onChanged: (val) {
                   email = val;
                 },
               ),
               SizedBox(
                 height: 6,
+              ),
+              Container(
+                width: MediaQuery.of(context).size.width,
+                padding: EdgeInsets.all(14),
+                child: Text(
+                  "Vul hier uw wachtwoord in: ",
+                  textAlign: TextAlign.left,
+                  style: TextStyle(color: Colors.white, fontSize: 20),
+                ),
               ),
               //Password
               TextFormField(
@@ -61,49 +95,48 @@ class _SignUpState extends State<SignUp> {
                 validator: (val) {
                   return val.isEmpty ? "Enter correct password" : null;
                 },
-                decoration: InputDecoration(hintText: "Email"),
+                decoration: inputDecoration(context),
                 onChanged: (val) {
-                  email = val;
+                  password = val;
                 },
               ),
               SizedBox(
+                height: 25,
+              ),
+              Material(
+                color: Color.fromRGBO(72, 72, 72, 1),
+                borderRadius: BorderRadius.circular(40),
+                child: InkWell(
+                  borderRadius: BorderRadius.circular(40.0),
+                  child: smallblackButton(context),
+                  onTap: () {
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => SignUp(),
+                      ),
+                    );
+                  },
+                ),
+              ),
+
+              SizedBox(
                 height: 24,
               ),
-              Container(
-                padding: EdgeInsets.symmetric(vertical: 18),
-                decoration: BoxDecoration(
-                    color: Colors.blue,
-                    borderRadius: BorderRadius.circular(30)),
-                alignment: Alignment.center,
-                //depending on margin at line number 27 times 2
-                width: MediaQuery.of(context).size.width - 48,
-                child: Text("Sign in",
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 16,
-                    )),
+
+              Material(
+                color: Color.fromRGBO(255, 129, 128, 1),
+                borderRadius: BorderRadius.circular(40),
+                child: InkWell(
+                  splashColor: Colors.white,
+                  borderRadius: BorderRadius.circular(40.0),
+                  child: smallwhiteButton(context),
+                  onTap: () {
+                    Navigator.pop(context);
+                  },
+                ),
               ),
-              SizedBox(
-                height: 18,
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    "Nog geen account? ",
-                    style: TextStyle(fontSize: 15.5),
-                  ),
-                  Text(
-                    "Regristreren",
-                    style: TextStyle(
-                        fontSize: 15.5, decoration: TextDecoration.underline),
-                  ),
-                ],
-              ),
-              //pushing the inlog buttons more above
-              SizedBox(
-                height: 80,
-              )
+              Spacer(flex: 2),
             ],
           ),
         ),

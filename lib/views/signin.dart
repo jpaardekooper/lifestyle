@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:lifestylescreening/widgets/widgets.dart';
+import 'package:lifestylescreening/services/auth.dart';
 
 class SignIn extends StatefulWidget {
   SignIn({Key key}) : super(key: key);
@@ -11,6 +12,8 @@ class SignIn extends StatefulWidget {
 class _SignInState extends State<SignIn> {
   final _formKey = GlobalKey<FormState>();
   String email, password;
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -48,6 +51,7 @@ class _SignInState extends State<SignIn> {
                 ),
               ),
               TextFormField(
+                controller: _emailController,
                 //return value if theres an value otherwise reutrn error mssge
                 validator: (val) {
                   return val.isEmpty ? "Enter correct Emailid" : null;
@@ -71,6 +75,7 @@ class _SignInState extends State<SignIn> {
               ),
               //Password
               TextFormField(
+                controller: _passwordController,
                 //return value if theres an value otherwise reutrn error mssge
                 validator: (val) {
                   return val.isEmpty ? "Enter correct password" : null;
@@ -87,17 +92,13 @@ class _SignInState extends State<SignIn> {
                 color: Color.fromRGBO(72, 72, 72, 1),
                 borderRadius: BorderRadius.circular(40),
                 child: InkWell(
-                  borderRadius: BorderRadius.circular(40.0),
-                  child: smallblackButton(context),
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => SignIn(),
-                      ),
-                    );
-                  },
-                ),
+                    borderRadius: BorderRadius.circular(40.0),
+                    child: smallblackButton(context),
+                    onTap: () async {
+                      if (_formKey.currentState.validate()) {
+                      AuthService.signInWithEmailAndPassword(_emailController.text, _passwordController.text);
+                      },
+                    }),
               ),
 
               SizedBox(
@@ -122,5 +123,12 @@ class _SignInState extends State<SignIn> {
         ),
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    _emailController.dispose();
+    _passwordController.dispose();
+    super.dispose();
   }
 }
