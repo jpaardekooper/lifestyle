@@ -20,7 +20,7 @@ class _SignInState extends State<SignIn> {
         key: _formKey,
         child: Container(
           width: MediaQuery.of(context).size.width,
-          padding: EdgeInsets.symmetric(horizontal: 24),
+          padding: EdgeInsets.symmetric(horizontal: 30),
           color: Color.fromRGBO(255, 129, 128, 1),
           child: Column(
             children: [
@@ -80,24 +80,41 @@ class _SignInState extends State<SignIn> {
                   password = val;
                 },
               ),
-              Spacer(flex: 1),
-              InkWell(
-                splashColor: Colors.blue,
-                onTap: () {
-                  print("Hello");
-                },
-                child: smallblackButton(context),
+              SizedBox(
+                height: 25,
+              ),
+              Material(
+                color: Color.fromRGBO(72, 72, 72, 1),
+                borderRadius: BorderRadius.circular(40),
+                child: InkWell(
+                  borderRadius: BorderRadius.circular(40.0),
+                  child: smallblackButton(context),
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => SignIn(),
+                      ),
+                    );
+                  },
+                ),
               ),
 
               SizedBox(
                 height: 24,
               ),
 
-              InkWell(
-                onTap: () {
-                  Navigator.pop(context);
-                },
-                child: smallwhiteButton(context),
+              Material(
+                color: Color.fromRGBO(255, 129, 128, 1),
+                borderRadius: BorderRadius.circular(40),
+                child: InkWell(
+                  splashColor: Colors.white,
+                  borderRadius: BorderRadius.circular(40.0),
+                  child: smallwhiteButton(context),
+                  onTap: () {
+                    Navigator.pop(context);
+                  },
+                ),
               ),
               Spacer(flex: 2),
             ],

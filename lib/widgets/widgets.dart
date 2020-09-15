@@ -13,9 +13,7 @@ Widget blackButton(BuildContext context) {
   return Container(
     padding: EdgeInsets.symmetric(vertical: 18),
     decoration: BoxDecoration(
-      color: Color.fromRGBO(72, 72, 72, 1),
       borderRadius: BorderRadius.circular(40),
-      border: Border.all(color: Color.fromRGBO(72, 72, 72, 1), width: 4),
     ),
     alignment: Alignment.center,
     //depending on margin at line number 27 times 2
@@ -35,7 +33,7 @@ Widget whiteButton(BuildContext context) {
   return Container(
     padding: EdgeInsets.symmetric(vertical: 18),
     decoration: BoxDecoration(
-      color: Color.fromRGBO(255, 129, 128, 1),
+      //    color: Color.fromRGBO(255, 129, 128, 1),
       borderRadius: BorderRadius.circular(40),
       border: Border.all(color: Colors.white, width: 4),
     ),
@@ -56,9 +54,9 @@ Widget smallblackButton(BuildContext context) {
   return Container(
     padding: EdgeInsets.symmetric(vertical: 8),
     decoration: BoxDecoration(
-      color: Color.fromRGBO(72, 72, 72, 1),
+      //     color: Color.fromRGBO(72, 72, 72, 1),
       borderRadius: BorderRadius.circular(40),
-      border: Border.all(color: Color.fromRGBO(72, 72, 72, 1), width: 4),
+      //     border: Border.all(color: Color.fromRGBO(72, 72, 72, 1), width: 4),
     ),
     alignment: Alignment.center,
     //depending on margin at line number 27 times 2
@@ -78,7 +76,6 @@ Widget smallwhiteButton(BuildContext context) {
   return Container(
     padding: EdgeInsets.symmetric(vertical: 8),
     decoration: BoxDecoration(
-      color: Color.fromRGBO(255, 129, 128, 1),
       borderRadius: BorderRadius.circular(40),
       border: Border.all(color: Colors.white, width: 2),
     ),

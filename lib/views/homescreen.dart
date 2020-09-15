@@ -22,33 +22,47 @@ class _HomeScreenState extends State<HomeScreen> {
           children: [
             Spacer(flex: 2),
             appName(context),
-            Spacer(flex: 2),
-            InkWell(
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => SignIn(),
-                  ),
-                );
-              },
-              child: blackButton(context),
+            SizedBox(
+              height: 16,
+            ),
+            Spacer(flex: 1),
+            Material(
+              color: Color.fromRGBO(72, 72, 72, 1),
+              borderRadius: BorderRadius.circular(40),
+              child: InkWell(
+                borderRadius: BorderRadius.circular(40.0),
+                child: blackButton(context),
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => SignIn(),
+                    ),
+                  );
+                },
+              ),
             ),
             SizedBox(
               height: 24,
             ),
-            InkWell(
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => SignIn(),
-                  ),
-                );
-              },
-              child: whiteButton(context),
+            Material(
+              color: Color.fromRGBO(255, 129, 128, 1),
+              borderRadius: BorderRadius.circular(40),
+              child: InkWell(
+                splashColor: Colors.white,
+                borderRadius: BorderRadius.circular(40.0),
+                child: whiteButton(context),
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => SignIn(),
+                    ),
+                  );
+                },
+              ),
             ),
-            Spacer(flex: 5),
+            Spacer(flex: 4),
           ],
         ),
       ),
