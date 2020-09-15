@@ -1,4 +1,3 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:lifestylescreening/widgets/widgets.dart';
 import 'package:lifestylescreening/services/auth.dart';
@@ -11,11 +10,18 @@ class SignIn extends StatefulWidget {
 }
 
 class _SignInState extends State<SignIn> {
-  final FirebaseAuth _auth = FirebaseAuth.instance;
   final _formKey = GlobalKey<FormState>();
-  String email, password;
+
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+
+  AuthService authService;
+
+  @override
+  void initState() {
+    authService = AuthService();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -100,7 +106,10 @@ class _SignInState extends State<SignIn> {
                     child: smallblackButton(context),
                     onTap: () {
                       if (_formKey.currentState.validate()) {
-                        _signInWithEmailAndPassword();
+                        authService
+                            .signInWithEmailAndPassword(
+                                _emailController.text, _passwordController.text)
+                            .then((value) => print(value.email));
                       }
                     }),
               ),
@@ -134,20 +143,5 @@ class _SignInState extends State<SignIn> {
     _emailController.dispose();
     _passwordController.dispose();
     super.dispose();
-  }
-
-  // Example code of how to sign in with email and password.
-  void _signInWithEmailAndPassword() async {
-    try {
-      final User user = (await _auth.signInWithEmailAndPassword(
-        email: _emailController.text,
-        password: _passwordController.text,
-      ))
-          .user;
-
-      return print("scuccesvol");
-    } catch (e) {
-      return print("niet scuccesvol");
-    }
   }
 }

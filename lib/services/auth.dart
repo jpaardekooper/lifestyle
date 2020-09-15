@@ -1,67 +1,63 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/services.dart';
+
+import 'package:lifestylescreening/models/user.dart';
 
 class AuthService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
-  // User _userFromFirebaseUser(User user) {
-
-  //   return user != null ? User(uid:  user.uid) : null;
+  // UserModel _userFromFirebaseUser(User user) {
+  //   return user != null ? UserModel(uid: user.uid) : null;
   // }
 
-  // Future signInEmailAndPass(String email, String password) async{
-  //   try{
-  //     UserCredential authResult =
-  //     await _auth.signInWithEmailAndPassword(email: email, password: password);
-  //     User firebaseUser = authResult.user;
-  //   //  return _userFromFirebaseUser(firebaseUser);
-  //   }catch(e){
-  //     print(e);
-  //   }
-  // }
-
-  Future signInWithEmailAndPassword(
-      String _emailController, String _passwordController) async {
+  // Example code of how to sign in with email and password.
+  Future signInWithEmailAndPassword(String email, String password) async {
     try {
-      User user = (await _auth.signInWithEmailAndPassword(
-        email: _emailController,
-        password: _passwordController,
+      final User user = (await _auth.signInWithEmailAndPassword(
+        email: email,
+        password: password,
       ))
           .user;
+      print("scuccesvol");
+      return user;
     } catch (e) {
-      print(e + "dsa");
+      print("niet scuccesvol");
+      return null;
+    }
+  }
+
+  Future register(String email, String password) async {
+    final User user = (await _auth.createUserWithEmailAndPassword(
+      email: email,
+      password: password,
+    ))
+        .user;
+
+    if (user != null) {
+      return user;
+    } else {
+      return null;
+    }
+  }
+
+  Future _register(String email, String password) async {
+    try {
+      final User user = (await _auth.createUserWithEmailAndPassword(
+        email: email,
+        password: password,
+      ))
+          .user;
+      if (user != null) {
+        return user;
+      } else {
+        return null;
+      }
+    } catch (signUpError) {
+      if (signUpError is PlatformException) {
+        if (signUpError.code == 'ERROR_EMAIL_ALREADY_IN_USE') {
+          return "email al in gebruik";
+        }
+      }
     }
   }
 }
-
-//   Future signUpWithEmailAndPassword(String email, String password) async {
-
-//     try{
-//       UserCredential authResult = await _auth.createUserWithEmailAndPassword(email: email, password: password);
-//       User user = authResult.user;
-//       return _userFromFirebaseUser(user);
-//     }catch(e){
-//       print(e.toString());
-//       return null;
-//     }
-
-//   }
-
-//   Future signOut() async{
-
-//     try{
-//       return await _auth.signOut();
-//     }catch(e){
-//       print(e.toString());
-//       return null;
-//     }
-//   }
-
-//   Future resetPass(String email) async{
-//     try{
-//       return await _auth.sendPasswordResetEmail(email: email);
-//     }catch(e){
-//       print(e.toString());
-//       return null;
-//     }
-//   }
-// }

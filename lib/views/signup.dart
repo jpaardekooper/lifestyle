@@ -1,4 +1,7 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:lifestylescreening/services/auth.dart';
 import 'package:lifestylescreening/widgets/widgets.dart';
 
 class SignUp extends StatefulWidget {
@@ -7,13 +10,26 @@ class SignUp extends StatefulWidget {
 }
 
 class _SignUpState extends State<SignUp> {
+  final FirebaseAuth _auth = FirebaseAuth.instance;
   final _formKey = GlobalKey<FormState>();
-  String name, email, password;
+
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+  final TextEditingController _passwordChecker = TextEditingController();
+
+  AuthService authService;
+
+  @override
+  void initState() {
+    authService = AuthService();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
     // Scaffold is used to utilize all the material widgets
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       body: Form(
         key: _formKey,
         child: Container(
@@ -28,54 +44,52 @@ class _SignUpState extends State<SignUp> {
                 height: 16,
               ),
               Text(
-                "Log in met je account",
+                "Meld je aan voor een nieuw account",
                 style: TextStyle(
                   color: Colors.white,
                   fontSize: 24,
                 ),
               ),
               Spacer(flex: 1),
-              //Email
-              Container(
-                width: MediaQuery.of(context).size.width,
-                padding: EdgeInsets.all(14),
-                child: Text(
-                  "Vul hier naam adres in: ",
-                  textAlign: TextAlign.left,
-                  style: TextStyle(color: Colors.white, fontSize: 20),
-                ),
-              ),
-              TextFormField(
-                //return value if theres an value otherwise reutrn error mssge
-                validator: (val) {
-                  return val.isEmpty ? "Enter correct name" : null;
-                },
-                decoration: inputDecoration(context),
-                onChanged: (val) {
-                  name = val;
-                },
-              ),
-              SizedBox(
-                height: 6,
-              ),
               Container(
                 width: MediaQuery.of(context).size.width,
                 padding: EdgeInsets.all(14),
                 child: Text(
                   "Vul hier uw e-mail adres in: ",
                   textAlign: TextAlign.left,
-                  style: TextStyle(color: Colors.white, fontSize: 20),
+                  style: TextStyle(color: Colors.white, fontSize: 18),
                 ),
               ),
               TextFormField(
+                controller: _emailController,
                 //return value if theres an value otherwise reutrn error mssge
                 validator: (val) {
-                  return val.isEmpty ? "Enter correct Emailid" : null;
+                  return val.isEmpty ? "Enter email naam" : null;
                 },
                 decoration: inputDecoration(context),
-                onChanged: (val) {
-                  email = val;
+              ),
+              SizedBox(
+                height: 6,
+              ),
+              //Email
+              Container(
+                width: MediaQuery.of(context).size.width,
+                padding: EdgeInsets.all(14),
+                child: Text(
+                  "Vul hier uw wachtwoord in: ",
+                  textAlign: TextAlign.left,
+                  style: TextStyle(color: Colors.white, fontSize: 18),
+                ),
+              ),
+              //Password
+              TextFormField(
+                obscureText: true,
+                controller: _passwordController,
+                //return value if theres an value otherwise reutrn error mssge
+                validator: (val) {
+                  return val.isEmpty ? "Enter correct password" : null;
                 },
+                decoration: inputDecoration(context),
               ),
               SizedBox(
                 height: 6,
@@ -84,46 +98,53 @@ class _SignUpState extends State<SignUp> {
                 width: MediaQuery.of(context).size.width,
                 padding: EdgeInsets.all(14),
                 child: Text(
-                  "Vul hier uw wachtwoord in: ",
+                  "Vul hier uw wachtwoord in opnieuw in: ",
                   textAlign: TextAlign.left,
-                  style: TextStyle(color: Colors.white, fontSize: 20),
+                  style: TextStyle(color: Colors.white, fontSize: 18),
                 ),
               ),
               //Password
               TextFormField(
+                obscureText: true,
+                controller: _passwordChecker,
                 //return value if theres an value otherwise reutrn error mssge
                 validator: (val) {
-                  return val.isEmpty ? "Enter correct password" : null;
+                  return val != _passwordController.text
+                      ? "Password komt niet overeen"
+                      : null;
                 },
                 decoration: inputDecoration(context),
-                onChanged: (val) {
-                  password = val;
-                },
               ),
               SizedBox(
-                height: 25,
+                height: 20,
               ),
+              // inloggen
               Material(
                 color: Color.fromRGBO(72, 72, 72, 1),
                 borderRadius: BorderRadius.circular(40),
                 child: InkWell(
-                  borderRadius: BorderRadius.circular(40.0),
-                  child: smallblackButton(context),
-                  onTap: () {
-                    Navigator.pushReplacement(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => SignUp(),
-                      ),
-                    );
-                  },
-                ),
+                    borderRadius: BorderRadius.circular(40.0),
+                    child: smallblackButton(context),
+                    onTap: () async {
+                      if (_formKey.currentState.validate()) {
+                        await authService
+                            .register(
+                                _emailController.text, _passwordController.text)
+                            .then((value) {
+                          if (value != null) {
+                            Navigator.pop(context);
+                          }
+                        });
+                      }
+
+                      ;
+                    }),
               ),
 
               SizedBox(
                 height: 24,
               ),
-
+              // terug
               Material(
                 color: Color.fromRGBO(255, 129, 128, 1),
                 borderRadius: BorderRadius.circular(40),
@@ -142,5 +163,13 @@ class _SignUpState extends State<SignUp> {
         ),
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    _emailController.dispose();
+    _passwordController.dispose();
+    _passwordChecker.dispose();
+    super.dispose();
   }
 }
