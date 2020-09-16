@@ -1,6 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:lifestylescreening/services/auth.dart';
 import 'package:lifestylescreening/widgets/widgets.dart';
 
