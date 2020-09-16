@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:lifestylescreening/helper/constants.dart';
 import 'package:lifestylescreening/views/signin.dart';
 import 'package:lifestylescreening/views/signup.dart';
 import 'package:lifestylescreening/widgets/buttons/background_dark_button.dart';
@@ -19,7 +20,7 @@ class _HomeScreenState extends State<HomeScreen> {
     return Scaffold(
       body: Container(
         width: MediaQuery.of(context).size.width,
-        padding: EdgeInsets.symmetric(horizontal: 24),
+        padding: EdgeInsets.symmetric(horizontal: 40),
         color: Color.fromRGBO(255, 129, 128, 1),
         child: Column(
           children: [

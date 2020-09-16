@@ -113,15 +113,17 @@ Widget appBar(BuildContext context) {
 inputDecoration(BuildContext context) {
   return InputDecoration(
     filled: true,
+    isDense: true,
+    contentPadding: EdgeInsets.all(14),
     fillColor: Colors.white,
     focusedBorder: OutlineInputBorder(
-      borderRadius: BorderRadius.circular(14.0),
+      borderRadius: BorderRadius.circular(12.0),
       borderSide: BorderSide(
         color: Colors.white,
       ),
     ),
     enabledBorder: OutlineInputBorder(
-      borderRadius: BorderRadius.circular(14.0),
+      borderRadius: BorderRadius.circular(12.0),
       borderSide: BorderSide(
         color: Colors.white,
         width: 2.0,

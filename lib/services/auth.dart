@@ -1,4 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:lifestylescreening/helper/constants.dart';
 
 class AuthService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -47,7 +48,7 @@ class AuthService {
       return Future.error(errorMessage);
     }
 
-    return user.uid;
+    return true;
   }
 
   Future signUpWithEmailAndPassword(String email, String password) async {
@@ -89,6 +90,24 @@ class AuthService {
       return Future.error(errorMessage);
     }
 
-    return user.uid;
+    return user;
+  }
+
+  Future signOut() async {
+    try {
+      return await _auth.signOut();
+    } catch (e) {
+      print(e.toString());
+      return null;
+    }
+  }
+
+  Future resetPass(String email) async {
+    try {
+      return await _auth.sendPasswordResetEmail(email: email);
+    } catch (e) {
+      print(e.toString());
+      return null;
+    }
   }
 }

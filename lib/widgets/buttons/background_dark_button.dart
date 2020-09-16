@@ -12,7 +12,8 @@ class BackgroundDarkButton extends StatelessWidget {
     return Container(
         padding: EdgeInsets.symmetric(vertical: 16),
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(35),
+          borderRadius: BorderRadius.circular(40),
+          border: Border.all(color: Color.fromRGBO(72, 72, 72, 1), width: 3),
         ),
         alignment: Alignment.center,
         //depending on margin at line number 27 times 2
