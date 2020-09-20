@@ -1,78 +1,77 @@
 import 'package:flutter/material.dart';
-import 'package:lifestylescreening/helper/constants.dart';
-import 'package:lifestylescreening/views/signin.dart';
-import 'package:lifestylescreening/views/signup.dart';
-import 'package:lifestylescreening/widgets/buttons/background_dark_button.dart';
-import 'package:lifestylescreening/widgets/buttons/background_white_button.dart';
+import 'package:lifestylescreening/helper/functions.dart';
+import 'package:lifestylescreening/helper/theme.dart';
+import 'package:lifestylescreening/views/createquiz.dart';
+import 'package:lifestylescreening/views/home.dart';
 import 'package:lifestylescreening/widgets/widgets.dart';
 
-class HomeScreen extends StatefulWidget {
-  HomeScreen({Key key}) : super(key: key);
-
+class HomeContainer extends StatefulWidget {
   @override
-  _HomeScreenState createState() => _HomeScreenState();
+  _HomeContainerState createState() => _HomeContainerState();
 }
 
-class _HomeScreenState extends State<HomeScreen> {
+/// Global Variables
+
+String _myName = "";
+
+/// Stream
+Stream infoStream;
+
+class _HomeContainerState extends State<HomeContainer> {
+  String _myEmail = "";
+
+  getMyInfoAndQuiz() async {
+    _myName = await HelperFunctions.getUserNameSharedPreference();
+    _myEmail = await HelperFunctions.getUserEmailSharedPreference();
+    print("Filling up some dat $_myName");
+    print("Filling up some dat $_myEmail");
+  }
+
+  @override
+  void initState() {
+    getMyInfoAndQuiz();
+
+    if (infoStream == null) {
+      infoStream = Stream<String>.periodic(Duration(milliseconds: 100), (x) {
+        return selectedMenuItem;
+      });
+    }
+
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    infoStream = null;
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
-    // Scaffold is used to utilize all the material widgets
     return Scaffold(
-      body: Container(
-        width: MediaQuery.of(context).size.width,
-        padding: EdgeInsets.symmetric(horizontal: 40),
-        color: Color.fromRGBO(255, 129, 128, 1),
-        child: Column(
-          children: [
-            Spacer(flex: 2),
-            appName(context),
-            SizedBox(
-              height: 16,
-            ),
-            Spacer(flex: 1),
-            Material(
-              color: Color.fromRGBO(72, 72, 72, 1),
-              borderRadius: BorderRadius.circular(40),
-              child: InkWell(
-                borderRadius: BorderRadius.circular(40.0),
-                child: BackgroundDarkButton(
-                  text: 'Inloggen',
-                  size: 30,
-                ),
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => SignIn(),
-                    ),
-                  );
-                },
-              ),
-            ),
-            SizedBox(
-              height: 24,
-            ),
-            Material(
-              color: Color.fromRGBO(255, 129, 128, 1),
-              borderRadius: BorderRadius.circular(40),
-              child: InkWell(
-                splashColor: Colors.white,
-                borderRadius: BorderRadius.circular(40.0),
-                child: BackgroundWhiteButton(text: 'Aanmelden', size: 30),
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => SignUp(),
-                    ),
-                  );
-                },
-              ),
-            ),
-            Spacer(flex: 4),
-          ],
-        ),
-      ),
-    );
+        body: StreamBuilder(
+      stream: infoStream,
+      builder: (context, snapshot) {
+        return snapshot.hasData
+            ? Scaffold(
+                appBar: AppBar(title: Text('welkom $_myName')),
+                body: Home(),
+                floatingActionButton: FloatingActionButton(
+                  child: Icon(Icons.add),
+                  onPressed: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => UpdateQuiz(
+                                  isNew: true,
+                                )));
+                  },
+                ))
+            : Container(
+                child: Center(
+                child: Text("no data has been found"),
+              ));
+      },
+    ));
   }
 }

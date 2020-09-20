@@ -1,24 +1,20 @@
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:lifestylescreening/helper/constants.dart';
+import 'package:lifestylescreening/models/firebase_user.dart';
 
 class AuthService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
-  // UserModel _userFromFirebaseUser(User user) {
-  //   return user != null ? UserModel(uid: user.uid) : null;
-  // }
+  AppUser _userFromFirebaseUser(User user) {
+    return user != null ? AppUser(uid: user.uid) : null;
+  }
 
-  // Example code of how to sign in with email and password.
   Future signInWithEmailAndPassword(String email, String password) async {
-    User user;
     String errorMessage;
-
     try {
-      user = (await _auth.signInWithEmailAndPassword(
-        email: email,
-        password: password,
-      ))
-          .user;
+      UserCredential authResult = await _auth.signInWithEmailAndPassword(
+          email: email, password: password);
+      User firebaseUser = authResult.user;
+      return _userFromFirebaseUser(firebaseUser);
     } catch (error) {
       switch (error.code) {
         case "ERROR_INVALID_EMAIL":
@@ -47,20 +43,15 @@ class AuthService {
     if (errorMessage != null) {
       return Future.error(errorMessage);
     }
-
-    return true;
   }
 
   Future signUpWithEmailAndPassword(String email, String password) async {
-    User user;
     String errorMessage;
-
     try {
-      user = (await _auth.createUserWithEmailAndPassword(
-        email: email,
-        password: password,
-      ))
-          .user;
+      UserCredential authResult = await _auth.createUserWithEmailAndPassword(
+          email: email, password: password);
+      User firebaseUser = authResult.user;
+      return _userFromFirebaseUser(firebaseUser);
     } catch (error) {
       switch (error.code) {
         case "ERROR_INVALID_EMAIL":
@@ -89,8 +80,6 @@ class AuthService {
     if (errorMessage != null) {
       return Future.error(errorMessage);
     }
-
-    return user;
   }
 
   Future signOut() async {

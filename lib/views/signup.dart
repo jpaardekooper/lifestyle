@@ -1,7 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:lifestylescreening/helper/constants.dart';
+import 'package:lifestylescreening/helper/functions.dart';
 import 'package:lifestylescreening/services/auth.dart';
+import 'package:lifestylescreening/services/database.dart';
 import 'package:lifestylescreening/views/homescreen.dart';
 import 'package:lifestylescreening/widgets/buttons/background_dark_button.dart';
 import 'package:lifestylescreening/widgets/buttons/background_white_button.dart';
@@ -15,9 +16,9 @@ class SignUp extends StatefulWidget {
 }
 
 class _SignUpState extends State<SignUp> {
-  final FirebaseAuth _auth = FirebaseAuth.instance;
   final _formKey = GlobalKey<FormState>();
 
+  final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _passwordChecker = TextEditingController();
@@ -72,6 +73,27 @@ class _SignUpState extends State<SignUp> {
                       width: MediaQuery.of(context).size.width,
                       padding: EdgeInsets.all(14),
                       child: Text(
+                        "Gebruikersnaam: ",
+                        textAlign: TextAlign.left,
+                        style: TextStyle(color: Colors.white, fontSize: 18),
+                      ),
+                    ),
+                    TextFormField(
+                      controller: _usernameController,
+                      //return value if theres an value otherwise reutrn error mssge
+                      validator: (val) {
+                        return val.isEmpty ? "Enter gebruikersnaam" : null;
+                      },
+                      decoration: inputDecoration(context),
+                    ),
+                    SizedBox(
+                      height: 6,
+                    ),
+                    //email
+                    Container(
+                      width: MediaQuery.of(context).size.width,
+                      padding: EdgeInsets.all(14),
+                      child: Text(
                         "Vul hier uw e-mail adres in: ",
                         textAlign: TextAlign.left,
                         style: TextStyle(color: Colors.white, fontSize: 18),
@@ -87,7 +109,7 @@ class _SignUpState extends State<SignUp> {
                     SizedBox(
                       height: 6,
                     ),
-                    //Email
+                    //pass
                     Container(
                       width: MediaQuery.of(context).size.width,
                       padding: EdgeInsets.all(14),
@@ -171,20 +193,37 @@ class _SignUpState extends State<SignUp> {
     );
   }
 
-  signUp() {
+  signUp() async {
     if (_formKey.currentState.validate()) {
       setState(() {
         _isLoading = true;
       });
-      authService
+      await authService
           .signUpWithEmailAndPassword(
               _emailController.text, _passwordController.text)
           .then((value) {
         if (value != null) {
-          Constants.saveUserLoggedInSharedPreference(true);
+          /// uploading user info to Firestore
+          Map<String, String> userInfo = {
+            "userName": _usernameController.text,
+            "email": _emailController.text,
+          };
+          DatabaseService().addUserData(userInfo).then((result) {});
 
-          Navigator.pushReplacement(
-              context, MaterialPageRoute(builder: (context) => Home()));
+          HelperFunctions.saveUserLoggedInSharedPreference(true);
+          HelperFunctions.saveUserNameSharedPreference(
+              _usernameController.text);
+          print("${_usernameController.text} username saved");
+
+          HelperFunctions.saveUserEmailSharedPreference(_emailController.text);
+          print("${_emailController.text} user email saved");
+
+          setState(() {
+            _isLoading = false;
+          });
+          HelperFunctions.saveUserLoggedInSharedPreference(true);
+          Navigator.pushReplacement(context,
+              MaterialPageRoute(builder: (context) => HomeContainer()));
         }
       });
     }

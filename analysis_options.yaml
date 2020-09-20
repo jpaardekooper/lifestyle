@@ -88,14 +88,14 @@ linter:
   - join_return_with_assignment
   - lines_longer_than_80_chars
   - null_closures
-  - omit_local_variable_types
+ # - omit_local_variable_types
   - prefer_conditional_assignment
   - prefer_contains
   - prefer_foreach
   - prefer_is_empty
   - prefer_is_not_empty
   - prefer_null_aware_operators
-  - public_member_api_docs
+ # - public_member_api_docs
   - sort_constructors_first
   - unawaited_futures
   - unnecessary_await_in_return

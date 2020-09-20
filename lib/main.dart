@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:lifestylescreening/views/home.dart';
 import 'package:lifestylescreening/views/homescreen.dart';
+import 'package:lifestylescreening/views/startup.dart';
 import 'package:firebase_core/firebase_core.dart';
 
-import 'helper/constants.dart';
+import 'helper/functions.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -18,23 +19,21 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  bool isUserLoggedIn;
+  bool _isLoggedin = false;
 
   @override
   void initState() {
-    isUserLoggedIn = false;
-    getLoggedInState();
+    checkUserLoggedInStatus();
     super.initState();
   }
 
-  getLoggedInState() async {
-    await Constants.getUerLoggedInSharedPreference().then((value) {
-      if (value != true) {
-        isUserLoggedIn = false;
-      } else {
-        isUserLoggedIn = value;
-      }
-      setState(() {});
+  Future checkUserLoggedInStatus() async {
+    print(_isLoggedin);
+    await HelperFunctions.getUserLoggedInSharedPreference().then((value) {
+      setState(() {
+        _isLoggedin = value;
+        print(_isLoggedin);
+      });
     });
   }
 
@@ -46,7 +45,7 @@ class _MyAppState extends State<MyApp> {
       theme: ThemeData(
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      home: isUserLoggedIn ? Home() : HomeScreen(),
+      home: (_isLoggedin ?? false) ? HomeContainer() : HomeScreen(),
     );
   }
 }

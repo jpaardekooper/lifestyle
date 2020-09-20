@@ -1,10 +1,10 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:lifestylescreening/helper/constants.dart';
+import 'package:lifestylescreening/helper/functions.dart';
+import 'package:lifestylescreening/services/database.dart';
 import 'package:lifestylescreening/views/homescreen.dart';
 import 'package:lifestylescreening/widgets/widgets.dart';
 import 'package:lifestylescreening/services/auth.dart';
-
-import 'home.dart';
 
 class SignIn extends StatefulWidget {
   SignIn({Key key}) : super(key: key);
@@ -20,6 +20,7 @@ class _SignInState extends State<SignIn> {
   final TextEditingController _passwordController = TextEditingController();
 
   AuthService authService;
+  DatabaseService _databaseMethods = DatabaseService();
   bool _isLoading;
 
   @override
@@ -77,7 +78,8 @@ class _SignInState extends State<SignIn> {
                     ),
                     TextFormField(
                       controller: _emailController,
-                      //return value if theres an value otherwise reutrn error mssge
+                      //return value if theres an value otherwise
+                      //return error mssge
                       validator: (val) {
                         return val.isEmpty ? "Enter correct Emailid" : null;
                       },
@@ -149,7 +151,7 @@ class _SignInState extends State<SignIn> {
     );
   }
 
-  signIn() {
+  signIn() async {
     if (_formKey.currentState.validate()) {
       setState(() {
         _isLoading = true;
@@ -157,14 +159,33 @@ class _SignInState extends State<SignIn> {
       authService
           .signInWithEmailAndPassword(
               _emailController.text, _passwordController.text)
-          .then((value) {
-        if (value != null || value != false) {
-          print(value);
+          .then((val) async {
+        if (val != null) {
+          setState(() {
+            _isLoading = false;
+          });
+          String userName;
 
-          Constants.saveUserLoggedInSharedPreference(true);
+          print("nu ben ik hier");
+          // QuerySnapshot userInfoSnapshot =
+          //     _databaseMethods.getUserInfo(_emailController.text);
 
-          Navigator.pushReplacement(
-              context, MaterialPageRoute(builder: (context) => Home()));
+          FirebaseFirestore.instance
+              .collection("users")
+              .where("email", isEqualTo: _emailController.text)
+              .get()
+              .then((querySnapshot) {
+            querySnapshot.docs.forEach((result) async {
+              userName = result.data()["userName"];
+
+              await HelperFunctions.saveUserLoggedInSharedPreference(true);
+              await HelperFunctions.saveUserNameSharedPreference(userName);
+              await HelperFunctions.saveUserEmailSharedPreference(
+                  _emailController.text);
+              await Navigator.pushReplacement(context,
+                  MaterialPageRoute(builder: (context) => HomeContainer()));
+            });
+          });
         } else {
           setState(() {
             _isLoading = false;
