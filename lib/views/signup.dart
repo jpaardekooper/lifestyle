@@ -1,4 +1,3 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:lifestylescreening/helper/functions.dart';
 import 'package:lifestylescreening/services/auth.dart';
@@ -7,8 +6,6 @@ import 'package:lifestylescreening/views/homescreen.dart';
 import 'package:lifestylescreening/widgets/buttons/background_dark_button.dart';
 import 'package:lifestylescreening/widgets/buttons/background_white_button.dart';
 import 'package:lifestylescreening/widgets/widgets.dart';
-
-import 'home.dart';
 
 class SignUp extends StatefulWidget {
   @override
@@ -52,20 +49,20 @@ class _SignUpState extends State<SignUp> {
               key: _formKey,
               child: Container(
                 width: MediaQuery.of(context).size.width,
-                padding: EdgeInsets.symmetric(horizontal: 40),
+                padding: EdgeInsets.symmetric(horizontal: 25),
                 color: Color.fromRGBO(255, 129, 128, 1),
                 child: Column(
                   children: [
                     Spacer(flex: 2),
                     appName(context),
                     SizedBox(
-                      height: 16,
+                      height: 6,
                     ),
                     Text(
                       "Meld je aan voor een nieuw account",
                       style: TextStyle(
                         color: Colors.white,
-                        fontSize: 24,
+                        fontSize: 16,
                       ),
                     ),
                     Spacer(flex: 1),
@@ -75,7 +72,7 @@ class _SignUpState extends State<SignUp> {
                       child: Text(
                         "Gebruikersnaam: ",
                         textAlign: TextAlign.left,
-                        style: TextStyle(color: Colors.white, fontSize: 18),
+                        style: TextStyle(color: Colors.white, fontSize: 16),
                       ),
                     ),
                     TextFormField(
@@ -96,7 +93,7 @@ class _SignUpState extends State<SignUp> {
                       child: Text(
                         "Vul hier uw e-mail adres in: ",
                         textAlign: TextAlign.left,
-                        style: TextStyle(color: Colors.white, fontSize: 18),
+                        style: TextStyle(color: Colors.white, fontSize: 16),
                       ),
                     ),
                     TextFormField(
@@ -116,7 +113,7 @@ class _SignUpState extends State<SignUp> {
                       child: Text(
                         "Vul hier uw wachtwoord in: ",
                         textAlign: TextAlign.left,
-                        style: TextStyle(color: Colors.white, fontSize: 18),
+                        style: TextStyle(color: Colors.white, fontSize: 16),
                       ),
                     ),
                     //Password
@@ -138,7 +135,7 @@ class _SignUpState extends State<SignUp> {
                       child: Text(
                         "Vul hier uw wachtwoord in opnieuw in: ",
                         textAlign: TextAlign.left,
-                        style: TextStyle(color: Colors.white, fontSize: 18),
+                        style: TextStyle(color: Colors.white, fontSize: 16),
                       ),
                     ),
                     //Password
@@ -163,7 +160,7 @@ class _SignUpState extends State<SignUp> {
                       child: InkWell(
                           borderRadius: BorderRadius.circular(40.0),
                           child:
-                              BackgroundDarkButton(text: "Aanmelden", size: 20),
+                              BackgroundDarkButton(text: "Aanmelden", size: 18),
                           onTap: () {
                             signUp();
                           }),
@@ -179,7 +176,7 @@ class _SignUpState extends State<SignUp> {
                       child: InkWell(
                         splashColor: Colors.white,
                         borderRadius: BorderRadius.circular(40.0),
-                        child: BackgroundWhiteButton(text: "Terug", size: 20),
+                        child: BackgroundWhiteButton(text: "Terug", size: 18),
                         onTap: () {
                           Navigator.pop(context);
                         },

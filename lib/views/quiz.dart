@@ -219,39 +219,39 @@ class _QuizPlayTileState extends State<QuizPlayTile> {
           ),
           GestureDetector(
             onTap: () {
-              if (!widget.questionModel.answered) {
-                ///correct
-                if (widget.questionModel.option1 ==
-                    widget.questionModel.correctOption) {
-                  optionSelected = widget.questionModel.option1;
+              //       if (!widget.questionModel.answered) {
+              ///correct
+              if (widget.questionModel.option1 ==
+                  widget.questionModel.correctOption) {
+                optionSelected = widget.questionModel.option1;
 
-                  questionsList[widget.index].userResponse =
-                      widget.questionModel.option1;
+                questionsList[widget.index].userResponse =
+                    widget.questionModel.option1;
 
-                  widget.questionModel.answered = true;
+                widget.questionModel.answered = true;
 
-                  questionsList[widget.index].answered = true;
-                  print("done");
+                questionsList[widget.index].answered = true;
+                print("done");
 
-                  _correct = _correct + 1;
-                  _notAttempted = _notAttempted - 1;
-                  setState(() {});
-                } else {
-                  optionSelected = widget.questionModel.option1;
+                _correct = _correct + 1;
+                _notAttempted = _notAttempted - 1;
+                setState(() {});
+              } else {
+                optionSelected = widget.questionModel.option1;
 
-                  questionsList[widget.index].userResponse =
-                      widget.questionModel.option1;
+                questionsList[widget.index].userResponse =
+                    widget.questionModel.option1;
 
-                  widget.questionModel.answered = true;
+                widget.questionModel.answered = true;
 
-                  questionsList[widget.index].answered = true;
-                  print("done");
+                questionsList[widget.index].answered = true;
+                print("done");
 
-                  _incorrect = _incorrect + 1;
-                  _notAttempted = _notAttempted - 1;
-                  setState(() {});
-                }
+                _incorrect = _incorrect + 1;
+                _notAttempted = _notAttempted - 1;
+                setState(() {});
               }
+              //        }
             },
             child: OptionTile(
               correctAnswer: widget.questionModel.correctOption,
@@ -265,40 +265,40 @@ class _QuizPlayTileState extends State<QuizPlayTile> {
           ),
           GestureDetector(
             onTap: () {
-              if (!widget.questionModel.answered) {
-                ///correct
-                if (widget.questionModel.option2 ==
-                    widget.questionModel.correctOption) {
-                  optionSelected = widget.questionModel.option2;
+              //        if (!widget.questionModel.answered) {
+              ///correct
+              if (widget.questionModel.option2 ==
+                  widget.questionModel.correctOption) {
+                optionSelected = widget.questionModel.option2;
 
-                  questionsList[widget.index].userResponse =
-                      widget.questionModel.option2;
+                questionsList[widget.index].userResponse =
+                    widget.questionModel.option2;
 
-                  widget.questionModel.answered = true;
+                widget.questionModel.answered = true;
 
-                  questionsList[widget.index].answered = true;
-                  print("done");
+                questionsList[widget.index].answered = true;
+                print("done");
 
-                  _correct = _correct + 1;
-                  _notAttempted = _notAttempted - 1;
-                  print("${widget.questionModel.correctOption}");
-                  setState(() {});
-                } else {
-                  optionSelected = widget.questionModel.option2;
+                _correct = _correct + 1;
+                _notAttempted = _notAttempted - 1;
+                print("${widget.questionModel.correctOption}");
+                setState(() {});
+              } else {
+                optionSelected = widget.questionModel.option2;
 
-                  questionsList[widget.index].userResponse =
-                      widget.questionModel.option2;
+                questionsList[widget.index].userResponse =
+                    widget.questionModel.option2;
 
-                  widget.questionModel.answered = true;
+                widget.questionModel.answered = true;
 
-                  questionsList[widget.index].answered = true;
-                  print("done");
+                questionsList[widget.index].answered = true;
+                print("done");
 
-                  _incorrect = _incorrect + 1;
-                  _notAttempted = _notAttempted - 1;
-                  setState(() {});
-                }
+                _incorrect = _incorrect + 1;
+                _notAttempted = _notAttempted - 1;
+                setState(() {});
               }
+              //       }
             },
             child: OptionTile(
               correctAnswer: widget.questionModel.correctOption,
@@ -312,39 +312,39 @@ class _QuizPlayTileState extends State<QuizPlayTile> {
           ),
           GestureDetector(
             onTap: () {
-              if (!widget.questionModel.answered) {
-                ///correct
-                if (widget.questionModel.option3 ==
-                    widget.questionModel.correctOption) {
-                  optionSelected = widget.questionModel.option3;
+              //   if (!widget.questionModel.answered) {
+              ///correct
+              if (widget.questionModel.option3 ==
+                  widget.questionModel.correctOption) {
+                optionSelected = widget.questionModel.option3;
 
-                  questionsList[widget.index].userResponse =
-                      widget.questionModel.option3;
+                questionsList[widget.index].userResponse =
+                    widget.questionModel.option3;
 
-                  widget.questionModel.answered = true;
+                widget.questionModel.answered = true;
 
-                  questionsList[widget.index].answered = true;
-                  print("done");
+                questionsList[widget.index].answered = true;
+                print("done");
 
-                  _correct = _correct + 1;
-                  _notAttempted = _notAttempted - 1;
-                  setState(() {});
-                } else {
-                  optionSelected = widget.questionModel.option3;
+                _correct = _correct + 1;
+                _notAttempted = _notAttempted - 1;
+                setState(() {});
+              } else {
+                optionSelected = widget.questionModel.option3;
 
-                  questionsList[widget.index].userResponse =
-                      widget.questionModel.option3;
+                questionsList[widget.index].userResponse =
+                    widget.questionModel.option3;
 
-                  widget.questionModel.answered = true;
+                widget.questionModel.answered = true;
 
-                  questionsList[widget.index].answered = true;
-                  print("done");
+                questionsList[widget.index].answered = true;
+                print("done");
 
-                  _incorrect = _incorrect + 1;
-                  _notAttempted = _notAttempted - 1;
-                  setState(() {});
-                }
+                _incorrect = _incorrect + 1;
+                _notAttempted = _notAttempted - 1;
+                setState(() {});
               }
+              //     }
             },
             child: OptionTile(
               correctAnswer: widget.questionModel.correctOption,

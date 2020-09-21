@@ -5,6 +5,7 @@ import 'package:lifestylescreening/services/database.dart';
 import 'package:lifestylescreening/views/homescreen.dart';
 import 'package:lifestylescreening/widgets/widgets.dart';
 import 'package:lifestylescreening/services/auth.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class SignIn extends StatefulWidget {
   SignIn({Key key}) : super(key: key);
@@ -80,9 +81,8 @@ class _SignInState extends State<SignIn> {
                       controller: _emailController,
                       //return value if theres an value otherwise
                       //return error mssge
-                      validator: (val) {
-                        return val.isEmpty ? "Enter correct Emailid" : null;
-                      },
+                      validator: (val) =>
+                          validateEmail(val) ? null : "Enter correct email",
                       decoration: inputDecoration(context),
                       // onChanged: (val) {
                       //   email = val;
@@ -100,6 +100,7 @@ class _SignInState extends State<SignIn> {
                         style: TextStyle(color: Colors.white, fontSize: 20),
                       ),
                     ),
+
                     //Password
                     TextFormField(
                       obscureText: true,
@@ -113,9 +114,11 @@ class _SignInState extends State<SignIn> {
                       //   password = val;
                       // },
                     ),
+                    Text(test == "" ? "" : test),
                     SizedBox(
                       height: 25,
                     ),
+
                     Material(
                       color: Color.fromRGBO(72, 72, 72, 1),
                       borderRadius: BorderRadius.circular(40),
@@ -143,6 +146,7 @@ class _SignInState extends State<SignIn> {
                         },
                       ),
                     ),
+
                     Spacer(flex: 2),
                   ],
                 ),
@@ -150,6 +154,8 @@ class _SignInState extends State<SignIn> {
             ),
     );
   }
+
+  String test = "";
 
   signIn() async {
     if (_formKey.currentState.validate()) {
@@ -164,13 +170,14 @@ class _SignInState extends State<SignIn> {
           setState(() {
             _isLoading = false;
           });
+
           String userName;
 
           print("nu ben ik hier");
           // QuerySnapshot userInfoSnapshot =
           //     _databaseMethods.getUserInfo(_emailController.text);
 
-          FirebaseFirestore.instance
+          await FirebaseFirestore.instance
               .collection("users")
               .where("email", isEqualTo: _emailController.text)
               .get()
@@ -188,11 +195,19 @@ class _SignInState extends State<SignIn> {
           });
         } else {
           setState(() {
+            test = val;
             _isLoading = false;
           });
         }
       });
     }
+  }
+
+  bool validateEmail(String value) {
+    Pattern pattern =
+        r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
+    RegExp regex = new RegExp(pattern);
+    return (!regex.hasMatch(value)) ? false : true;
   }
 
   @override

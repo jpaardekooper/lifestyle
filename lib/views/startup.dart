@@ -36,7 +36,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 borderRadius: BorderRadius.circular(40.0),
                 child: BackgroundDarkButton(
                   text: 'Inloggen',
-                  size: 30,
+                  size: 25,
                 ),
                 onTap: () {
                   Navigator.push(
@@ -57,7 +57,7 @@ class _HomeScreenState extends State<HomeScreen> {
               child: InkWell(
                 splashColor: Colors.white,
                 borderRadius: BorderRadius.circular(40.0),
-                child: BackgroundWhiteButton(text: 'Aanmelden', size: 30),
+                child: BackgroundWhiteButton(text: 'Aanmelden', size: 25),
                 onTap: () {
                   Navigator.push(
                     context,

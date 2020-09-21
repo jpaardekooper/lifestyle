@@ -15,9 +15,14 @@ class AuthService {
           email: email, password: password);
       User firebaseUser = authResult.user;
       return _userFromFirebaseUser(firebaseUser);
+    } on FirebaseAuthException catch (e) {
+      print('Failed with error code: ${e.code}');
+      errorMessage = e.code;
+      return errorMessage;
+      //   print(e.message);
     } catch (error) {
       switch (error.code) {
-        case "ERROR_INVALID_EMAIL":
+        case "invalid-email":
           errorMessage = "Your email address appears to be malformed.";
           break;
         case "ERROR_WRONG_PASSWORD":
