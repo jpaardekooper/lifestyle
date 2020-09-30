@@ -186,33 +186,38 @@ class _QuizPlayTileState extends State<QuizPlayTile> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Row(
-            children: [
-              Text(
-                "Q${widget.index + 1} ${widget.questionModel.question ?? "Not Found"}",
-                style: TextStyle(fontSize: 17, color: Colors.black87),
-              ),
-              Spacer(),
-              GestureDetector(
-                onTap: () {
-                  setState(() {
-                    questionsList[widget.index].isMarkedForReview =
-                        !questionsList[widget.index].isMarkedForReview;
-                  });
-                },
-                child: Opacity(
-                    opacity: 0.7,
-                    child: questionsList[widget.index].isMarkedForReview
-                        ? Icon(
-                            Icons.star,
-                            color: Colors.yellow,
-                          )
-                        : Icon(
-                            Icons.star,
-                            color: Colors.grey,
-                          )),
-              )
-            ],
+          Container(
+            padding: const EdgeInsets.all(16.0),
+            width: MediaQuery.of(context).size.width * 0.8,
+            child: new Column(
+              children: <Widget>[
+                ListTile(
+                  subtitle: Text(
+                    "Q${widget.index + 1} ${widget.questionModel.question ?? "Not Found"}",
+                    style: TextStyle(fontSize: 17, color: Colors.black87),
+                  ),
+                  trailing: GestureDetector(
+                    onTap: () {
+                      setState(() {
+                        questionsList[widget.index].isMarkedForReview =
+                            !questionsList[widget.index].isMarkedForReview;
+                      });
+                    },
+                    child: Opacity(
+                        opacity: 0.7,
+                        child: questionsList[widget.index].isMarkedForReview
+                            ? Icon(
+                                Icons.star,
+                                color: Colors.yellow,
+                              )
+                            : Icon(
+                                Icons.star,
+                                color: Colors.grey,
+                              )),
+                  ),
+                ),
+              ],
+            ),
           ),
           SizedBox(
             height: 12,
@@ -310,49 +315,51 @@ class _QuizPlayTileState extends State<QuizPlayTile> {
           SizedBox(
             height: 4,
           ),
-          GestureDetector(
-            onTap: () {
-              //   if (!widget.questionModel.answered) {
-              ///correct
-              if (widget.questionModel.option3 ==
-                  widget.questionModel.correctOption) {
-                optionSelected = widget.questionModel.option3;
+          widget.questionModel.question != null
+              ? Container()
+              : GestureDetector(
+                  onTap: () {
+                    //   if (!widget.questionModel.answered) {
+                    ///correct
+                    if (widget.questionModel.option3 ==
+                        widget.questionModel.correctOption) {
+                      optionSelected = widget.questionModel.option3;
 
-                questionsList[widget.index].userResponse =
-                    widget.questionModel.option3;
+                      questionsList[widget.index].userResponse =
+                          widget.questionModel.option3;
 
-                widget.questionModel.answered = true;
+                      widget.questionModel.answered = true;
 
-                questionsList[widget.index].answered = true;
-                print("done");
+                      questionsList[widget.index].answered = true;
+                      print("done");
 
-                _correct = _correct + 1;
-                _notAttempted = _notAttempted - 1;
-                setState(() {});
-              } else {
-                optionSelected = widget.questionModel.option3;
+                      _correct = _correct + 1;
+                      _notAttempted = _notAttempted - 1;
+                      setState(() {});
+                    } else {
+                      optionSelected = widget.questionModel.option3;
 
-                questionsList[widget.index].userResponse =
-                    widget.questionModel.option3;
+                      questionsList[widget.index].userResponse =
+                          widget.questionModel.option3;
 
-                widget.questionModel.answered = true;
+                      widget.questionModel.answered = true;
 
-                questionsList[widget.index].answered = true;
-                print("done");
+                      questionsList[widget.index].answered = true;
+                      print("done");
 
-                _incorrect = _incorrect + 1;
-                _notAttempted = _notAttempted - 1;
-                setState(() {});
-              }
-              //     }
-            },
-            child: OptionTile(
-              correctAnswer: widget.questionModel.correctOption,
-              description: widget.questionModel.option3,
-              option: "C",
-              optionSelected: optionSelected,
-            ),
-          ),
+                      _incorrect = _incorrect + 1;
+                      _notAttempted = _notAttempted - 1;
+                      setState(() {});
+                    }
+                    //     }
+                  },
+                  child: OptionTile(
+                    correctAnswer: widget.questionModel.correctOption,
+                    description: widget.questionModel.option3,
+                    option: "C",
+                    optionSelected: optionSelected,
+                  ),
+                ),
           SizedBox(
             height: 4,
           ),
@@ -512,7 +519,9 @@ class _QuizInfoMenuState extends State<QuizInfoMenu> {
                     ),
                     questionsSnapshot == null
                         ? Container()
-                        : widget.isList ? questionList() : questionNumberGrid(),
+                        : widget.isList
+                            ? questionList()
+                            : questionNumberGrid(),
                     Spacer(),
                     Container(
                         padding:

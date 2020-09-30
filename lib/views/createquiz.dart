@@ -173,9 +173,6 @@ class _UpdateQuizState extends State<UpdateQuiz> {
                               val.isEmpty ? "Enter Quiz Description" : null,
                           decoration:
                               MyThemeData.themedecoration("Quiz Description"),
-                          onChanged: (val) {
-                            quizDescController.text = val;
-                          },
                         ),
                         Spacer(),
                         GestureDetector(
