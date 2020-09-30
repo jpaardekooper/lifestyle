@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:lifestylescreening/helper/functions.dart';
 import 'package:lifestylescreening/helper/theme.dart';
+import 'package:lifestylescreening/services/auth.dart';
 import 'package:lifestylescreening/views/createquiz.dart';
 import 'package:lifestylescreening/views/home.dart';
+import 'package:lifestylescreening/views/signin.dart';
 import 'package:lifestylescreening/widgets/widgets.dart';
 
 class HomeContainer extends StatefulWidget {
@@ -10,16 +12,17 @@ class HomeContainer extends StatefulWidget {
   _HomeContainerState createState() => _HomeContainerState();
 }
 
+AuthService auth;
+
 /// Global Variables
 
 String _myName = "";
+String _myEmail = "";
 
 /// Stream
 Stream infoStream;
 
 class _HomeContainerState extends State<HomeContainer> {
-  String _myEmail = "";
-
   getMyInfoAndQuiz() async {
     _myName = await HelperFunctions.getUserNameSharedPreference();
     _myEmail = await HelperFunctions.getUserEmailSharedPreference();
@@ -54,7 +57,31 @@ class _HomeContainerState extends State<HomeContainer> {
       builder: (context, snapshot) {
         return snapshot.hasData
             ? Scaffold(
-                appBar: AppBar(title: Text('welkom $_myName')),
+                appBar: AppBar(
+                  title: Text('welkom $_myName'),
+                  actions: <Widget>[
+                    Padding(
+                        padding: EdgeInsets.only(right: 20.0),
+                        child: GestureDetector(
+                          onTap: () async {
+                            print("halo");
+
+                            // await auth.signOut();
+                            await HelperFunctions
+                                .saveUserLoggedInSharedPreference(false);
+
+                            await Navigator.pushReplacement(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => SignIn()));
+                          },
+                          child: Icon(
+                            Icons.offline_bolt_rounded,
+                            size: 26.0,
+                          ),
+                        )),
+                  ],
+                ),
                 body: Home(),
                 floatingActionButton: FloatingActionButton(
                   child: Icon(Icons.add),

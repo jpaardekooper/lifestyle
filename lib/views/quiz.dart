@@ -187,15 +187,24 @@ class _QuizPlayTileState extends State<QuizPlayTile> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Container(
-            padding: const EdgeInsets.all(16.0),
-            width: MediaQuery.of(context).size.width * 0.8,
+            padding: const EdgeInsets.all(10.0),
+            //   width: MediaQuery.of(context).size.width * 0.8,
             child: new Column(
               children: <Widget>[
                 ListTile(
-                  subtitle: Text(
-                    "Q${widget.index + 1} ${widget.questionModel.question ?? "Not Found"}",
-                    style: TextStyle(fontSize: 17, color: Colors.black87),
-                  ),
+                  title: widget.questionModel.question != null
+                      ? Text("Q${widget.index + 1}",
+                          style: TextStyle(
+                              fontSize: 18,
+                              color: Colors.black87,
+                              fontWeight: FontWeight.bold))
+                      : null,
+                  subtitle: widget.questionModel.question != null
+                      ? Text(
+                          "${widget.questionModel.question}",
+                          style: TextStyle(fontSize: 17, color: Colors.black87),
+                        )
+                      : null,
                   trailing: GestureDetector(
                     onTap: () {
                       setState(() {
