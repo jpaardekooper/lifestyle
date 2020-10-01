@@ -10,6 +10,7 @@ import 'package:lifestylescreening/views/quiz.dart';
 String selectedMenuItem = "Home";
 
 String _myName = "";
+String _myEmail = "";
 
 class Home extends StatefulWidget {
   @override
@@ -74,6 +75,7 @@ class _HomeState extends State<Home> {
 
   getMyInfoAndQuiz() async {
     _myName = await HelperFunctions.getUserNameSharedPreference();
+    _myEmail = await HelperFunctions.getUserEmailSharedPreference();
     print("Filling up some dat $_myName");
     _databaseService.getQuizezData(_myName).then((val) {
       setState(() {
@@ -239,35 +241,37 @@ class QuizTile extends StatelessWidget {
                   ],
                 ),
               ),
-              Container(
-                width: MediaQuery.of(context).size.width - 48,
-                height: 150,
-                alignment: Alignment.topRight,
-                child: GestureDetector(
-                  onTap: () {
-                    _moreOptionBottomSheet(
-                        context: context,
-                        title: title,
-                        desc: desc,
-                        quizImageUrl: imgUrl,
-                        quizId: quizid);
-                  },
-                  child: Container(
-                      padding: EdgeInsets.all(4),
-                      height: 30,
-                      width: 30,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.only(
-                            bottomLeft: Radius.circular(8),
-                            topRight: Radius.circular(8)),
+              _myEmail != "email@example.com"
+                  ? Container()
+                  : Container(
+                      width: MediaQuery.of(context).size.width - 48,
+                      height: 150,
+                      alignment: Alignment.topRight,
+                      child: GestureDetector(
+                        onTap: () {
+                          _moreOptionBottomSheet(
+                              context: context,
+                              title: title,
+                              desc: desc,
+                              quizImageUrl: imgUrl,
+                              quizId: quizid);
+                        },
+                        child: Container(
+                            padding: EdgeInsets.all(4),
+                            height: 30,
+                            width: 30,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.only(
+                                  bottomLeft: Radius.circular(8),
+                                  topRight: Radius.circular(8)),
+                            ),
+                            child: Icon(
+                              Icons.more_vert,
+                              color: Colors.white,
+                              size: 20,
+                            )),
                       ),
-                      child: Icon(
-                        Icons.more_vert,
-                        color: Colors.white,
-                        size: 20,
-                      )),
-                ),
-              ),
+                    ),
             ],
           ),
           GestureDetector(

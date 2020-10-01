@@ -83,17 +83,19 @@ class _HomeContainerState extends State<HomeContainer> {
                   ],
                 ),
                 body: Home(),
-                floatingActionButton: FloatingActionButton(
-                  child: Icon(Icons.add),
-                  onPressed: () {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => UpdateQuiz(
-                                  isNew: true,
-                                )));
-                  },
-                ))
+                floatingActionButton: _myEmail != "email@example.com"
+                    ? Container()
+                    : FloatingActionButton(
+                        child: Icon(Icons.add),
+                        onPressed: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => UpdateQuiz(
+                                        isNew: true,
+                                      )));
+                        },
+                      ))
             : Container(
                 child: Center(
                 child: Text("no data has been found"),
