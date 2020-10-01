@@ -193,7 +193,7 @@ class _QuizPlayTileState extends State<QuizPlayTile> {
               children: <Widget>[
                 ListTile(
                   title: widget.questionModel.question != null
-                      ? Text("Q${widget.index + 1}",
+                      ? Text("Vraag ${widget.index + 1}",
                           style: TextStyle(
                               fontSize: 18,
                               color: Colors.black87,
@@ -202,28 +202,28 @@ class _QuizPlayTileState extends State<QuizPlayTile> {
                   subtitle: widget.questionModel.question != null
                       ? Text(
                           "${widget.questionModel.question}",
-                          style: TextStyle(fontSize: 17, color: Colors.black87),
+                          style: TextStyle(fontSize: 16, color: Colors.black87),
                         )
                       : null,
-                  trailing: GestureDetector(
-                    onTap: () {
-                      setState(() {
-                        questionsList[widget.index].isMarkedForReview =
-                            !questionsList[widget.index].isMarkedForReview;
-                      });
-                    },
-                    child: Opacity(
-                        opacity: 0.7,
-                        child: questionsList[widget.index].isMarkedForReview
-                            ? Icon(
-                                Icons.star,
-                                color: Colors.yellow,
-                              )
-                            : Icon(
-                                Icons.star,
-                                color: Colors.grey,
-                              )),
-                  ),
+                  // trailing: GestureDetector(
+                  //   onTap: () {
+                  //     setState(() {
+                  //       questionsList[widget.index].isMarkedForReview =
+                  //           !questionsList[widget.index].isMarkedForReview;
+                  //     });
+                  //   },
+                  //   child: Opacity(
+                  //       opacity: 0.7,
+                  //       child: questionsList[widget.index].isMarkedForReview
+                  //           ? Icon(
+                  //               Icons.star,
+                  //               color: Colors.yellow,
+                  //             )
+                  //           : Icon(
+                  //               Icons.star,
+                  //               color: Colors.grey,
+                  //             )),
+                  // ),
                 ),
               ],
             ),

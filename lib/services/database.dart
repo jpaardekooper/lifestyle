@@ -81,7 +81,7 @@ class DatabaseService {
     print("getting quiz data for $username");
     return FirebaseFirestore.instance
         .collection("Quiz")
-        .doc(username)
+        .doc("jasper")
         .collection("MyQuiz")
         .snapshots();
   }
@@ -89,7 +89,7 @@ class DatabaseService {
   getQuizData(String quizId, String username) async {
     return FirebaseFirestore.instance
         .collection("Quiz")
-        .doc(username)
+        .doc("jasper")
         .collection("MyQuiz")
         .doc(quizId)
         .collection("QNA")
