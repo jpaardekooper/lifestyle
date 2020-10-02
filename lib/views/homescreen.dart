@@ -5,6 +5,7 @@ import 'package:lifestylescreening/services/auth.dart';
 import 'package:lifestylescreening/views/createquiz.dart';
 import 'package:lifestylescreening/views/home.dart';
 import 'package:lifestylescreening/views/signin.dart';
+import 'package:lifestylescreening/views/startup.dart';
 import 'package:lifestylescreening/widgets/widgets.dart';
 
 class HomeContainer extends StatefulWidget {
@@ -64,8 +65,6 @@ class _HomeContainerState extends State<HomeContainer> {
                         padding: EdgeInsets.only(right: 20.0),
                         child: GestureDetector(
                           onTap: () async {
-                            print("halo");
-
                             // await auth.signOut();
                             await HelperFunctions
                                 .saveUserLoggedInSharedPreference(false);
@@ -73,10 +72,10 @@ class _HomeContainerState extends State<HomeContainer> {
                             await Navigator.pushReplacement(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (context) => SignIn()));
+                                    builder: (context) => HomeScreen()));
                           },
                           child: Icon(
-                            Icons.offline_bolt_rounded,
+                            Icons.exit_to_app,
                             size: 26.0,
                           ),
                         )),

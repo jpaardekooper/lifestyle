@@ -16,9 +16,15 @@ class AuthService {
       User firebaseUser = authResult.user;
       return _userFromFirebaseUser(firebaseUser);
     } on FirebaseAuthException catch (e) {
+      if (e.code == 'user-not-found') {
+        print('No user found for that email.');
+      } else if (e.code == 'wrong-password') {
+        print('Wrong password provided for that user.');
+      }
+
       print('Failed with error code: ${e.code}');
       errorMessage = e.code;
-      return errorMessage;
+      return null;
       //   print(e.message);
     } catch (error) {
       switch (error.code) {

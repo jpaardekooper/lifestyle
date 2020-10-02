@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:lifestylescreening/helper/functions.dart';
+import 'package:lifestylescreening/models/firebase_user.dart';
 import 'package:lifestylescreening/services/database.dart';
 import 'package:lifestylescreening/views/homescreen.dart';
 import 'package:lifestylescreening/widgets/widgets.dart';
@@ -162,44 +163,39 @@ class _SignInState extends State<SignIn> {
       setState(() {
         _isLoading = true;
       });
-      authService
-          .signInWithEmailAndPassword(
-              _emailController.text, _passwordController.text)
-          .then((val) async {
-        if (val != null) {
-          setState(() {
-            _isLoading = false;
+      dynamic result = await authService.signInWithEmailAndPassword(
+          _emailController.text, _passwordController.text);
+
+      if (result != null) {
+        print("het resultaat is $result");
+
+        String userName;
+
+        // QuerySnapshot userInfoSnapshot =
+        //     _databaseMethods.getUserInfo(_emailController.text);
+
+        await FirebaseFirestore.instance
+            .collection("users")
+            .where("email", isEqualTo: _emailController.text)
+            .get()
+            .then((querySnapshot) {
+          querySnapshot.docs.forEach((result) async {
+            userName = result.data()["userName"];
+
+            await HelperFunctions.saveUserLoggedInSharedPreference(true);
+            await HelperFunctions.saveUserNameSharedPreference(userName);
+            await HelperFunctions.saveUserEmailSharedPreference(
+                _emailController.text);
+            await Navigator.pushReplacement(context,
+                MaterialPageRoute(builder: (context) => HomeContainer()));
           });
-
-          String userName;
-
-          print("nu ben ik hier");
-          // QuerySnapshot userInfoSnapshot =
-          //     _databaseMethods.getUserInfo(_emailController.text);
-
-          await FirebaseFirestore.instance
-              .collection("users")
-              .where("email", isEqualTo: _emailController.text)
-              .get()
-              .then((querySnapshot) {
-            querySnapshot.docs.forEach((result) async {
-              userName = result.data()["userName"];
-
-              await HelperFunctions.saveUserLoggedInSharedPreference(true);
-              await HelperFunctions.saveUserNameSharedPreference(userName);
-              await HelperFunctions.saveUserEmailSharedPreference(
-                  _emailController.text);
-              await Navigator.pushReplacement(context,
-                  MaterialPageRoute(builder: (context) => HomeContainer()));
-            });
-          });
-        } else {
-          setState(() {
-            test = val;
-            _isLoading = false;
-          });
-        }
-      });
+        });
+      } else {
+        setState(() {
+          _isLoading = false;
+          test = "wrong credential";
+        });
+      }
     }
   }
 
