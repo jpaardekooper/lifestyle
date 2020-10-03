@@ -1,12 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:lifestylescreening/helper/functions.dart';
-import 'package:lifestylescreening/helper/theme.dart';
 import 'package:lifestylescreening/services/auth.dart';
 import 'package:lifestylescreening/views/createquiz.dart';
 import 'package:lifestylescreening/views/home.dart';
-import 'package:lifestylescreening/views/signin.dart';
 import 'package:lifestylescreening/views/startup.dart';
-import 'package:lifestylescreening/widgets/widgets.dart';
 
 class HomeContainer extends StatefulWidget {
   @override
@@ -26,20 +23,18 @@ Stream infoStream;
 class _HomeContainerState extends State<HomeContainer> {
   getMyInfoAndQuiz() async {
     _myName = await HelperFunctions.getUserNameSharedPreference();
-    _myEmail = await HelperFunctions.getUserEmailSharedPreference();
-    print("Filling up some dat $_myName");
-    print("Filling up some dat $_myEmail");
+    // _myEmail = await HelperFunctions.getUserEmailSharedPreference();
+    // print("Filling up some dat $_myName");
+    // print("Filling up some dat $_myEmail");
   }
 
   @override
   void initState() {
     getMyInfoAndQuiz();
 
-    if (infoStream == null) {
-      infoStream = Stream<String>.periodic(Duration(milliseconds: 100), (x) {
-        return selectedMenuItem;
-      });
-    }
+    infoStream ??= Stream<String>.periodic(Duration(milliseconds: 100), (x) {
+      return selectedMenuItem;
+    });
 
     super.initState();
   }
@@ -95,10 +90,9 @@ class _HomeContainerState extends State<HomeContainer> {
                                       )));
                         },
                       ))
-            : Container(
-                child: Center(
+            : Center(
                 child: Text("no data has been found"),
-              ));
+              );
       },
     ));
   }
