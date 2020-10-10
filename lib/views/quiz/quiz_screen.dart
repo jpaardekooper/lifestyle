@@ -22,20 +22,18 @@ class _QuizScreenState extends State<QuizScreen> {
   Stream infoStream;
   getMyInfoAndQuiz() async {
     _myName = await HelperFunctions.getUserNameSharedPreference();
-    _myEmail = await HelperFunctions.getUserEmailSharedPreference();
-    print("Filling up some dat $_myName");
-    print("Filling up some dat $_myEmail");
+    // _myEmail = await HelperFunctions.getUserEmailSharedPreference();
+    // print("Filling up some dat $_myName");
+    // print("Filling up some dat $_myEmail");
   }
 
   @override
   void initState() {
     getMyInfoAndQuiz();
 
-    if (infoStream == null) {
-      infoStream = Stream<String>.periodic(Duration(milliseconds: 100), (x) {
-        return selectedMenuItem;
-      });
-    }
+    infoStream ??= Stream<String>.periodic(Duration(milliseconds: 100), (x) {
+      return selectedMenuItem;
+    });
 
     super.initState();
   }
@@ -90,10 +88,9 @@ class _QuizScreenState extends State<QuizScreen> {
                                       )));
                         },
                       ))
-            : Container(
-                child: Center(
+            : Center(
                 child: Text("no data has been found"),
-              ));
+              );
       },
     );
   }
