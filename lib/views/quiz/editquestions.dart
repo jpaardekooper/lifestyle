@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:lifestylescreening/models/question_model.dart';
 import 'package:lifestylescreening/services/database.dart';
-import 'package:lifestylescreening/views/addquestion.dart';
+import 'package:lifestylescreening/views/quiz/addquestion.dart';
 
 class EditQuestions extends StatefulWidget {
   EditQuestions({@required this.quizId, @required this.myAwesomeName});

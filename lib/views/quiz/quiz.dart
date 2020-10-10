@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:lifestylescreening/models/question_model.dart';
 import 'package:lifestylescreening/services/database.dart';
-import 'package:lifestylescreening/views/result.dart';
+import 'package:lifestylescreening/views/quiz/result.dart';
 import 'package:lifestylescreening/widgets/optiontile.dart';
 
 class Monitor extends StatefulWidget {

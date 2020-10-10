@@ -1,10 +1,9 @@
-import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:lifestylescreening/helper/functions.dart';
 import 'package:lifestylescreening/helper/theme.dart';
 import 'package:lifestylescreening/services/database.dart';
-import 'package:lifestylescreening/views/addquestion.dart';
+import 'package:lifestylescreening/views/quiz/addquestion.dart';
 import 'package:lifestylescreening/widgets/widgets.dart';
 import 'package:random_string/random_string.dart';
 

@@ -1,12 +1,13 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:lifestylescreening/helper/functions.dart';
-import 'package:lifestylescreening/models/firebase_user.dart';
 import 'package:lifestylescreening/services/database.dart';
-import 'package:lifestylescreening/views/homescreen.dart';
+import 'package:lifestylescreening/widgets/login/login_visual.dart';
+import 'package:lifestylescreening/widgets/logo/lifestyle_logo.dart';
 import 'package:lifestylescreening/widgets/widgets.dart';
 import 'package:lifestylescreening/services/auth.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+
+import 'home.dart';
 
 class SignIn extends StatefulWidget {
   SignIn({Key key}) : super(key: key);
@@ -24,6 +25,8 @@ class _SignInState extends State<SignIn> {
   AuthService authService;
   DatabaseService _databaseMethods = DatabaseService();
   bool _isLoading;
+  String test = "";
+  String userName = "";
 
   @override
   void initState() {
@@ -38,15 +41,7 @@ class _SignInState extends State<SignIn> {
     return Scaffold(
       resizeToAvoidBottomInset: false,
       body: _isLoading
-          ? Container(
-              color: Color.fromRGBO(255, 129, 128, 1),
-              child: Center(
-                child: CircularProgressIndicator(
-                  backgroundColor: Color.fromRGBO(72, 72, 72, 1),
-                  valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
-                ),
-              ),
-            )
+          ? LoginVisual()
           : Form(
               key: _formKey,
               child: Container(
@@ -56,7 +51,7 @@ class _SignInState extends State<SignIn> {
                 child: Column(
                   children: [
                     Spacer(flex: 2),
-                    appName(context),
+                    LifestyleLogo(size: 50),
                     SizedBox(
                       height: 16,
                     ),
@@ -156,8 +151,6 @@ class _SignInState extends State<SignIn> {
     );
   }
 
-  String test = "";
-
   signIn() async {
     if (_formKey.currentState.validate()) {
       setState(() {
@@ -168,8 +161,6 @@ class _SignInState extends State<SignIn> {
 
       if (result != null) {
         print("het resultaat is $result");
-
-        String userName;
 
         // QuerySnapshot userInfoSnapshot =
         //     _databaseMethods.getUserInfo(_emailController.text);
@@ -186,8 +177,8 @@ class _SignInState extends State<SignIn> {
             await HelperFunctions.saveUserNameSharedPreference(userName);
             await HelperFunctions.saveUserEmailSharedPreference(
                 _emailController.text);
-            await Navigator.pushReplacement(context,
-                MaterialPageRoute(builder: (context) => HomeContainer()));
+            await Navigator.pushReplacement(
+                context, MaterialPageRoute(builder: (context) => Home()));
           });
         });
       } else {

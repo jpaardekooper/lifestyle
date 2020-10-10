@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:lifestylescreening/views/home.dart';
-import 'package:lifestylescreening/views/homescreen.dart';
 import 'package:lifestylescreening/views/startup.dart';
 import 'package:firebase_core/firebase_core.dart';
 
@@ -43,9 +42,12 @@ class _MyAppState extends State<MyApp> {
       title: 'Lifestyle Screening',
       debugShowCheckedModeBanner: true,
       theme: ThemeData(
-        visualDensity: VisualDensity.adaptivePlatformDensity,
-      ),
-      home: (_isLoggedin ?? false) ? HomeContainer() : HomeScreen(),
+          visualDensity: VisualDensity.adaptivePlatformDensity,
+          brightness: Brightness.light,
+          primaryColor: Colors.lightBlue[800],
+          accentColor: Colors.cyan[600],
+          iconTheme: IconThemeData(color: Colors.black)),
+      home: (_isLoggedin ?? false) ? Home() : StartUp(),
     );
   }
 }

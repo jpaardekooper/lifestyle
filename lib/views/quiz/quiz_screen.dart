@@ -1,29 +1,25 @@
 import 'package:flutter/material.dart';
 import 'package:lifestylescreening/helper/functions.dart';
-import 'package:lifestylescreening/helper/theme.dart';
 import 'package:lifestylescreening/services/auth.dart';
-import 'package:lifestylescreening/views/createquiz.dart';
-import 'package:lifestylescreening/views/home.dart';
-import 'package:lifestylescreening/views/signin.dart';
+import 'package:lifestylescreening/views/quiz/createquiz.dart';
+import 'package:lifestylescreening/views/quiz/quiz_helper.dart';
 import 'package:lifestylescreening/views/startup.dart';
-import 'package:lifestylescreening/widgets/widgets.dart';
 
-class HomeContainer extends StatefulWidget {
+class QuizScreen extends StatefulWidget {
   @override
-  _HomeContainerState createState() => _HomeContainerState();
+  _QuizScreenState createState() => _QuizScreenState();
 }
 
-AuthService auth;
+class _QuizScreenState extends State<QuizScreen> {
+  AuthService auth;
 
-/// Global Variables
+  /// Global Variables
 
-String _myName = "";
-String _myEmail = "";
+  String _myName = "";
+  String _myEmail = "";
 
-/// Stream
-Stream infoStream;
-
-class _HomeContainerState extends State<HomeContainer> {
+  /// Stream
+  Stream infoStream;
   getMyInfoAndQuiz() async {
     _myName = await HelperFunctions.getUserNameSharedPreference();
     _myEmail = await HelperFunctions.getUserEmailSharedPreference();
@@ -52,8 +48,7 @@ class _HomeContainerState extends State<HomeContainer> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        body: StreamBuilder(
+    return StreamBuilder(
       stream: infoStream,
       builder: (context, snapshot) {
         return snapshot.hasData
@@ -72,7 +67,7 @@ class _HomeContainerState extends State<HomeContainer> {
                             await Navigator.pushReplacement(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (context) => HomeScreen()));
+                                    builder: (context) => StartUp()));
                           },
                           child: Icon(
                             Icons.exit_to_app,
@@ -81,7 +76,7 @@ class _HomeContainerState extends State<HomeContainer> {
                         )),
                   ],
                 ),
-                body: Home(),
+                body: QuizHelper(),
                 floatingActionButton: _myEmail != "email@example.com"
                     ? Container()
                     : FloatingActionButton(
@@ -100,6 +95,6 @@ class _HomeContainerState extends State<HomeContainer> {
                 child: Text("no data has been found"),
               ));
       },
-    ));
+    );
   }
 }

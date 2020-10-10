@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 
-Widget appName(BuildContext context) {
-  return Text(
-    'MHealth',
-    style: TextStyle(
-        fontWeight: FontWeight.w500, color: Colors.white, fontSize: 50),
-  );
-}
+// Widget appName(BuildContext context) {
+//   return Text(
+//     'MHealth',
+//     style: TextStyle(
+//         fontWeight: FontWeight.w500, color: Colors.white, fontSize: 50),
+//   );
+// }
 
 //big
 // Widget blackButton(BuildContext context) {

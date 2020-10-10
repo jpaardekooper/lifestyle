@@ -2,10 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:lifestylescreening/helper/functions.dart';
 import 'package:lifestylescreening/services/auth.dart';
 import 'package:lifestylescreening/services/database.dart';
-import 'package:lifestylescreening/views/homescreen.dart';
 import 'package:lifestylescreening/widgets/buttons/background_dark_button.dart';
 import 'package:lifestylescreening/widgets/buttons/background_white_button.dart';
+import 'package:lifestylescreening/widgets/login/login_visual.dart';
+import 'package:lifestylescreening/widgets/logo/lifestyle_logo.dart';
 import 'package:lifestylescreening/widgets/widgets.dart';
+
+import 'home.dart';
 
 class SignUp extends StatefulWidget {
   @override
@@ -36,15 +39,7 @@ class _SignUpState extends State<SignUp> {
     return Scaffold(
       resizeToAvoidBottomInset: false,
       body: _isLoading
-          ? Container(
-              color: Color.fromRGBO(255, 129, 128, 1),
-              child: Center(
-                child: CircularProgressIndicator(
-                  backgroundColor: Color.fromRGBO(72, 72, 72, 1),
-                  valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
-                ),
-              ),
-            )
+          ? LoginVisual()
           : Form(
               key: _formKey,
               child: Container(
@@ -54,7 +49,7 @@ class _SignUpState extends State<SignUp> {
                 child: Column(
                   children: [
                     Spacer(flex: 2),
-                    appName(context),
+                    LifestyleLogo(size: 50),
                     SizedBox(
                       height: 6,
                     ),
@@ -219,8 +214,8 @@ class _SignUpState extends State<SignUp> {
             _isLoading = false;
           });
           HelperFunctions.saveUserLoggedInSharedPreference(true);
-          Navigator.pushReplacement(context,
-              MaterialPageRoute(builder: (context) => HomeContainer()));
+          Navigator.pushReplacement(
+              context, MaterialPageRoute(builder: (context) => Home()));
         }
       });
     }

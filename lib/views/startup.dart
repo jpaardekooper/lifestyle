@@ -3,16 +3,17 @@ import 'package:lifestylescreening/views/signin.dart';
 import 'package:lifestylescreening/views/signup.dart';
 import 'package:lifestylescreening/widgets/buttons/background_dark_button.dart';
 import 'package:lifestylescreening/widgets/buttons/background_white_button.dart';
+import 'package:lifestylescreening/widgets/logo/lifestyle_logo.dart';
 import 'package:lifestylescreening/widgets/widgets.dart';
 
-class HomeScreen extends StatefulWidget {
-  HomeScreen({Key key}) : super(key: key);
+class StartUp extends StatefulWidget {
+  StartUp({Key key}) : super(key: key);
 
   @override
   _HomeScreenState createState() => _HomeScreenState();
 }
 
-class _HomeScreenState extends State<HomeScreen> {
+class _HomeScreenState extends State<StartUp> {
   @override
   Widget build(BuildContext context) {
     // Scaffold is used to utilize all the material widgets
@@ -24,7 +25,7 @@ class _HomeScreenState extends State<HomeScreen> {
         child: Column(
           children: [
             Spacer(flex: 2),
-            appName(context),
+            LifestyleLogo(size: 50),
             SizedBox(
               height: 16,
             ),
