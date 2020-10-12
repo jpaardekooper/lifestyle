@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:lifestylescreening/helper/functions.dart';
 import 'package:lifestylescreening/widgets/datepicker/datepicker.dart';
+import 'package:lifestylescreening/widgets/text/welcome_text.dart';
 
 class DiaryTab extends StatefulWidget {
   @override
@@ -9,7 +10,7 @@ class DiaryTab extends StatefulWidget {
 }
 
 class _DiaryTabState extends State<DiaryTab> {
-  String _myName = "";
+  String _myName;
   // String _myEmail = "";
   bool value = false;
 
@@ -29,24 +30,25 @@ class _DiaryTabState extends State<DiaryTab> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text("a"),
-        backgroundColor: Colors.white,
-      ),
       body: SingleChildScrollView(
-        child: Column(
-          children: <Widget>[
-            DatePickerTimeLine(),
-            Text("WELKOM $_myName"),
-            // Container(
-            //     child: CupertinoDatePicker(
-            //   mode: CupertinoDatePickerMode.date,
-            //   initialDateTime: DateTime.now(),
-            //   onDateTimeChanged: (dateTime) {
-            //     debugPrint("$dateTime");
-            //   },
-            // ))
-          ],
+        child: Container(
+          margin: EdgeInsets.only(left: 30, right: 30),
+          child: Column(
+            mainAxisSize: MainAxisSize.max,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              DatePickerTimeLine(),
+              WelcomeText(name: _myName),
+              // Container(
+              //     child: CupertinoDatePicker(
+              //   mode: CupertinoDatePickerMode.date,
+              //   initialDateTime: DateTime.now(),
+              //   onDateTimeChanged: (dateTime) {
+              //     debugPrint("$dateTime");
+              //   },
+              // ))
+            ],
+          ),
         ),
       ),
     );
