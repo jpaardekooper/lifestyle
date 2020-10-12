@@ -43,7 +43,8 @@ class _ResultsState extends State<Results> {
             SizedBox(
               height: 14,
             ),
-            ListView.builder(
+            Expanded(
+              child: ListView.builder(
                 itemCount: widget.questionsAndAnswers.length,
                 shrinkWrap: true,
                 padding: EdgeInsets.symmetric(horizontal: 24),
@@ -52,7 +53,9 @@ class _ResultsState extends State<Results> {
                     index: index,
                     questionModel: widget.questionsAndAnswers[index],
                   );
-                })
+                },
+              ),
+            )
           ],
         ),
       ),

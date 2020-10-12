@@ -1,6 +1,5 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:lifestylescreening/helper/functions.dart';
 import 'package:lifestylescreening/views/quiz/quiz_screen.dart';
 import 'package:lifestylescreening/widgets/logo/bottom_navigation_logo.dart';
 

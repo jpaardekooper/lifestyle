@@ -33,15 +33,13 @@ class _MonitorState extends State<Monitor> {
   @override
   void initState() {
     /// Stream
-    if (infoStream == null) {
-      infoStream = Stream<List<QuestionModel>>.periodic(
+    infoStream ??= Stream<List<QuestionModel>>.periodic(
           Duration(milliseconds: 100), (x) {
         return questionsList;
       });
-    }
 
     isList = true;
-    print("${widget.quizId}");
+   // print("${widget.quizId}");
     databaseService.getQuizData(widget.quizId, widget.myName).then((value) {
       questionsSnapshot = value;
       questionsList = getListFromDatasnapshot(questionsSnapshot);
@@ -50,7 +48,7 @@ class _MonitorState extends State<Monitor> {
       _incorrect = 0;
       total = questionsSnapshot.docs.length;
 
-      print("$total this is total");
+     // print("$total this is total");
       setState(() {});
     });
     super.initState();
@@ -74,14 +72,14 @@ class _MonitorState extends State<Monitor> {
       ),
       body: SingleChildScrollView(
         child: Container(
+           width: MediaQuery.of(context).size.width,
           child: Column(
             children: [
               questionsSnapshot == null
-                  ? Container(
-                      child: Center(
+                  ?  Center(
                         child: CircularProgressIndicator(),
-                      ),
-                    )
+                      )
+                    
                   : Container(
                       color: Colors.white,
                       child: ListView.builder(
@@ -189,7 +187,7 @@ class _QuizPlayTileState extends State<QuizPlayTile> {
           Container(
             padding: const EdgeInsets.all(10.0),
             //   width: MediaQuery.of(context).size.width * 0.8,
-            child: new Column(
+            child:  Column(
               children: <Widget>[
                 ListTile(
                   title: widget.questionModel.question != null
@@ -245,7 +243,7 @@ class _QuizPlayTileState extends State<QuizPlayTile> {
                 widget.questionModel.answered = true;
 
                 questionsList[widget.index].answered = true;
-                print("done");
+           //     print("done");
 
                 _correct = _correct + 1;
                 _notAttempted = _notAttempted - 1;
@@ -259,7 +257,7 @@ class _QuizPlayTileState extends State<QuizPlayTile> {
                 widget.questionModel.answered = true;
 
                 questionsList[widget.index].answered = true;
-                print("done");
+          //      print("done");
 
                 _incorrect = _incorrect + 1;
                 _notAttempted = _notAttempted - 1;
@@ -291,11 +289,11 @@ class _QuizPlayTileState extends State<QuizPlayTile> {
                 widget.questionModel.answered = true;
 
                 questionsList[widget.index].answered = true;
-                print("done");
+              //  print("done");
 
                 _correct = _correct + 1;
                 _notAttempted = _notAttempted - 1;
-                print("${widget.questionModel.correctOption}");
+              //  print("${widget.questionModel.correctOption}");
                 setState(() {});
               } else {
                 optionSelected = widget.questionModel.option2;
@@ -306,7 +304,7 @@ class _QuizPlayTileState extends State<QuizPlayTile> {
                 widget.questionModel.answered = true;
 
                 questionsList[widget.index].answered = true;
-                print("done");
+              //  print("done");
 
                 _incorrect = _incorrect + 1;
                 _notAttempted = _notAttempted - 1;
@@ -340,7 +338,7 @@ class _QuizPlayTileState extends State<QuizPlayTile> {
                       widget.questionModel.answered = true;
 
                       questionsList[widget.index].answered = true;
-                      print("done");
+                   //   print("done");
 
                       _correct = _correct + 1;
                       _notAttempted = _notAttempted - 1;
@@ -354,7 +352,7 @@ class _QuizPlayTileState extends State<QuizPlayTile> {
                       widget.questionModel.answered = true;
 
                       questionsList[widget.index].answered = true;
-                      print("done");
+                  //    print("done");
 
                       _incorrect = _incorrect + 1;
                       _notAttempted = _notAttempted - 1;
@@ -435,8 +433,9 @@ Widget questionNumberGrid() {
   );
 }
 
-Widget questionList() {
+Widget questionList(BuildContext context) {
   return Container(
+    width: MediaQuery.of(context).size.width,
     child: ListView.builder(
         shrinkWrap: true,
         physics: ClampingScrollPhysics(),
@@ -529,7 +528,7 @@ class _QuizInfoMenuState extends State<QuizInfoMenu> {
                     questionsSnapshot == null
                         ? Container()
                         : widget.isList
-                            ? questionList()
+                            ? questionList(context)
                             : questionNumberGrid(),
                     Spacer(),
                     Container(
@@ -580,9 +579,9 @@ class _QuizInfoMenuState extends State<QuizInfoMenu> {
                             ),
                             Row(
                               children: [
-                                Container(
-                                  child: Icon(Icons.star),
-                                ),
+                                Icon(Icons.star),
+                                
+                                
                                 SizedBox(
                                   width: 6,
                                 ),

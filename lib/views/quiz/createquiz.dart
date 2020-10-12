@@ -41,7 +41,6 @@ class _UpdateQuizState extends State<UpdateQuiz> {
   //
   //File selectedImage;
   var selectedImage;
-  dynamic _pickImageError;
 
   updateQuizOnline() async {
     if (_formKey.currentState.validate()) {
@@ -101,7 +100,7 @@ class _UpdateQuizState extends State<UpdateQuiz> {
         });
       });
     } else if (quizImageUrlController.text.isEmpty) {
-      print("error");
+      //  print("error");
     }
   }
 
@@ -122,10 +121,10 @@ class _UpdateQuizState extends State<UpdateQuiz> {
               child: CircularProgressIndicator(),
             )
           : Container(
+              width: MediaQuery.of(context).size.width,
               child: Form(
                 key: _formKey,
                 child: Container(
-                  width: MediaQuery.of(context).size.width,
                   alignment: Alignment.center,
                   child: Container(
                     width: 500,

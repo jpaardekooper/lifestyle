@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:lifestylescreening/helper/functions.dart';
+import 'package:lifestylescreening/widgets/datepicker/datepicker.dart';
 
 class DiaryTab extends StatefulWidget {
   @override
@@ -9,7 +10,9 @@ class DiaryTab extends StatefulWidget {
 
 class _DiaryTabState extends State<DiaryTab> {
   String _myName = "";
-  String _myEmail = "";
+  // String _myEmail = "";
+  bool value = false;
+
   @override
   void initState() {
     super.initState();
@@ -18,9 +21,9 @@ class _DiaryTabState extends State<DiaryTab> {
 
   getMyInfoAndQuiz() async {
     _myName = await HelperFunctions.getUserNameSharedPreference();
-    _myEmail = await HelperFunctions.getUserEmailSharedPreference();
-    print("Filling up some dat $_myName");
-    print("Filling up some dat $_myEmail");
+    //   _myEmail = await HelperFunctions.getUserEmailSharedPreference();
+    //print("Filling up some dat $_myName");
+    //  print("Filling up some dat $_myEmail");
   }
 
   @override
@@ -33,21 +36,16 @@ class _DiaryTabState extends State<DiaryTab> {
       body: SingleChildScrollView(
         child: Column(
           children: <Widget>[
-            Container(
-              height: 250,
-              color: Colors.red[600],
-              child: const Center(child: Text('Entry A')),
-            ),
-            Container(
-              height: 250,
-              color: Colors.red[500],
-              child: const Center(child: Text('Entry B')),
-            ),
-            Container(
-              height: 250,
-              color: Colors.yellow[100],
-              child: const Center(child: Text('Entry C')),
-            ),
+            DatePickerTimeLine(),
+            Text("WELKOM $_myName"),
+            // Container(
+            //     child: CupertinoDatePicker(
+            //   mode: CupertinoDatePickerMode.date,
+            //   initialDateTime: DateTime.now(),
+            //   onDateTimeChanged: (dateTime) {
+            //     debugPrint("$dateTime");
+            //   },
+            // ))
           ],
         ),
       ),

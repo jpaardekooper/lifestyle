@@ -1,7 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:lifestylescreening/helper/functions.dart';
-import 'package:lifestylescreening/services/database.dart';
 import 'package:lifestylescreening/widgets/login/login_visual.dart';
 import 'package:lifestylescreening/widgets/logo/lifestyle_logo.dart';
 import 'package:lifestylescreening/widgets/widgets.dart';
@@ -23,7 +22,7 @@ class _SignInState extends State<SignIn> {
   final TextEditingController _passwordController = TextEditingController();
 
   AuthService authService;
-  DatabaseService _databaseMethods = DatabaseService();
+  // DatabaseService _databaseMethods = DatabaseService();
   bool _isLoading;
   String test = "";
   String userName = "";
@@ -101,7 +100,6 @@ class _SignInState extends State<SignIn> {
                     TextFormField(
                       obscureText: true,
                       controller: _passwordController,
-                      //return value if theres an value otherwise reutrn error mssge
                       validator: (val) {
                         return val.isEmpty ? "Enter correct password" : null;
                       },
@@ -160,7 +158,7 @@ class _SignInState extends State<SignIn> {
           _emailController.text, _passwordController.text);
 
       if (result != null) {
-        print("het resultaat is $result");
+        // print("het resultaat is $result");
 
         // QuerySnapshot userInfoSnapshot =
         //     _databaseMethods.getUserInfo(_emailController.text);
@@ -193,7 +191,7 @@ class _SignInState extends State<SignIn> {
   bool validateEmail(String value) {
     Pattern pattern =
         r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
-    RegExp regex = new RegExp(pattern);
+    RegExp regex = RegExp(pattern);
     return (!regex.hasMatch(value)) ? false : true;
   }
 

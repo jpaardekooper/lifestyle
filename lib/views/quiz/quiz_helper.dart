@@ -35,14 +35,14 @@ class _QuizHelperState extends State<QuizHelper> {
         stream: quizStream,
         builder: (context, snapshot) {
           return snapshot.data == null
-              ? Container(
+              ? Center(
                   child: CircularProgressIndicator(),
                 )
               : snapshot.data.docs.length == 0
                   ? Container(
                       width: 250,
                       child: Text(
-                        "No quiz found, please click on the (+) button to create quiz",
+                        "No quiz found, click on the (+) button to create quiz",
                         textAlign: TextAlign.center,
                         style: TextStyle(
                             color: Colors.black87,
@@ -76,7 +76,7 @@ class _QuizHelperState extends State<QuizHelper> {
   getMyInfoAndQuiz() async {
     _myName = await HelperFunctions.getUserNameSharedPreference();
     _myEmail = await HelperFunctions.getUserEmailSharedPreference();
-    print("Filling up some dat $_myName");
+    // print("Filling up some dat $_myName");
     _databaseService.getQuizezData(_myName).then((val) {
       setState(() {
         quizStream = val;
@@ -106,7 +106,7 @@ void _moreOptionBottomSheet(
       builder: (BuildContext bc) {
         return Container(
           padding: EdgeInsets.only(bottom: 36),
-          child: new Wrap(
+          child: Wrap(
             children: <Widget>[
               Container(
                   padding: EdgeInsets.symmetric(vertical: 16, horizontal: 24),
@@ -176,16 +176,16 @@ void _moreOptionBottomSheet(
 }
 
 class QuizTile extends StatelessWidget {
-  final String imgUrl;
-  final String title;
-  final String desc;
-  final String quizid;
-
   QuizTile(
       {@required this.imgUrl,
       @required this.title,
       @required this.desc,
       @required this.quizid});
+
+  final String imgUrl;
+  final String title;
+  final String desc;
+  final String quizid;
 
   @override
   Widget build(BuildContext context) {
@@ -276,7 +276,7 @@ class QuizTile extends StatelessWidget {
           ),
           GestureDetector(
             onTap: () {
-              print("Monitor");
+              //print("Monitor");
               Navigator.push(
                   context,
                   MaterialPageRoute(

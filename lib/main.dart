@@ -27,11 +27,9 @@ class _MyAppState extends State<MyApp> {
   }
 
   Future checkUserLoggedInStatus() async {
-    print(_isLoggedin);
     await HelperFunctions.getUserLoggedInSharedPreference().then((value) {
       setState(() {
         _isLoggedin = value;
-        print(_isLoggedin);
       });
     });
   }

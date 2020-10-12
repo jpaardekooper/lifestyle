@@ -6,7 +6,7 @@ class DatabaseService {
         .collection("users")
         .add(userData)
         .catchError((e) {
-      print(e);
+      //   print(e);
     });
   }
 
@@ -19,7 +19,7 @@ class DatabaseService {
         .doc(quizId)
         .set(quizData)
         .catchError((e) {
-      print(e.toString());
+      // print(e.toString());
     });
   }
 
@@ -33,22 +33,27 @@ class DatabaseService {
         .collection("QNA")
         .add(questionData)
         .catchError((e) {
-      print(e);
+      //    print(e);
     });
   }
 
   getUserInfo(String email) async {
     String userName;
 
-    FirebaseFirestore.instance
+    await FirebaseFirestore.instance
         .collection("users")
         .where("email", isEqualTo: email)
         .get()
         .then((querySnapshot) {
       querySnapshot.docs.forEach((result) {
-        userName = result.data()["userName"];
-        print(userName);
-        //    return userName;
+        try {
+          userName = result.data()["userName"];
+          // ignore: unused_catch_clause
+        } on Exception catch (e) {
+          //
+        }
+        //  print(userName);
+        return userName;
       });
     });
 
@@ -78,7 +83,7 @@ class DatabaseService {
   }
 
   getQuizezData(String username) async {
-    print("getting quiz data for $username");
+    // print("getting quiz data for $username");
     return FirebaseFirestore.instance
         .collection("Quiz")
         .doc("jasper")

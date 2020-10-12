@@ -17,15 +17,16 @@ class AuthService {
       return _userFromFirebaseUser(firebaseUser);
     } on FirebaseAuthException catch (e) {
       if (e.code == 'user-not-found') {
-        print('No user found for that email.');
+        // print('No user found for that email.');
       } else if (e.code == 'wrong-password') {
-        print('Wrong password provided for that user.');
+        //   print('Wrong password provided for that user.');
       }
 
-      print('Failed with error code: ${e.code}');
+      //   print('Failed with error code: ${e.code}');
       errorMessage = e.code;
       return null;
       //   print(e.message);
+      // ignore: avoid_catches_without_on_clauses
     } catch (error) {
       switch (error.code) {
         case "invalid-email":
@@ -63,6 +64,7 @@ class AuthService {
           email: email, password: password);
       User firebaseUser = authResult.user;
       return _userFromFirebaseUser(firebaseUser);
+      // ignore: avoid_catches_without_on_clauses
     } catch (error) {
       switch (error.code) {
         case "ERROR_INVALID_EMAIL":
@@ -96,8 +98,9 @@ class AuthService {
   Future signOut() async {
     try {
       return await _auth.signOut();
+      // ignore: avoid_catches_without_on_clauses
     } catch (e) {
-      print(e.toString());
+      //  print(e.toString());
       return null;
     }
   }
@@ -105,8 +108,9 @@ class AuthService {
   Future resetPass(String email) async {
     try {
       return await _auth.sendPasswordResetEmail(email: email);
+      // ignore: avoid_catches_without_on_clauses
     } catch (e) {
-      print(e.toString());
+      //  print(e.toString());
       return null;
     }
   }

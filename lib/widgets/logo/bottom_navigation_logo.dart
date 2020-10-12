@@ -4,9 +4,9 @@ import 'package:flutter/material.dart';
 class BottomNavigationLogo extends StatelessWidget {
   BottomNavigationLogo({this.bottomAppIcon, this.bottomAppName, this.visible});
 
-  IconData bottomAppIcon;
-  String bottomAppName;
-  bool visible;
+  final IconData bottomAppIcon;
+  final String bottomAppName;
+  final bool visible;
 
   @override
   Widget build(BuildContext context) {

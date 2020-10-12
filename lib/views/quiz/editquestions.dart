@@ -41,7 +41,7 @@ class _EditQuestionsState extends State<EditQuestions> {
 
   @override
   void initState() {
-    print("${widget.quizId}, this is name ${widget.myAwesomeName}");
+    //print("${widget.quizId}, this is name ${widget.myAwesomeName}");
 
     FirebaseFirestore.instance
         .collection("Quiz")
@@ -52,7 +52,7 @@ class _EditQuestionsState extends State<EditQuestions> {
         .get()
         .then((value) {
       questionsSnapshot = value;
-      print("this is length ${questionsSnapshot.docs.length}");
+      //  print("this is length ${questionsSnapshot.docs.length}");
       setState(() {});
     });
     super.initState();

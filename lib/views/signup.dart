@@ -72,7 +72,8 @@ class _SignUpState extends State<SignUp> {
                     ),
                     TextFormField(
                       controller: _usernameController,
-                      //return value if theres an value otherwise reutrn error mssge
+                      //return value if theres an value otherwise reutrn error
+                      // mssge
                       validator: (val) {
                         return val.isEmpty ? "Enter gebruikersnaam" : null;
                       },
@@ -93,7 +94,8 @@ class _SignUpState extends State<SignUp> {
                     ),
                     TextFormField(
                       controller: _emailController,
-                      //return value if theres an value otherwise reutrn error mssge
+                      //return value if theres an value otherwise reutrn
+                      //error mssge
                       validator: (val) =>
                           validateEmail(val) ? null : "Enter correct email",
                       decoration: inputDecoration(context),
@@ -115,7 +117,8 @@ class _SignUpState extends State<SignUp> {
                     TextFormField(
                       obscureText: true,
                       controller: _passwordController,
-                      //return value if theres an value otherwise reutrn error mssge
+                      //return value if theres an value otherwise reutrn
+                      // error mssge
                       validator: (val) {
                         return val.isEmpty ? "Enter correct password" : null;
                       },
@@ -137,7 +140,8 @@ class _SignUpState extends State<SignUp> {
                     TextFormField(
                       obscureText: true,
                       controller: _passwordChecker,
-                      //return value if theres an value otherwise reutrn error mssge
+                      //return value if theres an value otherwise reutrn
+                      //error mssge
                       validator: (val) {
                         return val != _passwordController.text
                             ? "Password komt niet overeen"
@@ -205,10 +209,10 @@ class _SignUpState extends State<SignUp> {
           HelperFunctions.saveUserLoggedInSharedPreference(true);
           HelperFunctions.saveUserNameSharedPreference(
               _usernameController.text);
-          print("${_usernameController.text} username saved");
+          //   print("${_usernameController.text} username saved");
 
           HelperFunctions.saveUserEmailSharedPreference(_emailController.text);
-          print("${_emailController.text} user email saved");
+          //   print("${_emailController.text} user email saved");
 
           setState(() {
             _isLoading = false;
@@ -224,7 +228,7 @@ class _SignUpState extends State<SignUp> {
   bool validateEmail(String value) {
     Pattern pattern =
         r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
-    RegExp regex = new RegExp(pattern);
+    RegExp regex = RegExp(pattern);
     return (!regex.hasMatch(value)) ? false : true;
   }
 
