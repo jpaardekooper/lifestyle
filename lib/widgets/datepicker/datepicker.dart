@@ -38,9 +38,9 @@ class _DatePickerTimeLineState extends State<DatePickerTimeLine>
 
   @override
   void dispose() {
+    super.dispose();
     _animationController.dispose();
     _calendarController.dispose();
-    super.dispose();
   }
 
   // void _onDaySelected(DateTime day, List events) {
