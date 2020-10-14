@@ -1,11 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-extension CapExtension on String {
-  // ignore: unnecessary_this
-  String get inCaps => '${this[0].toUpperCase()}${this.substring(1)}';
-}
-
 class WelcomeText extends StatelessWidget {
   const WelcomeText({this.name});
 
@@ -18,7 +13,7 @@ class WelcomeText extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          "Hello ${name.inCaps}",
+          "Hello $name",
           style: TextStyle(
               fontSize: 24,
               color: Colors.red[400],
