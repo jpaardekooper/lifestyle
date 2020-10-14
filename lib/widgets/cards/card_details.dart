@@ -18,9 +18,11 @@ class _CardDetailsState extends State<CardDetails> {
       appBar: AppBar(
         title: Text(widget.name),
       ),
-      body: Column(
+      body: ListView(
         children: [
+          Text("ingriedenten"),
           Expanded(
+            flex: 0,
             child: StreamBuilder<QuerySnapshot>(
               stream: FirebaseFirestore.instance
                   .collection("recipes")
@@ -30,10 +32,11 @@ class _CardDetailsState extends State<CardDetails> {
               builder: (BuildContext context,
                   AsyncSnapshot<QuerySnapshot> snapshot) {
                 if (!snapshot.hasData) return Text("There is no expense");
-                return ListView(children: getExpenseItems(snapshot));
+                return Column(children: getExpenseItems(snapshot));
               },
             ),
           ),
+          Text("Methode"),
           Expanded(
             child: StreamBuilder<QuerySnapshot>(
               stream: FirebaseFirestore.instance
@@ -44,10 +47,11 @@ class _CardDetailsState extends State<CardDetails> {
               builder: (BuildContext context,
                   AsyncSnapshot<QuerySnapshot> snapshot) {
                 if (!snapshot.hasData) return Text("There is no expense");
-                return ListView(children: getMethodItems(snapshot));
+                return Column(children: getMethodItems(snapshot));
               },
             ),
           ),
+          Text("Nutrio"),
           Expanded(
             child: StreamBuilder<QuerySnapshot>(
               stream: FirebaseFirestore.instance
@@ -58,7 +62,7 @@ class _CardDetailsState extends State<CardDetails> {
               builder: (BuildContext context,
                   AsyncSnapshot<QuerySnapshot> snapshot) {
                 if (!snapshot.hasData) return Text("There is no expense");
-                return ListView(children: getNutritionalValue(snapshot));
+                return Column(children: getNutritionalValue(snapshot));
               },
             ),
           ),
@@ -71,6 +75,7 @@ class _CardDetailsState extends State<CardDetails> {
     return snapshot.data.docs
         .map(
           (doc) => ListTile(
+              leading: Icon(Icons.data_usage),
               title: Text(doc['amount'].toString() +
                   doc['unit'] +
                   " " +
@@ -83,7 +88,8 @@ class _CardDetailsState extends State<CardDetails> {
     return snapshot.data.docs
         .map(
           (doc) => ListTile(
-              title: Text(doc['instruction'] + " " + doc['step'].toString())),
+              title: Text("Stap" + doc['step'].toString()),
+              subtitle: Text(doc['instruction'])),
         )
         .toList();
   }
@@ -92,9 +98,8 @@ class _CardDetailsState extends State<CardDetails> {
     return snapshot.data.docs
         .map(
           (doc) => ListTile(
-              title: Text(doc['amount'].toString() +
-                  doc['name'].toString() +
-                  doc['unit'].toString())),
+              title: Text(
+                  doc['amount'].toString() + doc['unit'] + " " + doc['name'])),
         )
         .toList();
   }
