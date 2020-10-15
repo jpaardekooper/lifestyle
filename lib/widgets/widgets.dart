@@ -114,7 +114,7 @@ inputDecoration(BuildContext context) {
   return InputDecoration(
     filled: true,
     isDense: true,
-    contentPadding: EdgeInsets.all(14),
+    contentPadding: EdgeInsets.all(11),
     fillColor: Colors.white,
     focusedBorder: OutlineInputBorder(
       borderRadius: BorderRadius.circular(12.0),

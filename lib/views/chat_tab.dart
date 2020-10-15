@@ -41,8 +41,7 @@ class _ChatTabState extends State<ChatTab> {
             alignment: Alignment.bottomCenter,
             child: Container(
               color: Color(0x54FFFFFF),
-              padding: EdgeInsets.symmetric(
-                horizontal: 10),
+              padding: EdgeInsets.symmetric(horizontal: 10),
               child: Row(
                 children: [
                   Expanded(
@@ -76,8 +75,5 @@ class _ChatTabState extends State<ChatTab> {
     );
   }
 
-  sendMessage(){
-    
-  }
-
+  sendMessage() {}
 }

@@ -51,9 +51,7 @@ class _DatePickerTimeLineState extends State<DatePickerTimeLine>
   // }
 
   void _onVisibleDaysChanged(
-      DateTime first, DateTime last, CalendarFormat format) {
-    _toggle(visible);
-  }
+      DateTime first, DateTime last, CalendarFormat format) {}
 
   // void _onCalendarCreated(
   //     DateTime first, DateTime last, CalendarFormat format) {
@@ -123,7 +121,9 @@ class _DatePickerTimeLineState extends State<DatePickerTimeLine>
         visible = false;
       });
     } else {
-      visible = true;
+      setState(() {
+        visible = true;
+      });
     }
   }
 
@@ -153,60 +153,58 @@ class _DatePickerTimeLineState extends State<DatePickerTimeLine>
           //     _controller.animateToSelection();
           //   },
           // ),
-
-          !visible
-              ? Hero(
-                  tag: 'showCalender',
-                  child: Container(
-                    padding: EdgeInsets.all(8),
-                    child: DatePicker(
-                      DateTime.now(),
-                      width: 40,
-                      height: 40,
-                      controller: _controller,
-                      initialSelectedDate: selectedValue == null
-                          ? DateTime.now()
-                          : selectedValue,
-                      selectionColor: Colors.white,
-                      selectedTextColor: Colors.red[400],
-                      deactivatedColor: Colors.white,
-                      dayTextStyle: TextStyle(
-                        fontSize: 0,
-                        color: Colors.blue,
-                      ),
-                      dateTextStyle: TextStyle(
-                          color: Colors.white, fontWeight: FontWeight.bold),
-                      monthTextStyle:
-                          TextStyle(color: Colors.white, fontSize: 0),
-                      daysCount: 14,
-                      locale: "NL",
-                      // inactiveDates: [
-                      //   DateTime.now().add(Duration(days: 3)),
-                      //   DateTime.now().add(Duration(days: 4)),
-                      //   DateTime.now().add(Duration(days: 7))
-                      // ],
-                      onDateChange: (date) {
-                        // New date selected
-                        setState(() {
-                          selectedValue = date;
-                          // showDatePicker(
-                          //   context: context,
-                          //   initialDate: _selectedValue,
-                          //   firstDate: DateTime(2000),
-                          //   lastDate: DateTime(2025),
-                          //   initialDatePickerMode: DatePickerMode.day,
-                          // );
-                          //_selectDate(context);
-                          _toggle(visible);
-                        });
-                      },
-                    ),
-                  ),
-                )
-              : Hero(
-                  tag: 'showCalender',
-                  child: _buildTableCalendar(),
+          AnimatedCrossFade(
+            crossFadeState:
+                !visible ? CrossFadeState.showFirst : CrossFadeState.showSecond,
+            duration: const Duration(milliseconds: 500),
+            firstCurve: Curves.easeOut,
+            secondCurve: Curves.easeIn,
+            sizeCurve: Curves.bounceOut,
+            firstChild: Container(
+              padding: EdgeInsets.all(8),
+              child: DatePicker(
+                DateTime.now(),
+                width: 40,
+                height: 40,
+                controller: _controller,
+                initialSelectedDate:
+                    selectedValue == null ? DateTime.now() : selectedValue,
+                selectionColor: Colors.white,
+                selectedTextColor: Colors.red[400],
+                deactivatedColor: Colors.white,
+                dayTextStyle: TextStyle(
+                  fontSize: 0,
+                  color: Colors.blue,
                 ),
+                dateTextStyle:
+                    TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+                monthTextStyle: TextStyle(color: Colors.white, fontSize: 0),
+                daysCount: 14,
+                locale: "NL",
+                // inactiveDates: [
+                //   DateTime.now().add(Duration(days: 3)),
+                //   DateTime.now().add(Duration(days: 4)),
+                //   DateTime.now().add(Duration(days: 7))
+                // ],
+                onDateChange: (date) {
+                  // New date selected
+                  setState(() {
+                    selectedValue = date;
+                    // showDatePicker(
+                    //   context: context,
+                    //   initialDate: _selectedValue,
+                    //   firstDate: DateTime(2000),
+                    //   lastDate: DateTime(2025),
+                    //   initialDatePickerMode: DatePickerMode.day,
+                    // );
+                    //_selectDate(context);
+                    _toggle(visible);
+                  });
+                },
+              ),
+            ),
+            secondChild: _buildTableCalendar(),
+          ),
         ],
       ),
     );

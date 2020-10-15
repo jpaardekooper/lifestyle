@@ -38,7 +38,7 @@ class _SignInState extends State<SignIn> {
   Widget build(BuildContext context) {
     // Scaffold is used to utilize all the material widgets
     return Scaffold(
-      resizeToAvoidBottomInset: false,
+      // resizeToAvoidBottomInset: false,
       body: _isLoading
           ? LoginVisual()
           : Form(
@@ -51,9 +51,6 @@ class _SignInState extends State<SignIn> {
                   children: [
                     Spacer(flex: 2),
                     LifestyleLogo(size: 50),
-                    SizedBox(
-                      height: 16,
-                    ),
                     Text(
                       "Log in met je account",
                       style: TextStyle(
@@ -109,9 +106,7 @@ class _SignInState extends State<SignIn> {
                       // },
                     ),
                     Text(test == "" ? "" : test),
-                    SizedBox(
-                      height: 25,
-                    ),
+                    Spacer(),
 
                     Material(
                       color: Color.fromRGBO(72, 72, 72, 1),
@@ -124,10 +119,7 @@ class _SignInState extends State<SignIn> {
                           }),
                     ),
 
-                    SizedBox(
-                      height: 24,
-                    ),
-
+                    Spacer(),
                     Material(
                       color: Color.fromRGBO(255, 129, 128, 1),
                       borderRadius: BorderRadius.circular(40),

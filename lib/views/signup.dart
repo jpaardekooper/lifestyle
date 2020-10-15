@@ -37,7 +37,7 @@ class _SignUpState extends State<SignUp> {
   Widget build(BuildContext context) {
     // Scaffold is used to utilize all the material widgets
     return Scaffold(
-      resizeToAvoidBottomInset: false,
+      // resizeToAvoidBottomInset: false,
       body: _isLoading
           ? LoginVisual()
           : Form(
@@ -46,28 +46,34 @@ class _SignUpState extends State<SignUp> {
                 width: MediaQuery.of(context).size.width,
                 padding: EdgeInsets.symmetric(horizontal: 25),
                 color: Color.fromRGBO(255, 129, 128, 1),
-                child: Column(
+                child: ListView(
                   children: [
-                    Spacer(flex: 2),
-                    LifestyleLogo(size: 50),
+                    SizedBox(
+                      height: 16,
+                    ),
+                    Center(child: LifestyleLogo(size: 50)),
                     SizedBox(
                       height: 6,
                     ),
-                    Text(
-                      "Meld je aan voor een nieuw account",
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 16,
+                    Center(
+                      child: Text(
+                        "Meld je aan voor een nieuw account",
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 16,
+                        ),
                       ),
                     ),
-                    Spacer(flex: 1),
+                    SizedBox(
+                      height: 16,
+                    ),
                     Container(
                       width: MediaQuery.of(context).size.width,
-                      padding: EdgeInsets.all(14),
+                      padding: EdgeInsets.only(bottom: 10, top: 10, left: 5),
                       child: Text(
                         "Gebruikersnaam: ",
                         textAlign: TextAlign.left,
-                        style: TextStyle(color: Colors.white, fontSize: 16),
+                        style: TextStyle(color: Colors.white, fontSize: 14),
                       ),
                     ),
                     TextFormField(
@@ -79,17 +85,15 @@ class _SignUpState extends State<SignUp> {
                       },
                       decoration: inputDecoration(context),
                     ),
-                    SizedBox(
-                      height: 6,
-                    ),
+                    Spacer(),
                     //email
                     Container(
                       width: MediaQuery.of(context).size.width,
-                      padding: EdgeInsets.all(14),
+                      padding: EdgeInsets.only(bottom: 10, top: 10, left: 5),
                       child: Text(
                         "Vul hier uw e-mail adres in: ",
                         textAlign: TextAlign.left,
-                        style: TextStyle(color: Colors.white, fontSize: 16),
+                        style: TextStyle(color: Colors.white, fontSize: 14),
                       ),
                     ),
                     TextFormField(
@@ -100,17 +104,15 @@ class _SignUpState extends State<SignUp> {
                           validateEmail(val) ? null : "Enter correct email",
                       decoration: inputDecoration(context),
                     ),
-                    SizedBox(
-                      height: 6,
-                    ),
+                    Spacer(),
                     //pass
                     Container(
                       width: MediaQuery.of(context).size.width,
-                      padding: EdgeInsets.all(14),
+                      padding: EdgeInsets.only(bottom: 10, top: 10, left: 5),
                       child: Text(
                         "Vul hier uw wachtwoord in: ",
                         textAlign: TextAlign.left,
-                        style: TextStyle(color: Colors.white, fontSize: 16),
+                        style: TextStyle(color: Colors.white, fontSize: 14),
                       ),
                     ),
                     //Password
@@ -124,16 +126,14 @@ class _SignUpState extends State<SignUp> {
                       },
                       decoration: inputDecoration(context),
                     ),
-                    SizedBox(
-                      height: 6,
-                    ),
+                    Spacer(),
                     Container(
                       width: MediaQuery.of(context).size.width,
-                      padding: EdgeInsets.all(14),
+                      padding: EdgeInsets.only(bottom: 10, top: 10, left: 5),
                       child: Text(
                         "Vul hier uw wachtwoord in opnieuw in: ",
                         textAlign: TextAlign.left,
-                        style: TextStyle(color: Colors.white, fontSize: 16),
+                        style: TextStyle(color: Colors.white, fontSize: 14),
                       ),
                     ),
                     //Password
@@ -150,38 +150,48 @@ class _SignUpState extends State<SignUp> {
                       decoration: inputDecoration(context),
                     ),
                     SizedBox(
-                      height: 20,
+                      height: 30,
                     ),
                     // inloggen
-                    Material(
-                      color: Color.fromRGBO(72, 72, 72, 1),
-                      borderRadius: BorderRadius.circular(40),
-                      child: InkWell(
-                          borderRadius: BorderRadius.circular(40.0),
-                          child:
-                              BackgroundDarkButton(text: "Aanmelden", size: 18),
-                          onTap: () {
-                            signUp();
-                          }),
+                    Align(
+                      child: SizedBox(
+                        width: MediaQuery.of(context).size.width / 2.5,
+                        child: Material(
+                          color: Color.fromRGBO(72, 72, 72, 1),
+                          borderRadius: BorderRadius.circular(40),
+                          child: InkWell(
+                              borderRadius: BorderRadius.circular(40.0),
+                              child: BackgroundDarkButton(
+                                  text: "Aanmelden", size: 18),
+                              onTap: () {
+                                signUp();
+                              }),
+                        ),
+                      ),
                     ),
 
                     SizedBox(
-                      height: 24,
+                      height: 16,
                     ),
                     // terug
-                    Material(
-                      color: Color.fromRGBO(255, 129, 128, 1),
-                      borderRadius: BorderRadius.circular(40),
-                      child: InkWell(
-                        splashColor: Colors.white,
-                        borderRadius: BorderRadius.circular(40.0),
-                        child: BackgroundWhiteButton(text: "Terug", size: 18),
-                        onTap: () {
-                          Navigator.pop(context);
-                        },
+                    Align(
+                      child: SizedBox(
+                        width: MediaQuery.of(context).size.width / 2.5,
+                        child: Material(
+                          color: Color.fromRGBO(255, 129, 128, 1),
+                          borderRadius: BorderRadius.circular(40),
+                          child: InkWell(
+                            splashColor: Colors.white,
+                            borderRadius: BorderRadius.circular(40.0),
+                            child:
+                                BackgroundWhiteButton(text: "Terug", size: 18),
+                            onTap: () {
+                              Navigator.pop(context);
+                            },
+                          ),
+                        ),
                       ),
                     ),
-                    Spacer(flex: 2),
                   ],
                 ),
               ),
