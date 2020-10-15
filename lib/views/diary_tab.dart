@@ -21,7 +21,12 @@ class _DiaryTabState extends State<DiaryTab> {
   }
 
   getMyInfoAndQuiz() async {
-    _myName = await HelperFunctions.getUserNameSharedPreference();
+    await HelperFunctions.getUserNameSharedPreference().then((value) {
+      setState(() {
+        _myName = value;
+      });
+    });
+
     //   _myEmail = await HelperFunctions.getUserEmailSharedPreference();
     //print("Filling up some dat $_myName");
     //  print("Filling up some dat $_myEmail");
