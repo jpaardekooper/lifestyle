@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:lifestylescreening/views/home.dart';
-import 'package:lifestylescreening/views/startup.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:lifestylescreening/widgets/disclaimer/disclaimer_popup.dart';
 
 import 'helper/functions.dart';
 
@@ -45,7 +45,7 @@ class _MyAppState extends State<MyApp> {
           primaryColor: Colors.lightBlue[800],
           accentColor: Colors.cyan[600],
           iconTheme: IconThemeData(color: Colors.black)),
-      home: (_isLoggedin ?? false) ? Home() : StartUp(),
+      home: (_isLoggedin ?? false) ? Home() : DisclaimerPopup(),
     );
   }
 }

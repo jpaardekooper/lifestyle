@@ -11,7 +11,7 @@ class DiaryTab extends StatefulWidget {
 
 class _DiaryTabState extends State<DiaryTab> {
   String _myName;
-  // String _myEmail = "";
+  // String _myEmail;
   bool value = false;
 
   @override
@@ -27,7 +27,11 @@ class _DiaryTabState extends State<DiaryTab> {
       });
     });
 
-    //   _myEmail = await HelperFunctions.getUserEmailSharedPreference();
+    // await HelperFunctions.getUserEmailSharedPreference().then((value) {
+    //   setState(() {
+    //     _myEmail = value;
+    //   });
+    // });
     //print("Filling up some dat $_myName");
     //  print("Filling up some dat $_myEmail");
   }
