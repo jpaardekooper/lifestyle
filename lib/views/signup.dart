@@ -78,6 +78,7 @@ class _SignUpState extends State<SignUp> {
                     ),
                     TextFormField(
                       controller: _usernameController,
+                      keyboardType: TextInputType.visiblePassword,
                       //return value if theres an value otherwise reutrn error
                       // mssge
                       validator: (val) {
@@ -98,6 +99,7 @@ class _SignUpState extends State<SignUp> {
                     ),
                     TextFormField(
                       controller: _emailController,
+                      keyboardType: TextInputType.emailAddress,
                       //return value if theres an value otherwise reutrn
                       //error mssge
                       validator: (val) =>
@@ -119,6 +121,7 @@ class _SignUpState extends State<SignUp> {
                     TextFormField(
                       obscureText: true,
                       controller: _passwordController,
+                      keyboardType: TextInputType.visiblePassword,
                       //return value if theres an value otherwise reutrn
                       // error mssge
                       validator: (val) {
@@ -140,6 +143,7 @@ class _SignUpState extends State<SignUp> {
                     TextFormField(
                       obscureText: true,
                       controller: _passwordChecker,
+                      keyboardType: TextInputType.visiblePassword,
                       //return value if theres an value otherwise reutrn
                       //error mssge
                       validator: (val) {

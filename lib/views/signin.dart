@@ -38,7 +38,7 @@ class _SignInState extends State<SignIn> {
   Widget build(BuildContext context) {
     // Scaffold is used to utilize all the material widgets
     return Scaffold(
-      // resizeToAvoidBottomInset: false,
+      //resizeToAvoidBottomInset: false,
       body: _isLoading
           ? LoginVisual()
           : Form(
@@ -47,30 +47,37 @@ class _SignInState extends State<SignIn> {
                 width: MediaQuery.of(context).size.width,
                 padding: EdgeInsets.symmetric(horizontal: 40),
                 color: Color.fromRGBO(255, 129, 128, 1),
-                child: Column(
+                child: ListView(
                   children: [
-                    Spacer(flex: 2),
-                    LifestyleLogo(size: 50),
-                    Text(
-                      "Log in met je account",
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 24,
+                    SizedBox(
+                      height: 50,
+                    ),
+                    Center(child: LifestyleLogo(size: 50)),
+                    Center(
+                      child: Text(
+                        "Log in met je account",
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 24,
+                        ),
                       ),
                     ),
-                    Spacer(flex: 1),
+                    SizedBox(
+                      height: 32,
+                    ),
                     //Email
                     Container(
                       width: MediaQuery.of(context).size.width,
-                      padding: EdgeInsets.all(14),
+                      padding: EdgeInsets.only(bottom: 10, top: 10, left: 5),
                       child: Text(
                         "Vul hier uw e-mail adres in: ",
                         textAlign: TextAlign.left,
-                        style: TextStyle(color: Colors.white, fontSize: 20),
+                        style: TextStyle(color: Colors.white, fontSize: 16),
                       ),
                     ),
                     TextFormField(
                       controller: _emailController,
+                      keyboardType: TextInputType.emailAddress,
                       //return value if theres an value otherwise
                       //return error mssge
                       validator: (val) =>
@@ -85,11 +92,11 @@ class _SignInState extends State<SignIn> {
                     ),
                     Container(
                       width: MediaQuery.of(context).size.width,
-                      padding: EdgeInsets.all(14),
+                      padding: EdgeInsets.only(bottom: 10, top: 10, left: 5),
                       child: Text(
                         "Vul hier uw wachtwoord in: ",
                         textAlign: TextAlign.left,
-                        style: TextStyle(color: Colors.white, fontSize: 20),
+                        style: TextStyle(color: Colors.white, fontSize: 16),
                       ),
                     ),
 
@@ -97,6 +104,7 @@ class _SignInState extends State<SignIn> {
                     TextFormField(
                       obscureText: true,
                       controller: _passwordController,
+                      keyboardType: TextInputType.visiblePassword,
                       validator: (val) {
                         return val.isEmpty ? "Enter correct password" : null;
                       },
@@ -105,31 +113,46 @@ class _SignInState extends State<SignIn> {
                       //   password = val;
                       // },
                     ),
-                    Text(test == "" ? "" : test),
-                    Spacer(),
-
-                    Material(
-                      color: Color.fromRGBO(72, 72, 72, 1),
-                      borderRadius: BorderRadius.circular(40),
-                      child: InkWell(
-                          borderRadius: BorderRadius.circular(40.0),
-                          child: smallblackButton(context),
-                          onTap: () {
-                            signIn();
-                          }),
+                    Text(test == "" ? "" : test,
+                        style: TextStyle(color: Colors.white)),
+                    SizedBox(
+                      height: 16,
                     ),
 
-                    Spacer(),
-                    Material(
-                      color: Color.fromRGBO(255, 129, 128, 1),
-                      borderRadius: BorderRadius.circular(40),
-                      child: InkWell(
-                        splashColor: Colors.white,
-                        borderRadius: BorderRadius.circular(40.0),
-                        child: smallwhiteButton(context),
-                        onTap: () {
-                          Navigator.pop(context);
-                        },
+                    Align(
+                      child: SizedBox(
+                        width: MediaQuery.of(context).size.width / 2.5,
+                        child: Material(
+                          color: Color.fromRGBO(72, 72, 72, 1),
+                          borderRadius: BorderRadius.circular(40),
+                          child: InkWell(
+                              borderRadius: BorderRadius.circular(40.0),
+                              child: smallblackButton(context),
+                              onTap: () {
+                                signIn();
+                              }),
+                        ),
+                      ),
+                    ),
+
+                    SizedBox(
+                      height: 32,
+                    ),
+                    Align(
+                      child: SizedBox(
+                        width: MediaQuery.of(context).size.width / 2.5,
+                        child: Material(
+                          color: Color.fromRGBO(255, 129, 128, 1),
+                          borderRadius: BorderRadius.circular(40),
+                          child: InkWell(
+                            splashColor: Colors.white,
+                            borderRadius: BorderRadius.circular(40.0),
+                            child: smallwhiteButton(context),
+                            onTap: () {
+                              Navigator.pop(context);
+                            },
+                          ),
+                        ),
                       ),
                     ),
 
