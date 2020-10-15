@@ -37,58 +37,47 @@ class _CardDetailsState extends State<CardDetails> {
           SliverList(
             delegate: SliverChildListDelegate(
               <Widget>[
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text("ingriedenten"),
-                      StreamBuilder<QuerySnapshot>(
-                        stream: FirebaseFirestore.instance
-                            .collection("recipes")
-                            .doc(widget.id)
-                            .collection("ingredients")
-                            .snapshots(),
-                        builder: (BuildContext context,
-                            AsyncSnapshot<QuerySnapshot> snapshot) {
-                          if (!snapshot.hasData)
-                            return Text("There is no expense");
-                          return Column(children: getExpenseItems(snapshot));
-                        },
-                      ),
-                      Text("Methode"),
-                      StreamBuilder<QuerySnapshot>(
-                        stream: FirebaseFirestore.instance
-                            .collection("recipes")
-                            .doc(widget.id)
-                            .collection("method")
-                            .snapshots(),
-                        builder: (BuildContext context,
-                            AsyncSnapshot<QuerySnapshot> snapshot) {
-                          if (!snapshot.hasData)
-                            return Text("There is no expense");
-                          return Column(children: getMethodItems(snapshot));
-                        },
-                      ),
-                      Text("Nutrio"),
-                      StreamBuilder<QuerySnapshot>(
-                        stream: FirebaseFirestore.instance
-                            .collection("recipes")
-                            .doc(widget.id)
-                            .collection("nutritionalValue")
-                            .snapshots(),
-                        builder: (BuildContext context,
-                            AsyncSnapshot<QuerySnapshot> snapshot) {
-                          if (!snapshot.hasData)
-                            return Text("There is no expense");
-                          return Column(
-                              children: getNutritionalValue(snapshot));
-                        },
-                      ),
-                      SizedBox(
-                        height: 500,
-                      )
-                    ],
-                  ),
+                Text("ingriedenten"),
+                StreamBuilder<QuerySnapshot>(
+                  stream: FirebaseFirestore.instance
+                      .collection("recipes")
+                      .doc(widget.id)
+                      .collection("ingredients")
+                      .snapshots(),
+                  builder: (BuildContext context,
+                      AsyncSnapshot<QuerySnapshot> snapshot) {
+                    if (!snapshot.hasData) return Text("There is no expense");
+                    return Column(children: getExpenseItems(snapshot));
+                  },
+                ),
+                Text("Methode"),
+                StreamBuilder<QuerySnapshot>(
+                  stream: FirebaseFirestore.instance
+                      .collection("recipes")
+                      .doc(widget.id)
+                      .collection("method")
+                      .snapshots(),
+                  builder: (BuildContext context,
+                      AsyncSnapshot<QuerySnapshot> snapshot) {
+                    if (!snapshot.hasData) return Text("There is no expense");
+                    return Column(children: getMethodItems(snapshot));
+                  },
+                ),
+                Text("Nutrio"),
+                StreamBuilder<QuerySnapshot>(
+                  stream: FirebaseFirestore.instance
+                      .collection("recipes")
+                      .doc(widget.id)
+                      .collection("nutritionalValue")
+                      .snapshots(),
+                  builder: (BuildContext context,
+                      AsyncSnapshot<QuerySnapshot> snapshot) {
+                    if (!snapshot.hasData) return Text("There is no expense");
+                    return Column(children: getNutritionalValue(snapshot));
+                  },
+                ),
+                SizedBox(
+                  height: 500,
                 )
               ],
             ),
