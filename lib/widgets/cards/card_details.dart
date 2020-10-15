@@ -15,55 +15,80 @@ class _CardDetailsState extends State<CardDetails> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.name),
-      ),
-      body: ListView(
-        children: [
-          Text("ingriedenten"),
-          Expanded(
-            flex: 0,
-            child: StreamBuilder<QuerySnapshot>(
-              stream: FirebaseFirestore.instance
-                  .collection("recipes")
-                  .doc(widget.id)
-                  .collection("ingredients")
-                  .snapshots(),
-              builder: (BuildContext context,
-                  AsyncSnapshot<QuerySnapshot> snapshot) {
-                if (!snapshot.hasData) return Text("There is no expense");
-                return Column(children: getExpenseItems(snapshot));
-              },
+      body: CustomScrollView(
+        slivers: <Widget>[
+          SliverAppBar(
+            pinned: true,
+            floating: true,
+            snap: true,
+            expandedHeight: 200.0,
+            flexibleSpace: FlexibleSpaceBar(
+              title: Text(widget.name),
             ),
+            actions: <Widget>[
+              IconButton(
+                icon: const Icon(Icons.add_circle),
+                tooltip: 'Add new entry',
+                onPressed: () {},
+              ),
+            ],
           ),
-          Text("Methode"),
-          Expanded(
-            child: StreamBuilder<QuerySnapshot>(
-              stream: FirebaseFirestore.instance
-                  .collection("recipes")
-                  .doc(widget.id)
-                  .collection("method")
-                  .snapshots(),
-              builder: (BuildContext context,
-                  AsyncSnapshot<QuerySnapshot> snapshot) {
-                if (!snapshot.hasData) return Text("There is no expense");
-                return Column(children: getMethodItems(snapshot));
-              },
-            ),
-          ),
-          Text("Nutrio"),
-          Expanded(
-            child: StreamBuilder<QuerySnapshot>(
-              stream: FirebaseFirestore.instance
-                  .collection("recipes")
-                  .doc(widget.id)
-                  .collection("nutritionalValue")
-                  .snapshots(),
-              builder: (BuildContext context,
-                  AsyncSnapshot<QuerySnapshot> snapshot) {
-                if (!snapshot.hasData) return Text("There is no expense");
-                return Column(children: getNutritionalValue(snapshot));
-              },
+          SliverList(
+            delegate: SliverChildListDelegate(
+              <Widget>[
+                Expanded(
+                  child: Column(
+                    children: [
+                      Text("ingriedenten"),
+                      StreamBuilder<QuerySnapshot>(
+                        stream: FirebaseFirestore.instance
+                            .collection("recipes")
+                            .doc(widget.id)
+                            .collection("ingredients")
+                            .snapshots(),
+                        builder: (BuildContext context,
+                            AsyncSnapshot<QuerySnapshot> snapshot) {
+                          if (!snapshot.hasData)
+                            return Text("There is no expense");
+                          return Column(children: getExpenseItems(snapshot));
+                        },
+                      ),
+                      Text("Methode"),
+                      StreamBuilder<QuerySnapshot>(
+                        stream: FirebaseFirestore.instance
+                            .collection("recipes")
+                            .doc(widget.id)
+                            .collection("method")
+                            .snapshots(),
+                        builder: (BuildContext context,
+                            AsyncSnapshot<QuerySnapshot> snapshot) {
+                          if (!snapshot.hasData)
+                            return Text("There is no expense");
+                          return Column(children: getMethodItems(snapshot));
+                        },
+                      ),
+                      Text("Nutrio"),
+                      StreamBuilder<QuerySnapshot>(
+                        stream: FirebaseFirestore.instance
+                            .collection("recipes")
+                            .doc(widget.id)
+                            .collection("nutritionalValue")
+                            .snapshots(),
+                        builder: (BuildContext context,
+                            AsyncSnapshot<QuerySnapshot> snapshot) {
+                          if (!snapshot.hasData)
+                            return Text("There is no expense");
+                          return Column(
+                              children: getNutritionalValue(snapshot));
+                        },
+                      ),
+                      SizedBox(
+                        height: 500,
+                      )
+                    ],
+                  ),
+                )
+              ],
             ),
           ),
         ],
