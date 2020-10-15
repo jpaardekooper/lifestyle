@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:lifestylescreening/widgets/cards/nutritional_value.dart';
 
 class CardDetails extends StatefulWidget {
   CardDetails({this.name, this.id});
@@ -18,9 +19,9 @@ class _CardDetailsState extends State<CardDetails> {
       body: CustomScrollView(
         slivers: <Widget>[
           SliverAppBar(
+            floating: false,
             pinned: true,
-            floating: true,
-            snap: true,
+            snap: false,
             expandedHeight: 200.0,
             flexibleSpace: FlexibleSpaceBar(
               title: Text(widget.name),
@@ -123,9 +124,10 @@ class _CardDetailsState extends State<CardDetails> {
   getNutritionalValue(AsyncSnapshot<QuerySnapshot> snapshot) {
     return snapshot.data.docs
         .map(
-          (doc) => ListTile(
-              title: Text(
-                  doc['amount'].toString() + doc['unit'] + " " + doc['name'])),
+          (doc) => NutritionalValue(
+              amount: doc['amount'].toString(),
+              name: doc['name'],
+              unit: doc['unit']),
         )
         .toList();
   }

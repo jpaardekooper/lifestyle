@@ -91,13 +91,6 @@ class DatabaseService {
         .snapshots();
   }
 
-  Future getRecipeData() async {
-    // print("getting quiz data for $username");
-    CollectionReference recipes =
-        FirebaseFirestore.instance.collection('recipes');
-    return recipes;
-  }
-
   getQuizData(String quizId, String username) async {
     return FirebaseFirestore.instance
         .collection("Quiz")
