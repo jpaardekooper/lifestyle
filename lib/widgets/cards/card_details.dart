@@ -38,6 +38,7 @@ class _CardDetailsState extends State<CardDetails> {
               <Widget>[
                 Expanded(
                   child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text("ingriedenten"),
                       StreamBuilder<QuerySnapshot>(
