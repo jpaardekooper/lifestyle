@@ -59,14 +59,14 @@ class _ChatTabState extends State<ChatTab> {
                   .snapshots(),
               builder: (BuildContext context,
                   AsyncSnapshot<QuerySnapshot> snapshot) {
-                if (!snapshot.hasData) return welcomeChatMessage();
+                if (!snapshot.hasData) return Text("Type uw vraag");
                 return FadeInTransition(
                   child: ListView(
                     children: getMessageData(snapshot),
                   ),
                 );
               })
-          : Container(),
+          : welcomeChatMessage(),
       bottomNavigationBar: BottomAppBar(
         child: Container(
           height: 45,
@@ -153,7 +153,8 @@ Alles wat u hoeft te doen is een vraag typen en deze naar ons sturen, iemand van
     return snapshot.data.docs
         .map((doc) => MessageTile(
               message: doc["description"],
-              sendByMe: userEmail == doc.id,
+              // sendByMe: userEmail == doc.id,
+              sendByMe: doc["open"],
               dateTime: doc["timestamp"].toDate().toIso8601String(),
             ))
         .toList();
@@ -177,32 +178,50 @@ class _MessageTileState extends State<MessageTile> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        Container(
-          padding: EdgeInsets.only(right: 16),
-          child: Text(widget.dateTime,
-              textAlign: TextAlign.end,
-              style: TextStyle(
-                fontSize: 10,
-              )),
-        ),
+        widget.sendByMe
+            //true
+            ? Container(
+                padding: EdgeInsets.only(right: 16),
+                child: Text(
+                  widget.dateTime,
+                  textAlign: TextAlign.end,
+                  style: TextStyle(
+                    fontSize: 10,
+                  ),
+                ))
+            //false
+            : Container(
+                padding: EdgeInsets.only(left: 16),
+                child: Text(
+                  widget.dateTime,
+                  textAlign: TextAlign.start,
+                  style: TextStyle(
+                    fontSize: 10,
+                  ),
+                ),
+              ),
         Container(
           margin: widget.sendByMe
+              //true
               ? EdgeInsets.only(
                   left: MediaQuery.of(context).size.width / 3.5,
                   right: 8,
                   top: 8,
                   bottom: 8)
+              //false
               : EdgeInsets.only(
-                  left: MediaQuery.of(context).size.width / 3.5,
+                  left: 8,
                   top: 8,
                   bottom: 8,
-                  right: 8),
+                  right: MediaQuery.of(context).size.width / 3.5),
           padding: EdgeInsets.all(20),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(23),
             color: widget.sendByMe
-                ? const Color(0x1AFFFFFF)
-                : const Color(0xff007EF4),
+                //true
+                ? Color(0xff007EF4)
+                //false
+                : Colors.red,
           ),
           child: Text(widget.message,
               textAlign: TextAlign.start,
