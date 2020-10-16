@@ -37,6 +37,29 @@ class DatabaseService {
     });
   }
 
+  Future<void> sendMessageData(String email, Map chatMessage) async {
+    await FirebaseFirestore.instance
+        .collection("messages")
+        .doc(email)
+        .set(chatMessage)
+        .catchError((e) {
+      //    print(e);
+    });
+
+    await FirebaseFirestore.instance
+        .collection("messages")
+        .doc(email)
+        .collection("awnser")
+        .doc("awnser_" + email)
+        .set({
+      'awnser': null,
+      'timestamp': null,
+      'user_id': null,
+    }).catchError((e) {
+      //  print(e);
+    });
+  }
+
   getUserInfo(String email) async {
     String userName;
 
