@@ -41,6 +41,8 @@ class DatabaseService {
     await FirebaseFirestore.instance
         .collection("messages")
         .doc(email)
+        .collection("user_message")
+        .doc()
         .set(chatMessage)
         .catchError((e) {
       //    print(e);

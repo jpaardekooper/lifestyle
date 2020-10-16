@@ -17,7 +17,7 @@ class _FadeInTransitionState extends State<FadeInTransition>
   void initState() {
     _controller = AnimationController(
       vsync: this,
-      duration: Duration(milliseconds: 500),
+      duration: Duration(milliseconds: 800),
     );
     _animation = Tween(
       begin: 0.0,

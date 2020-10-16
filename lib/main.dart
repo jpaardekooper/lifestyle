@@ -2,12 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:lifestylescreening/views/home.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:lifestylescreening/widgets/disclaimer/disclaimer_popup.dart';
+import 'package:intl/date_symbol_data_local.dart';
 
 import 'helper/functions.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
+  await initializeDateFormatting();
   runApp(MyApp());
 }
 
