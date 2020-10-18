@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:lifestylescreening/helper/functions.dart';
-import 'package:lifestylescreening/models/firebase_user.dart';
 import 'package:lifestylescreening/services/auth.dart';
 import 'package:lifestylescreening/services/database.dart';
 import 'package:lifestylescreening/widgets/buttons/background_dark_button.dart';
@@ -8,8 +7,6 @@ import 'package:lifestylescreening/widgets/buttons/background_white_button.dart'
 import 'package:lifestylescreening/widgets/login/login_visual.dart';
 import 'package:lifestylescreening/widgets/logo/lifestyle_logo.dart';
 import 'package:lifestylescreening/widgets/widgets.dart';
-
-import 'home.dart';
 
 class SignUp extends StatefulWidget {
   @override

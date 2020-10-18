@@ -1,15 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:lifestylescreening/helper/functions.dart';
-import 'package:lifestylescreening/helper/user_repository.dart';
 import 'package:lifestylescreening/widgets/login/login_visual.dart';
 import 'package:lifestylescreening/widgets/logo/lifestyle_logo.dart';
 import 'package:lifestylescreening/widgets/widgets.dart';
 import 'package:lifestylescreening/services/auth.dart';
-import 'package:provider/provider.dart';
-
-import 'home.dart';
 
 class SignIn extends StatefulWidget {
   @override
@@ -200,11 +195,6 @@ class _SignInState extends State<SignIn> {
       setState(() {
         _isLoading = true;
       });
-
-      // if (!await user.signIn(_emailController.text, _passwordController.text))
-      // _key.currentState.showSnackBar(SnackBar(
-      //   content: Text("Something is wrong"),
-      //   ));
 
       dynamic result = await authService.signInWithEmailAndPassword(
           _emailController.text, _passwordController.text);

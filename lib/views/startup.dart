@@ -1,13 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:lifestylescreening/helper/user_repository.dart';
-import 'package:lifestylescreening/views/home.dart';
 import 'package:lifestylescreening/views/signin.dart';
 import 'package:lifestylescreening/views/signup.dart';
 import 'package:lifestylescreening/widgets/buttons/background_dark_button.dart';
 import 'package:lifestylescreening/widgets/buttons/background_white_button.dart';
-import 'package:lifestylescreening/widgets/login/login_visual.dart';
+
 import 'package:lifestylescreening/widgets/logo/lifestyle_logo.dart';
-import 'package:provider/provider.dart';
 
 class StartUp extends StatefulWidget {
   StartUp({Key key}) : super(key: key);

@@ -29,6 +29,7 @@ class _ChatTabState extends State<ChatTab> {
   @override
   void dispose() {
     messageController.dispose();
+
     super.dispose();
   }
 
@@ -59,14 +60,16 @@ class _ChatTabState extends State<ChatTab> {
                   .snapshots(),
               builder: (BuildContext context,
                   AsyncSnapshot<QuerySnapshot> snapshot) {
-                if (!snapshot.hasData) return Text("Type uw vraag");
+                if (!snapshot.hasData || snapshot.data.docs.isEmpty) {
+                  return welcomeChatMessage();
+                }
                 return FadeInTransition(
                   child: ListView(
                     children: getMessageData(snapshot),
                   ),
                 );
               })
-          : welcomeChatMessage(),
+          : Container(),
       bottomNavigationBar: BottomAppBar(
         child: Container(
           height: 45,
@@ -178,28 +181,6 @@ class _MessageTileState extends State<MessageTile> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        widget.sendByMe
-            //true
-            ? Container(
-                padding: EdgeInsets.only(right: 16),
-                child: Text(
-                  widget.dateTime,
-                  textAlign: TextAlign.end,
-                  style: TextStyle(
-                    fontSize: 10,
-                  ),
-                ))
-            //false
-            : Container(
-                padding: EdgeInsets.only(left: 16),
-                child: Text(
-                  widget.dateTime,
-                  textAlign: TextAlign.start,
-                  style: TextStyle(
-                    fontSize: 10,
-                  ),
-                ),
-              ),
         Container(
           margin: widget.sendByMe
               //true
@@ -231,6 +212,28 @@ class _MessageTileState extends State<MessageTile> {
                   fontFamily: 'OverpassRegular',
                   fontWeight: FontWeight.w300)),
         ),
+        widget.sendByMe
+            //true
+            ? Container(
+                padding: EdgeInsets.only(right: 16),
+                child: Text(
+                  widget.dateTime,
+                  textAlign: TextAlign.end,
+                  style: TextStyle(
+                    fontSize: 10,
+                  ),
+                ))
+            //false
+            : Container(
+                padding: EdgeInsets.only(left: 16),
+                child: Text(
+                  widget.dateTime,
+                  textAlign: TextAlign.start,
+                  style: TextStyle(
+                    fontSize: 10,
+                  ),
+                ),
+              ),
       ],
     );
   }
