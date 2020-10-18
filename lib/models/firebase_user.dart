@@ -1,4 +1,5 @@
 class AppUser {
-  AppUser({this.uid});
+  AppUser({this.uid, this.role});
   String uid;
+  String role;
 }

@@ -1,16 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:lifestylescreening/views/home.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:lifestylescreening/widgets/disclaimer/disclaimer_popup.dart';
+import 'package:lifestylescreening/views/disclaimer_screen.dart';
 import 'package:intl/date_symbol_data_local.dart';
+import 'package:lifestylescreening/views/startup.dart';
 
 import 'helper/functions.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp();
-  await initializeDateFormatting();
-  runApp(MyApp());
+  await Firebase.initializeApp()
+      .then((value) => initializeDateFormatting().then(
+            (value) => runApp(
+              MyApp(),
+            ),
+          ));
 }
 
 class MyApp extends StatefulWidget {
@@ -20,11 +24,13 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
+  bool _disclaimerAccepted = false;
   bool _isLoggedin = false;
 
   @override
   void initState() {
     checkUserLoggedInStatus();
+    checkDisclaimerStatus();
     super.initState();
   }
 
@@ -32,6 +38,14 @@ class _MyAppState extends State<MyApp> {
     await HelperFunctions.getUserLoggedInSharedPreference().then((value) {
       setState(() {
         _isLoggedin = value;
+      });
+    });
+  }
+
+  Future checkDisclaimerStatus() async {
+    await HelperFunctions.getDisclaimerSharedPreference().then((value) {
+      setState(() {
+        _disclaimerAccepted = value;
       });
     });
   }
@@ -47,7 +61,12 @@ class _MyAppState extends State<MyApp> {
           primaryColor: Colors.lightBlue[800],
           accentColor: Colors.cyan[600],
           iconTheme: IconThemeData(color: Colors.black)),
-      home: (_isLoggedin ?? false) ? Home() : DisclaimerPopup(),
+      home: (_disclaimerAccepted ?? false)
+          ? (_isLoggedin ?? false)
+              ? Home()
+              : StartUp()
+          : DisclaimerScreen(),
+      // home: DisclaimerScreen(),
     );
   }
 }

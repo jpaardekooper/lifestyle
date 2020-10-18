@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:lifestylescreening/helper/functions.dart';
+import 'package:lifestylescreening/models/firebase_user.dart';
 import 'package:lifestylescreening/services/auth.dart';
 import 'package:lifestylescreening/services/database.dart';
 import 'package:lifestylescreening/widgets/buttons/background_dark_button.dart';
@@ -38,126 +39,136 @@ class _SignUpState extends State<SignUp> {
     // Scaffold is used to utilize all the material widgets
     return Scaffold(
       // resizeToAvoidBottomInset: false,
-      body: _isLoading
-          ? LoginVisual()
-          : Form(
-              key: _formKey,
-              child: Container(
+      backgroundColor: Color.fromRGBO(255, 129, 128, 1),
+      body: Form(
+        key: _formKey,
+        child: Container(
+          //    width: MediaQuery.of(context).size.width,
+          padding: EdgeInsets.symmetric(horizontal: 40),
+          child: ListView(
+            children: [
+              SizedBox(
+                height: 16,
+              ),
+              Center(child: LifestyleLogo(size: 50)),
+              SizedBox(
+                height: 6,
+              ),
+              Center(
+                child: Text(
+                  "Meld je aan voor een nieuw account",
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 16,
+                  ),
+                ),
+              ),
+              SizedBox(
+                height: 16,
+              ),
+              Container(
                 width: MediaQuery.of(context).size.width,
-                padding: EdgeInsets.symmetric(horizontal: 25),
-                color: Color.fromRGBO(255, 129, 128, 1),
-                child: ListView(
-                  children: [
-                    SizedBox(
-                      height: 16,
-                    ),
-                    Center(child: LifestyleLogo(size: 50)),
-                    SizedBox(
-                      height: 6,
-                    ),
-                    Center(
-                      child: Text(
-                        "Meld je aan voor een nieuw account",
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 16,
-                        ),
-                      ),
-                    ),
-                    SizedBox(
-                      height: 16,
-                    ),
-                    Container(
-                      width: MediaQuery.of(context).size.width,
-                      padding: EdgeInsets.only(bottom: 10, top: 10, left: 5),
-                      child: Text(
-                        "Gebruikersnaam: ",
-                        textAlign: TextAlign.left,
-                        style: TextStyle(color: Colors.white, fontSize: 14),
-                      ),
-                    ),
-                    TextFormField(
-                      controller: _usernameController,
-                      keyboardType: TextInputType.visiblePassword,
-                      //return value if theres an value otherwise reutrn error
-                      // mssge
-                      validator: (val) {
-                        return val.isEmpty ? "Enter gebruikersnaam" : null;
-                      },
-                      decoration: inputDecoration(context),
-                    ),
-                    Spacer(),
-                    //email
-                    Container(
-                      width: MediaQuery.of(context).size.width,
-                      padding: EdgeInsets.only(bottom: 10, top: 10, left: 5),
-                      child: Text(
-                        "Vul hier uw e-mail adres in: ",
-                        textAlign: TextAlign.left,
-                        style: TextStyle(color: Colors.white, fontSize: 14),
-                      ),
-                    ),
-                    TextFormField(
-                      controller: _emailController,
-                      keyboardType: TextInputType.emailAddress,
-                      //return value if theres an value otherwise reutrn
-                      //error mssge
-                      validator: (val) =>
-                          validateEmail(val) ? null : "Enter correct email",
-                      decoration: inputDecoration(context),
-                    ),
-                    Spacer(),
-                    //pass
-                    Container(
-                      width: MediaQuery.of(context).size.width,
-                      padding: EdgeInsets.only(bottom: 10, top: 10, left: 5),
-                      child: Text(
-                        "Vul hier uw wachtwoord in: ",
-                        textAlign: TextAlign.left,
-                        style: TextStyle(color: Colors.white, fontSize: 14),
-                      ),
-                    ),
-                    //Password
-                    TextFormField(
-                      obscureText: true,
-                      controller: _passwordController,
-                      keyboardType: TextInputType.visiblePassword,
-                      //return value if theres an value otherwise reutrn
-                      // error mssge
-                      validator: (val) {
-                        return val.isEmpty ? "Enter correct password" : null;
-                      },
-                      decoration: inputDecoration(context),
-                    ),
-                    Spacer(),
-                    Container(
-                      width: MediaQuery.of(context).size.width,
-                      padding: EdgeInsets.only(bottom: 10, top: 10, left: 5),
-                      child: Text(
-                        "Vul hier uw wachtwoord in opnieuw in: ",
-                        textAlign: TextAlign.left,
-                        style: TextStyle(color: Colors.white, fontSize: 14),
-                      ),
-                    ),
-                    //Password
-                    TextFormField(
-                      obscureText: true,
-                      controller: _passwordChecker,
-                      keyboardType: TextInputType.visiblePassword,
-                      //return value if theres an value otherwise reutrn
-                      //error mssge
-                      validator: (val) {
-                        return val != _passwordController.text
-                            ? "Password komt niet overeen"
-                            : null;
-                      },
-                      decoration: inputDecoration(context),
-                    ),
-                    SizedBox(
-                      height: 30,
-                    ),
-                    // inloggen
-                    Align(
+                padding: EdgeInsets.only(bottom: 10, top: 10, left: 5),
+                child: Text(
+                  "Gebruikersnaam: ",
+                  textAlign: TextAlign.left,
+                  style: TextStyle(color: Colors.white, fontSize: 14),
+                ),
+              ),
+              TextFormField(
+                textInputAction: TextInputAction.next,
+                controller: _usernameController,
+                keyboardType: TextInputType.visiblePassword,
+                //return value if theres an value otherwise reutrn error
+                // mssge
+                validator: (val) {
+                  return val.isEmpty ? "Enter gebruikersnaam" : null;
+                },
+                decoration: inputDecoration(context),
+              ),
+              SizedBox(
+                height: 16,
+              ),
+              //email
+              Container(
+                width: MediaQuery.of(context).size.width,
+                padding: EdgeInsets.only(bottom: 10, top: 10, left: 5),
+                child: Text(
+                  "Vul hier uw e-mail adres in: ",
+                  textAlign: TextAlign.left,
+                  style: TextStyle(color: Colors.white, fontSize: 14),
+                ),
+              ),
+              TextFormField(
+                textInputAction: TextInputAction.next,
+                controller: _emailController,
+                keyboardType: TextInputType.emailAddress,
+                //return value if theres an value otherwise reutrn
+                //error mssge
+                validator: (val) =>
+                    validateEmail(val) ? null : "Enter correct email",
+                decoration: inputDecoration(context),
+              ),
+              SizedBox(
+                height: 16,
+              ),
+              //pass
+              Container(
+                width: MediaQuery.of(context).size.width,
+                padding: EdgeInsets.only(bottom: 10, top: 10, left: 5),
+                child: Text(
+                  "Vul hier uw wachtwoord in: ",
+                  textAlign: TextAlign.left,
+                  style: TextStyle(color: Colors.white, fontSize: 14),
+                ),
+              ),
+              //Password
+              TextFormField(
+                textInputAction: TextInputAction.next,
+                obscureText: true,
+                controller: _passwordController,
+                keyboardType: TextInputType.visiblePassword,
+                //return value if theres an value otherwise reutrn
+                // error mssge
+                validator: (val) {
+                  return val.isEmpty ? "Enter correct password" : null;
+                },
+                decoration: inputDecoration(context),
+              ),
+              SizedBox(
+                height: 16,
+              ),
+              Container(
+                width: MediaQuery.of(context).size.width,
+                padding: EdgeInsets.only(bottom: 10, top: 10, left: 5),
+                child: Text(
+                  "Vul hier uw wachtwoord in opnieuw in: ",
+                  textAlign: TextAlign.left,
+                  style: TextStyle(color: Colors.white, fontSize: 14),
+                ),
+              ),
+              //Password
+              TextFormField(
+                textInputAction: TextInputAction.done,
+                obscureText: true,
+                controller: _passwordChecker,
+                keyboardType: TextInputType.visiblePassword,
+                //return value if theres an value otherwise reutrn
+                //error mssge
+                validator: (val) {
+                  return val != _passwordController.text
+                      ? "Password komt niet overeen"
+                      : null;
+                },
+                decoration: inputDecoration(context),
+              ),
+              SizedBox(
+                height: 30,
+              ),
+              // inloggen
+              _isLoading
+                  ? Center(child: CircularProgressIndicator())
+                  : Align(
                       child: SizedBox(
                         width: MediaQuery.of(context).size.width / 2.5,
                         child: Material(
@@ -174,32 +185,31 @@ class _SignUpState extends State<SignUp> {
                       ),
                     ),
 
-                    SizedBox(
-                      height: 16,
+              SizedBox(
+                height: 16,
+              ),
+              // terug
+              Align(
+                child: SizedBox(
+                  width: MediaQuery.of(context).size.width / 2.5,
+                  child: Material(
+                    color: Color.fromRGBO(255, 129, 128, 1),
+                    borderRadius: BorderRadius.circular(40),
+                    child: InkWell(
+                      splashColor: Colors.white,
+                      borderRadius: BorderRadius.circular(40.0),
+                      child: BackgroundWhiteButton(text: "Terug", size: 18),
+                      onTap: () {
+                        Navigator.pop(context);
+                      },
                     ),
-                    // terug
-                    Align(
-                      child: SizedBox(
-                        width: MediaQuery.of(context).size.width / 2.5,
-                        child: Material(
-                          color: Color.fromRGBO(255, 129, 128, 1),
-                          borderRadius: BorderRadius.circular(40),
-                          child: InkWell(
-                            splashColor: Colors.white,
-                            borderRadius: BorderRadius.circular(40.0),
-                            child:
-                                BackgroundWhiteButton(text: "Terug", size: 18),
-                            onTap: () {
-                              Navigator.pop(context);
-                            },
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
+                  ),
                 ),
               ),
-            ),
+            ],
+          ),
+        ),
+      ),
     );
   }
 
@@ -217,24 +227,31 @@ class _SignUpState extends State<SignUp> {
           Map<String, String> userInfo = {
             "userName": _usernameController.text,
             "email": _emailController.text,
+            "role": "user",
           };
-          DatabaseService().addUserData(userInfo).then((result) {});
+          DatabaseService().addUserData(userInfo).then((result) {
+            HelperFunctions.saveUserLoggedInSharedPreference(true);
+            HelperFunctions.saveUserNameSharedPreference(
+                _usernameController.text);
+            //   print("${_usernameController.text} username saved");
 
-          HelperFunctions.saveUserLoggedInSharedPreference(true);
-          HelperFunctions.saveUserNameSharedPreference(
-              _usernameController.text);
-          //   print("${_usernameController.text} username saved");
+            HelperFunctions.saveUserEmailSharedPreference(
+                _emailController.text);
 
-          HelperFunctions.saveUserEmailSharedPreference(_emailController.text);
-          //   print("${_emailController.text} user email saved");
+            HelperFunctions.saveUserPasswordSharedPreference(
+                _passwordController.text);
 
-          setState(() {
-            _isLoading = false;
+            Navigator.pushReplacement(context,
+                MaterialPageRoute(builder: (context) => LoginVisual("user")));
           });
-          HelperFunctions.saveUserLoggedInSharedPreference(true);
-          Navigator.pushReplacement(
-              context, MaterialPageRoute(builder: (context) => Home()));
+
+          // HelperFunctions.saveUserLoggedInSharedPreference(true);
+
         }
+      });
+    } else {
+      setState(() {
+        _isLoading = false;
       });
     }
   }
