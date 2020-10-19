@@ -4,9 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:lifestylescreening/widgets/cards/nutritional_value.dart';
 
 class CardDetails extends StatefulWidget {
-  CardDetails({this.name, this.id});
+  CardDetails({this.name, this.id, this.url});
   final String name;
   final String id;
+  final String url;
 
   @override
   _CardDetailsState createState() => _CardDetailsState();
@@ -19,13 +20,36 @@ class _CardDetailsState extends State<CardDetails> {
       body: CustomScrollView(
         slivers: <Widget>[
           SliverAppBar(
+            centerTitle: true,
+            title: Container(
+              padding: EdgeInsets.all(12),
+              child: Text(widget.name),
+              decoration: BoxDecoration(
+                color: Colors.white24,
+                borderRadius: BorderRadius.circular(30),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.grey.withOpacity(0.5),
+                    spreadRadius: 1,
+                    blurRadius: 5,
+                  ),
+                ],
+              ),
+            ),
+            shape: ContinuousRectangleBorder(
+                borderRadius: BorderRadius.only(
+                    bottomLeft: Radius.circular(30),
+                    bottomRight: Radius.circular(30))),
             floating: false,
             pinned: true,
             snap: false,
             expandedHeight: 200.0,
-            flexibleSpace: FlexibleSpaceBar(
-              title: Text(widget.name),
-            ),
+            flexibleSpace: Hero(
+                tag: "url",
+                child: Image.network(
+                  widget.url,
+                  fit: BoxFit.fitWidth,
+                )),
             actions: <Widget>[
               IconButton(
                 icon: const Icon(Icons.add_circle),
@@ -56,6 +80,7 @@ class _CardDetailsState extends State<CardDetails> {
                       .collection("recipes")
                       .doc(widget.id)
                       .collection("method")
+                      .orderBy("step", descending: false)
                       .snapshots(),
                   builder: (BuildContext context,
                       AsyncSnapshot<QuerySnapshot> snapshot) {

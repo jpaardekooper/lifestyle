@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:lifestylescreening/helper/functions.dart';
 import 'package:lifestylescreening/views/admin/chat_tab_admin.dart';
+import 'package:lifestylescreening/views/startup.dart';
 import 'package:lifestylescreening/widgets/transitions/fade_transition.dart';
 
 import '../chat_tab.dart';
@@ -38,6 +39,23 @@ class _DashboardState extends State<Dashboard> {
       // backgroundColor: Colors.blue,
       appBar: AppBar(
         title: Text("DASHBOARD"),
+        actions: <Widget>[
+          Padding(
+              padding: EdgeInsets.only(right: 20.0),
+              child: GestureDetector(
+                onTap: () async {
+                  // await auth.signOut();
+                  await HelperFunctions.saveUserLoggedInSharedPreference(false);
+
+                  await Navigator.pushReplacement(context,
+                      MaterialPageRoute(builder: (context) => StartUp()));
+                },
+                child: Icon(
+                  Icons.exit_to_app,
+                  size: 26.0,
+                ),
+              )),
+        ],
       ),
       body: StreamBuilder<QuerySnapshot>(
           stream: FirebaseFirestore.instance

@@ -213,7 +213,7 @@ class _SignInState extends State<SignIn> {
             .then((querySnapshot) {
           querySnapshot.docs.forEach((result) async {
             userName = result.data()["userName"];
-            userRole = (result.data()["role"]);
+            userRole = result.data()["role"];
           });
         });
 

@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:lifestylescreening/widgets/cards/card_style.dart';
+import 'package:lifestylescreening/widgets/cards/recipe_style.dart';
 import 'package:lifestylescreening/widgets/transitions/fade_transition.dart';
 
 class RecipeTab extends StatefulWidget {
@@ -14,18 +14,39 @@ class RecipeTab extends StatefulWidget {
 class _RecipeTabState extends State<RecipeTab> {
   @override
   Widget build(BuildContext context) {
-    return StreamBuilder<QuerySnapshot>(
-        stream: FirebaseFirestore.instance.collection("recipes").snapshots(),
-        builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
-          if (!snapshot.hasData) return Text("There is no expense");
-          return FadeInTransition(
-              child: ListView(children: getExpenseItems(snapshot)));
-        });
+    return Scaffold(
+      // backgroundColor: Colors.grey,
+      appBar: AppBar(
+        centerTitle: true,
+        title: Text(
+          "Recepten",
+          style: TextStyle(color: Colors.blue),
+        ),
+        backgroundColor: Colors.white,
+        shape: ContinuousRectangleBorder(
+          borderRadius: BorderRadius.only(
+              bottomLeft: Radius.circular(30),
+              bottomRight: Radius.circular(30)),
+        ),
+      ),
+      body: StreamBuilder<QuerySnapshot>(
+          stream: FirebaseFirestore.instance.collection("recipes").snapshots(),
+          builder:
+              (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+            if (!snapshot.hasData) return Text("There is no expense");
+            return FadeInTransition(
+                child: ListView(children: getExpenseItems(snapshot)));
+          }),
+    );
   }
 
   getExpenseItems(AsyncSnapshot<QuerySnapshot> snapshot) {
     return snapshot.data.docs
-        .map((doc) => CardStyle(name: doc['title'], id: doc.id))
+        .map((doc) => RecipeStyle(
+              name: doc['title'],
+              id: doc.id,
+              url: doc['url'],
+            ))
         .toList();
   }
 
