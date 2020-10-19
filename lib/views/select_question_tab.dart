@@ -2,19 +2,17 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:lifestylescreening/helper/functions.dart';
-import 'package:lifestylescreening/views/admin/chat_tab_admin.dart';
+import 'package:lifestylescreening/views/chat_tab.dart';
 import 'package:lifestylescreening/widgets/transitions/fade_transition.dart';
 
-import '../chat_tab.dart';
-
-class Dashboard extends StatefulWidget {
-  Dashboard({Key key}) : super(key: key);
+class SelectQuestionTab extends StatefulWidget {
+  SelectQuestionTab({Key key}) : super(key: key);
 
   @override
-  _DashboardState createState() => _DashboardState();
+  _SelectQuestionTabState createState() => _SelectQuestionTabState();
 }
 
-class _DashboardState extends State<Dashboard> {
+class _SelectQuestionTabState extends State<SelectQuestionTab> {
   String userEmail;
 
   @override
@@ -33,16 +31,14 @@ class _DashboardState extends State<Dashboard> {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-        child: Scaffold(
-      // backgroundColor: Colors.blue,
+    return Scaffold(
       appBar: AppBar(
-        title: Text("DASHBOARD"),
+        title: Text("Stel gerust een vraag"),
       ),
       body: StreamBuilder<QuerySnapshot>(
           stream: FirebaseFirestore.instance
-              .collection("messages")
-              .orderBy('category', descending: false)
+              .collection("categories")
+              .orderBy('order', descending: false)
               .snapshots(),
           builder:
               (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
@@ -50,26 +46,30 @@ class _DashboardState extends State<Dashboard> {
             return FadeInTransition(
                 child: ListView(children: getExpenseItems(snapshot)));
           }),
-    ));
+    );
   }
 
   getExpenseItems(AsyncSnapshot<QuerySnapshot> snapshot) {
     return snapshot.data.docs
-        .map((doc) => MessageOverView(
-            category: doc['category'],
-            email: userEmail,
-            sender: false,
-            id: doc.id))
+        .map((doc) => CategoryOptions(
+              category: doc['category'],
+              email: userEmail,
+              sender: true,
+            ))
         .toList();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
   }
 }
 
-class MessageOverView extends StatelessWidget {
-  MessageOverView({this.category, this.email, this.sender, this.id});
+class CategoryOptions extends StatelessWidget {
+  CategoryOptions({this.category, this.email, this.sender});
   final String category;
   final String email;
   final bool sender;
-  final String id;
 
   @override
   Widget build(BuildContext context) {
@@ -88,22 +88,21 @@ class MessageOverView extends StatelessWidget {
         ],
       ),
       child: GestureDetector(
-        onTap: () {
+        onTap: () => {
           Navigator.push(
             context,
             MaterialPageRoute(
               builder: (context) =>
-                  ChatTabAdmin(email: email, sender: sender, id: id),
+                  ChatTab(email: email, category: category, sender: sender),
             ),
-          );
+          ),
         },
         child: ListTile(
           leading: Icon(
             Icons.question_answer,
             color: Colors.white,
           ),
-          title: Text(id),
-          subtitle: Text(category),
+          title: Text(category),
           trailing: Material(
             color: Color(0xff007EF4),
             child: SizedBox(

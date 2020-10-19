@@ -37,10 +37,11 @@ class DatabaseService {
     });
   }
 
-  Future<void> sendMessageData(String email, Map chatMessage) async {
+  Future<void> sendMessageData(
+      String email, Map chatMessage, String category) async {
     await FirebaseFirestore.instance
         .collection("messages")
-        .doc(email)
+        .doc(email + "_" + category)
         .collection("user_message")
         .doc()
         .set(chatMessage)
@@ -50,15 +51,22 @@ class DatabaseService {
 
     await FirebaseFirestore.instance
         .collection("messages")
-        .doc(email)
-        .collection("awnser")
-        .doc("awnser_" + email)
+        .doc(email + "_" + category)
         .set({
-      'awnser': null,
-      'timestamp': null,
-      'user_id': null,
-    }).catchError((e) {
-      //  print(e);
+      'open': true,
+      'category': category,
+    }).catchError((e) {});
+  }
+
+  Future<void> sendMessageDataAsAdmin(String id, Map chatMessage) async {
+    await FirebaseFirestore.instance
+        .collection("messages")
+        .doc(id)
+        .collection("user_message")
+        .doc()
+        .set(chatMessage)
+        .catchError((e) {
+      //    print(e);
     });
   }
 

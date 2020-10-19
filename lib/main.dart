@@ -7,14 +7,13 @@ import 'package:lifestylescreening/views/startup.dart';
 
 import 'helper/functions.dart';
 
-Future<void> main() async {
+void main() {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp()
-      .then((value) => initializeDateFormatting().then(
-            (value) => runApp(
-              MyApp(),
-            ),
-          ));
+  Firebase.initializeApp().then((value) => initializeDateFormatting().then(
+        (value) => runApp(
+          MyApp(),
+        ),
+      ));
 }
 
 class MyApp extends StatefulWidget {

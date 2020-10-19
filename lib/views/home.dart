@@ -1,8 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:lifestylescreening/views/chat_tab.dart';
 import 'package:lifestylescreening/views/quiz/quiz_screen.dart';
 import 'package:lifestylescreening/views/recipe_tab.dart';
+import 'package:lifestylescreening/views/select_question_tab.dart';
 import 'package:lifestylescreening/widgets/logo/bottom_navigation_logo.dart';
 
 import 'diary_tab.dart';
@@ -24,7 +24,7 @@ class _HomeState extends State<Home> {
       'Index 1: Business',
       style: optionStyle,
     ),
-    ChatTab(),
+    SelectQuestionTab(),
     RecipeTab(),
     QuizScreen(),
   ];

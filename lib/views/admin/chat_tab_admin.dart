@@ -4,18 +4,18 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:lifestylescreening/services/database.dart';
 import 'package:lifestylescreening/widgets/transitions/fade_transition.dart';
 
-class ChatTab extends StatefulWidget {
-  ChatTab({@required this.email, @required this.category, this.sender});
+class ChatTabAdmin extends StatefulWidget {
+  ChatTabAdmin({@required this.email, this.sender, this.id});
 
   final String email;
-  final String category;
   final bool sender;
+  final String id;
 
   @override
-  _ChatTabState createState() => _ChatTabState();
+  _ChatTabAdminState createState() => _ChatTabAdminState();
 }
 
-class _ChatTabState extends State<ChatTab> {
+class _ChatTabAdminState extends State<ChatTabAdmin> {
   TextEditingController messageController = TextEditingController();
 
   // String userEmail = "";
@@ -51,7 +51,7 @@ class _ChatTabState extends State<ChatTab> {
     return Scaffold(
       key: _scaffoldKey,
       appBar: AppBar(
-        title: Text(widget.category),
+        title: Text(widget.id),
         backgroundColor: Colors.red,
       ),
       body: Column(
@@ -61,7 +61,7 @@ class _ChatTabState extends State<ChatTab> {
             child: StreamBuilder<QuerySnapshot>(
               stream: FirebaseFirestore.instance
                   .collection("messages")
-                  .doc(widget.email + "_" + widget.category)
+                  .doc(widget.id)
                   .collection("user_message")
                   .orderBy('timestamp', descending: false)
                   .snapshots(),
@@ -74,6 +74,7 @@ class _ChatTabState extends State<ChatTab> {
                   return welcomeChatMessage();
                 }
                 return ListView.builder(
+                  addAutomaticKeepAlives: true,
                   reverse: false,
                   padding: EdgeInsets.all(20),
                   itemCount: snapshot.data.docs.length,
@@ -157,12 +158,11 @@ class _ChatTabState extends State<ChatTab> {
     if (messageController.text.isNotEmpty) {
       Map<String, dynamic> chatMessage = {
         'description': messageController.text ?? "",
-        'sender': true,
+        'sender': widget.id == widget.email,
         'timestamp': DateTime.now(),
       };
 
-      DatabaseService()
-          .sendMessageData(widget.email, chatMessage, widget.category);
+      DatabaseService().sendMessageDataAsAdmin(widget.id, chatMessage);
 
       setState(() {
         messageController.clear();
@@ -211,7 +211,7 @@ class _MessageTileState extends State<MessageTile> {
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         Container(
-          margin: widget.sendByMe
+          margin: !widget.sendByMe
               //true
               ? EdgeInsets.only(
                   left: MediaQuery.of(context).size.width / 3.5,
@@ -226,7 +226,8 @@ class _MessageTileState extends State<MessageTile> {
                   right: MediaQuery.of(context).size.width / 3.5),
           padding: EdgeInsets.all(10),
           decoration: BoxDecoration(
-            color: widget.sendByMe
+            //change color to match the same as the sender
+            color: !widget.sendByMe
                 //true
                 ? Color(0xff007EF4)
                 //false

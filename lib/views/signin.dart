@@ -224,7 +224,7 @@ class _SignInState extends State<SignIn> {
         await HelperFunctions.saveUserNameSharedPreference(userName);
         await HelperFunctions.saveUserEmailSharedPreference(
             _emailController.text);
-        await HelperFunctions.saveUserEmailSharedPreference(
+        await HelperFunctions.saveUserPasswordSharedPreference(
             _passwordController.text);
         await Navigator.pushReplacement(context,
             MaterialPageRoute(builder: (context) => LoginVisual(userRole)));
