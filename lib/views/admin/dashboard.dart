@@ -6,8 +6,6 @@ import 'package:lifestylescreening/views/admin/chat_tab_admin.dart';
 import 'package:lifestylescreening/views/startup.dart';
 import 'package:lifestylescreening/widgets/transitions/fade_transition.dart';
 
-import '../chat_tab.dart';
-
 class Dashboard extends StatefulWidget {
   Dashboard({Key key}) : super(key: key);
 
