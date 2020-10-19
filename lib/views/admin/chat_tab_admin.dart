@@ -249,7 +249,7 @@ class _MessageTileState extends State<MessageTile> {
                   fontFamily: 'OverpassRegular',
                   fontWeight: FontWeight.w300)),
         ),
-        widget.sendByMe
+        !widget.sendByMe
             //true
             ? Container(
                 padding: EdgeInsets.only(right: 16),
