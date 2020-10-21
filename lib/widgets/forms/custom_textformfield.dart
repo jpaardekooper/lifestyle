@@ -20,8 +20,8 @@ class CustomTextFormField extends StatelessWidget {
   inputDecoration() {
     return InputDecoration(
       filled: true,
-      isDense: true,
-      contentPadding: EdgeInsets.all(10),
+      //  isDense: true,
+      contentPadding: EdgeInsets.all(12),
       fillColor: Colors.white,
       focusedBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(12.0),

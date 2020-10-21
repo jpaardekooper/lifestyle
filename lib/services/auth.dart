@@ -3,6 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:lifestylescreening/helper/functions.dart';
 import 'package:lifestylescreening/models/firebase_user.dart';
+import 'package:lifestylescreening/services/database.dart';
 
 class AuthService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -28,7 +29,6 @@ class AuthService {
       //   print('Failed with error code: ${e.code}');
       errorMessage = e.code;
       return null;
-      //   print(e.message);
       // ignore: avoid_catches_without_on_clauses
     } catch (error) {
       switch (error.code) {
@@ -60,13 +60,29 @@ class AuthService {
     }
   }
 
-  Future signUpWithEmailAndPassword(String email, String password) async {
+  Future signUpWithEmailAndPassword(
+      String email, String username, String password) async {
     String errorMessage;
     try {
-      UserCredential authResult = await _auth.createUserWithEmailAndPassword(
+      await _auth.createUserWithEmailAndPassword(
           email: email, password: password);
-      User firebaseUser = authResult.user;
-      return _userFromFirebaseUser(firebaseUser);
+      //User firebaseUser = authResult.user;
+
+      Map<String, String> userInfo = {
+        "userName": username,
+        "email": email,
+        "role": "user",
+      };
+
+      /// uploading user info to Firestore
+      await DatabaseService().addUserData(userInfo).then((result) async {
+        //storing user data in sharedpref
+        await HelperFunctions.saveUserNameSharedPreference(username);
+        await HelperFunctions.saveUserEmailSharedPreference(email);
+        await HelperFunctions.saveUserPasswordSharedPreference(password);
+      });
+      return true;
+
       // ignore: avoid_catches_without_on_clauses
     } catch (error) {
       switch (error.code) {
@@ -88,13 +104,18 @@ class AuthService {
         case "ERROR_OPERATION_NOT_ALLOWED":
           errorMessage = "Signing in with Email and Password is not enabled.";
           break;
+        case "email-already-in-use":
+          errorMessage = "Mail adres bestaat al";
+          break;
+
         default:
           errorMessage = "An undefined Error happened.";
       }
     }
 
     if (errorMessage != null) {
-      return Future.error(errorMessage);
+      return false;
+      //  return errorMessage;
     }
   }
 
@@ -120,18 +141,8 @@ class AuthService {
         (querySnapshot) {
           querySnapshot.docs.forEach(
             (result) {
-              //
-              //   userRole = result.data()["role"];
-              //  await appuser.role = result.data()["userName"];
-              //    await print(result.data()["role"]);
-              // appUser = result.data()["role"];
-              // print("een");
-              // await  print(result);
               username = result.data()["userName"];
               role = result.data()["role"];
-              // print(appuser.username);
-              // appuser.role = result.data()["role"];
-              // print(appuser.role);
             },
           );
         },
@@ -147,7 +158,7 @@ class AuthService {
       return role;
       // ignore: avoid_catches_without_on_clauses
     } catch (e) {
-//
+      return null;
     }
   }
 

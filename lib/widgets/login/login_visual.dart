@@ -10,7 +10,7 @@ class LoginVisual extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Future.delayed(const Duration(seconds: 1), () {
+    Future.delayed(const Duration(seconds: 2), () {
       if (role == "user") {
         Navigator.of(context).pushAndRemoveUntil(
             MaterialPageRoute(builder: (context) => Home()),
@@ -19,8 +19,6 @@ class LoginVisual extends StatelessWidget {
         Navigator.of(context).pushAndRemoveUntil(
             MaterialPageRoute(builder: (context) => Dashboard()),
             (Route<dynamic> route) => false);
-        // Navigator.pushReplacement(
-        //     context, MaterialPageRoute(builder: (context) => Dashboard()));
       }
     });
     return Container(
@@ -30,15 +28,8 @@ class LoginVisual extends StatelessWidget {
         mainAxisSize: MainAxisSize.max,
         children: [
           LifestyleLogo(
-            size: 20,
-          ),
-          Text(
-            "welkom",
-            style: TextStyle(
-                fontWeight: FontWeight.w500,
-                color: Colors.white,
-                fontSize: 50,
-                decoration: TextDecoration.none),
+            size: 24,
+            description: "Welkom",
           ),
           Container(
             color: Color.fromRGBO(255, 129, 128, 1),

@@ -49,7 +49,7 @@ class _SignInState extends State<SignIn> {
       body: Form(
         key: _formKey,
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 50),
+          padding: const EdgeInsets.symmetric(horizontal: 40),
           child: ListView(
             shrinkWrap: true,
             children: [
@@ -75,7 +75,7 @@ class _SignInState extends State<SignIn> {
                 secureText: false,
               ),
               SizedBox(
-                height: 16,
+                height: 32,
               ),
               Padding(
                 padding: const EdgeInsets.only(left: 8),
@@ -110,7 +110,7 @@ class _SignInState extends State<SignIn> {
                   ),
                 ],
               ),
-              SizedBox(height: MediaQuery.of(context).size.height / 12),
+              SizedBox(height: MediaQuery.of(context).size.height / 10),
               Container(
                 margin: const EdgeInsets.only(left: 60, right: 60),
                 child: _isLoading

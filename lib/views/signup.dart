@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:lifestylescreening/helper/functions.dart';
 import 'package:lifestylescreening/services/auth.dart';
-import 'package:lifestylescreening/services/database.dart';
 import 'package:lifestylescreening/widgets/buttons/button_background.dart';
 import 'package:lifestylescreening/widgets/forms/custom_textformfield.dart';
 import 'package:lifestylescreening/widgets/login/login_visual.dart';
@@ -21,6 +19,7 @@ class _SignUpState extends State<SignUp> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _passwordChecker = TextEditingController();
+  final _key = GlobalKey<ScaffoldState>();
   final AuthService authService = AuthService();
   final _formKey = GlobalKey<FormState>();
 
@@ -35,16 +34,67 @@ class _SignUpState extends State<SignUp> {
     super.dispose();
   }
 
+  void goBack() {
+    Navigator.pop(context);
+  }
+
+  void registerAccount() {
+    if (_formKey.currentState.validate()) {
+      setState(() {
+        _isLoading = true;
+      });
+      checkAccountDetails();
+    } else {
+      resetSignInPage();
+    }
+  }
+
+  checkAccountDetails() async {
+    dynamic login = await authService.signUpWithEmailAndPassword(
+      _emailController.text,
+      _usernameController.text,
+      _passwordController.text,
+    );
+    //   .then((value) {
+    if (login) {
+      /// mapping user data
+      await Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+          builder: (context) => LoginVisual("user"),
+        ),
+      );
+    } else {
+      resetSignInPage();
+    }
+  }
+
+  void resetSignInPage() {
+    setState(() {
+      _isLoading = false;
+
+      _key.currentState.showSnackBar(
+        SnackBar(
+          backgroundColor: black,
+          content: Text(
+            "Er is iets misgegaan",
+            style: TextStyle(color: Colors.red, fontSize: 14),
+          ),
+        ),
+      );
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     // Scaffold is used to utilize all the material widgets
     return Scaffold(
-      // resizeToAvoidBottomInset: false,
+      key: _key,
       backgroundColor: Color.fromRGBO(255, 129, 128, 1),
       body: Form(
         key: _formKey,
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 50),
+          padding: const EdgeInsets.symmetric(horizontal: 40),
           child: ListView(
             shrinkWrap: true,
             children: [
@@ -153,52 +203,5 @@ class _SignUpState extends State<SignUp> {
         ),
       ),
     );
-  }
-
-  void goBack() {
-    Navigator.pop(context);
-  }
-
-  void registerAccount() {
-    setState(() {
-      _isLoading = true;
-    });
-    if (_formKey.currentState.validate()) {
-      authService
-          .signUpWithEmailAndPassword(
-              _emailController.text, _passwordController.text)
-          .then((value) {
-        if (value != null) {
-          /// mapping user data
-          saveUserData();
-        }
-      });
-    } else {
-      setState(() {
-        _isLoading = false;
-      });
-    }
-  }
-
-  saveUserData() async {
-    Map<String, String> userInfo = {
-      "userName": _usernameController.text,
-      "email": _emailController.text,
-      "role": "user",
-    };
-
-    /// uploading user info to Firestore
-    await DatabaseService().addUserData(userInfo).then((result) async {
-      //storing user data in sharedpref
-      await HelperFunctions.saveUserNameSharedPreference(
-          _usernameController.text);
-      await HelperFunctions.saveUserEmailSharedPreference(
-          _emailController.text);
-      await HelperFunctions.saveUserPasswordSharedPreference(
-          _passwordController.text);
-
-      await Navigator.pushReplacement(context,
-          MaterialPageRoute(builder: (context) => LoginVisual("user")));
-    });
   }
 }

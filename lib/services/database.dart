@@ -89,21 +89,6 @@ class DatabaseService {
         return userName;
       });
     });
-
-    // var docRef = FirebaseFirestore.instance
-    //     .collection("users")
-    //     .where("email", isEqualTo: email)
-    //     .get()
-    //     .then((QuerySnapshot snapshot) {
-    //   snapshot.docs.forEach((f) => print('${f.data}}'));
-    // });
-
-    // FirebaseFirestore.instance
-    //       .collection("users")
-    //       .where("email", isEqualTo: email)
-    //       .get();
-    //   print(test);
-    // }
   }
 
   removeQuiz(String quizId, String userName) {
