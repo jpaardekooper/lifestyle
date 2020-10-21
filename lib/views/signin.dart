@@ -1,9 +1,9 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:lifestylescreening/helper/functions.dart';
+import 'package:lifestylescreening/widgets/buttons/button_background.dart';
+import 'package:lifestylescreening/widgets/forms/custom_textformfield.dart';
 import 'package:lifestylescreening/widgets/login/login_visual.dart';
 import 'package:lifestylescreening/widgets/logo/lifestyle_logo.dart';
-import 'package:lifestylescreening/widgets/widgets.dart';
+import 'package:lifestylescreening/widgets/text/white_text.dart';
 import 'package:lifestylescreening/services/auth.dart';
 
 class SignIn extends StatefulWidget {
@@ -12,117 +12,92 @@ class SignIn extends StatefulWidget {
 }
 
 class _SignInState extends State<SignIn> {
+  static const Color black = Color.fromRGBO(72, 72, 72, 1);
+  static const Color red = Color.fromRGBO(255, 129, 128, 1);
+
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
   final _key = GlobalKey<ScaffoldState>();
-  AuthService authService;
-  // DatabaseService _databaseMethods = DatabaseService();
-  bool _isLoading;
-  String test = "";
+  AuthService authService = AuthService();
+
+  bool _isLoading = false;
   String userName = "";
   bool rememberMe = false;
-
-  @override
-  void initState() {
-    authService = AuthService();
-    _isLoading = false;
-
-    super.initState();
-  }
+  String userRole;
 
   void _onRememberMeChanged(bool newValue) => setState(() {
         rememberMe = newValue;
       });
 
+  void goBack() {
+    Navigator.pop(context);
+  }
+
+  @override
+  void dispose() {
+    _emailController.dispose();
+    _passwordController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
-    //  final user = Provider.of<UserRepository>(context);
-    // Scaffold is used to utilize all the material widgets
     return Scaffold(
-      //resizeToAvoidBottomInset: false,
-
       key: _key,
-      backgroundColor: Color.fromRGBO(255, 129, 128, 1),
+      backgroundColor: const Color.fromRGBO(255, 129, 128, 1),
       body: Form(
         key: _formKey,
-        child: Container(
-          //    width: MediaQuery.of(context).size.width,
-          padding: EdgeInsets.symmetric(horizontal: 40),
-          //     color:
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 50),
           child: ListView(
+            shrinkWrap: true,
             children: [
-              SizedBox(
-                height: 50,
+              SizedBox(height: MediaQuery.of(context).size.height / 12),
+              LifestyleLogo(
+                size: 24,
+                description: "Log in met je account",
               ),
-              Center(child: LifestyleLogo(size: 50)),
-              Center(
-                child: Text(
-                  "Log in met je account",
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 24,
-                  ),
+              SizedBox(height: MediaQuery.of(context).size.height / 12),
+              Padding(
+                padding: const EdgeInsets.only(left: 8),
+                child: WhiteText(
+                  text: "Vul hier uw e-mail adres in: ",
+                  size: 14,
                 ),
               ),
-              SizedBox(
-                height: 32,
-              ),
-              //Email
-              Container(
-                width: MediaQuery.of(context).size.width,
-                padding: EdgeInsets.only(bottom: 10, top: 10, left: 5),
-                child: Text(
-                  "Vul hier uw e-mail adres in: ",
-                  textAlign: TextAlign.left,
-                  style: TextStyle(color: Colors.white, fontSize: 16),
-                ),
-              ),
-              TextFormField(
-                textInputAction: TextInputAction.next,
-                controller: _emailController,
+              // username
+              CustomTextFormField(
                 keyboardType: TextInputType.emailAddress,
-                //return value if theres an value otherwise
-                //return error mssge
-                validator: (val) =>
-                    validateEmail(val) ? null : "Enter correct email",
-                decoration: inputDecoration(context),
-                // onChanged: (val) {
-                //   email = val;
-                // },
+                textcontroller: _emailController,
+                errorMessage: "Geen geldige e-mail adres",
+                validator: 1,
+                secureText: false,
               ),
               SizedBox(
-                height: 6,
+                height: 16,
               ),
-              Container(
-                width: MediaQuery.of(context).size.width,
-                padding: EdgeInsets.only(bottom: 10, top: 10, left: 5),
-                child: Text(
-                  "Vul hier uw wachtwoord in: ",
-                  textAlign: TextAlign.left,
-                  style: TextStyle(color: Colors.white, fontSize: 16),
+              Padding(
+                padding: const EdgeInsets.only(left: 8),
+                child: WhiteText(
+                  text: "Vul hier uw wachtwoord in: ",
+                  size: 14,
                 ),
               ),
-
-              //Password
-              TextFormField(
-                obscureText: true,
-                controller: _passwordController,
+              // username
+              CustomTextFormField(
                 keyboardType: TextInputType.visiblePassword,
-                validator: (val) {
-                  return val.isEmpty ? "Enter correct password" : null;
-                },
-                decoration: inputDecoration(context),
-                // onChanged: (val) {
-                //   password = val;
-                // },
+                textcontroller: _passwordController,
+                errorMessage: "Geen geldige e-mail adres",
+                validator: 1,
+                secureText: true,
               ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
-                  Text(
-                    "Onthoudt mijn gegevens",
-                    style: TextStyle(color: Colors.white, fontSize: 14),
+                  WhiteText(
+                    text: "Onthoudt mijn gegevens",
+                    size: 14,
                   ),
                   Theme(
                     data: Theme.of(context).copyWith(
@@ -135,54 +110,35 @@ class _SignInState extends State<SignIn> {
                   ),
                 ],
               ),
-
+              SizedBox(height: MediaQuery.of(context).size.height / 12),
+              Container(
+                margin: const EdgeInsets.only(left: 60, right: 60),
+                child: _isLoading
+                    ? Center(
+                        child: CircularProgressIndicator(),
+                      )
+                    : ButtonBackground(
+                        text: 'Aanmelden',
+                        size: 18,
+                        onTap: signIn,
+                        colorbackground: black,
+                        dark: true,
+                      ),
+              ),
               SizedBox(
                 height: 16,
               ),
-              _isLoading
-                  ? Center(child: CircularProgressIndicator())
-                  : Align(
-                      child: SizedBox(
-                        width: MediaQuery.of(context).size.width / 2.5,
-                        child: Material(
-                          color: Color.fromRGBO(72, 72, 72, 1),
-                          borderRadius: BorderRadius.circular(40),
-                          child: InkWell(
-                              borderRadius: BorderRadius.circular(40.0),
-                              child: smallblackButton(context),
-                              onTap: () {
-                                signIn();
-                              }),
-                        ),
-                      ),
-                    ),
-
-              SizedBox(
-                height: 32,
-              ),
-              Align(
-                child: SizedBox(
-                  width: MediaQuery.of(context).size.width / 2.5,
-                  child: Material(
-                    color: Color.fromRGBO(255, 129, 128, 1),
-                    borderRadius: BorderRadius.circular(40),
-                    child: InkWell(
-                      splashColor: Colors.white,
-                      borderRadius: BorderRadius.circular(40.0),
-                      child: smallwhiteButton(context),
-                      onTap: () {
-                        Navigator.pop(context);
-                        // final user = Provider.of<UserRepository>(context);
-                        // await user.resetStatus();
-                      },
-                    ),
-                  ),
+              // terug
+              Container(
+                margin: const EdgeInsets.only(left: 60, right: 60),
+                child: ButtonBackground(
+                  text: 'Terug',
+                  size: 18,
+                  onTap: goBack,
+                  colorbackground: red,
+                  dark: false,
                 ),
               ),
-
-              // SizedBox(
-              //   height: 32,
-              // ),
             ],
           ),
         ),
@@ -195,67 +151,36 @@ class _SignInState extends State<SignIn> {
       setState(() {
         _isLoading = true;
       });
-
       dynamic result = await authService.signInWithEmailAndPassword(
           _emailController.text, _passwordController.text);
-
-      String userRole;
       if (result != null) {
-        // print("het resultaat is $result");
+        String henk = await authService.saveUserDetailsOnLogin(
+            _emailController.text, _passwordController.text, rememberMe);
 
-        // QuerySnapshot userInfoSnapshot =
-        //     _databaseMethods.getUserInfo(_emailController.text);
-
-        await FirebaseFirestore.instance
-            .collection("users")
-            .where("email", isEqualTo: _emailController.text)
-            .get()
-            .then((querySnapshot) {
-          querySnapshot.docs.forEach((result) async {
-            userName = result.data()["userName"];
-            userRole = result.data()["role"];
-          });
-        });
-
-        if (rememberMe) {
-          await HelperFunctions.saveUserLoggedInSharedPreference(true);
+        if (henk != null) {
+          await Navigator.pushReplacement(context,
+              MaterialPageRoute(builder: (context) => LoginVisual(henk)));
+        } else {
+          resetSignInPage();
         }
-
-        await HelperFunctions.saveUserNameSharedPreference(userName);
-        await HelperFunctions.saveUserEmailSharedPreference(
-            _emailController.text);
-        await HelperFunctions.saveUserPasswordSharedPreference(
-            _passwordController.text);
-        await Navigator.pushReplacement(context,
-            MaterialPageRoute(builder: (context) => LoginVisual(userRole)));
       } else {
-        setState(() {
-          _isLoading = false;
-          _key.currentState.showSnackBar(
-            SnackBar(
-              backgroundColor: Colors.white,
-              content: Text(
-                "Er is iets mis gegaan probeer het nog eens",
-                style: TextStyle(color: Colors.red, fontSize: 18),
-              ),
-            ),
-          );
-        });
+        resetSignInPage();
       }
     }
   }
 
-  bool validateEmail(String value) {
-    Pattern pattern =
-        r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
-    RegExp regex = RegExp(pattern);
-    return (!regex.hasMatch(value)) ? false : true;
-  }
-
-  @override
-  void dispose() {
-    _emailController.dispose();
-    _passwordController.dispose();
-    super.dispose();
+  void resetSignInPage() {
+    setState(() {
+      _isLoading = false;
+      _key.currentState.showSnackBar(
+        SnackBar(
+          backgroundColor: Colors.white,
+          content: Text(
+            "Er is iets mis gegaan probeer het nog eens",
+            style: TextStyle(color: Colors.red, fontSize: 18),
+          ),
+        ),
+      );
+    });
   }
 }

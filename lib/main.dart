@@ -55,17 +55,20 @@ class _MyAppState extends State<MyApp> {
       title: 'Lifestyle Screening',
       debugShowCheckedModeBanner: true,
       theme: ThemeData(
-          visualDensity: VisualDensity.adaptivePlatformDensity,
-          brightness: Brightness.light,
-          primaryColor: Colors.lightBlue[800],
-          accentColor: Colors.cyan[600],
-          iconTheme: IconThemeData(color: Colors.black)),
-      home: (_disclaimerAccepted ?? false)
-          ? (_isLoggedin ?? false)
-              ? Home()
-              : StartUp()
-          : DisclaimerScreen(),
-      // home: DisclaimerScreen(),
+        visualDensity: VisualDensity.adaptivePlatformDensity,
+        brightness: Brightness.light,
+        primaryColor: const Color(0xFF3b4254),
+        accentColor: const Color(0xFFddb461),
+        iconTheme: IconThemeData(color: Colors.white),
+      ),
+      home:
+          //if the vallue is null (not found) change value to false
+          (_disclaimerAccepted ?? false)
+              //if the vallue is null (not found) change value to false
+              ? (_isLoggedin ?? false)
+                  ? Home()
+                  : StartUp()
+              : DisclaimerScreen(),
     );
   }
 }

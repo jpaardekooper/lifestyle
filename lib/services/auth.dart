@@ -1,4 +1,7 @@
+import 'dart:core';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:lifestylescreening/helper/functions.dart';
 import 'package:lifestylescreening/models/firebase_user.dart';
 
 class AuthService {
@@ -102,6 +105,49 @@ class AuthService {
     } catch (e) {
       //  print(e.toString());
       return null;
+    }
+  }
+
+  saveUserDetailsOnLogin(String email, String password, bool rememberMe) async {
+    String role;
+    String username;
+    try {
+      await FirebaseFirestore.instance
+          .collection("users")
+          .where("email", isEqualTo: email)
+          .get()
+          .then(
+        (querySnapshot) {
+          querySnapshot.docs.forEach(
+            (result) {
+              //
+              //   userRole = result.data()["role"];
+              //  await appuser.role = result.data()["userName"];
+              //    await print(result.data()["role"]);
+              // appUser = result.data()["role"];
+              // print("een");
+              // await  print(result);
+              username = result.data()["userName"];
+              role = result.data()["role"];
+              // print(appuser.username);
+              // appuser.role = result.data()["role"];
+              // print(appuser.role);
+            },
+          );
+        },
+      );
+
+      if (rememberMe) {
+        await HelperFunctions.saveUserLoggedInSharedPreference(true);
+      }
+      await HelperFunctions.saveUserNameSharedPreference(username);
+      await HelperFunctions.saveUserEmailSharedPreference(email);
+      await HelperFunctions.saveUserPasswordSharedPreference(password);
+
+      return role;
+      // ignore: avoid_catches_without_on_clauses
+    } catch (e) {
+//
     }
   }
 

@@ -6,6 +6,7 @@ class HelperFunctions {
   static const String sharedPreferenceUserEmailKey = "USEREMAILKEY";
   static const String sharedPreferenceUserPassKey = "USERPASSKEY";
   static const String sharedPreferenceDisclaimerKey = "DISCLAIMERKEY";
+  static const String sharedPreferenceUserRoleKey = "ROLE";
 
   static Future<bool> saveUserLoggedInSharedPreference(
       bool isUserLoggedIn) async {
@@ -13,7 +14,7 @@ class HelperFunctions {
     return preferences.setBool(sharedPreferenceUserLoggedInKey, isUserLoggedIn);
   }
 
-  static Future<bool> saveUserNameSharedPreference(String userName) async {
+  static Future<void> saveUserNameSharedPreference(String userName) async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
     return preferences.setString(sharedPreferenceUserNameKey, userName);
   }
@@ -31,6 +32,11 @@ class HelperFunctions {
   static Future<bool> saveDisclaimerSharedPreference(bool disclaimer) async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
     return preferences.setBool(sharedPreferenceDisclaimerKey, disclaimer);
+  }
+
+  static Future<void> saveUserRoleSharedPreference(String role) async {
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    return preferences.setString(sharedPreferenceUserRoleKey, role);
   }
 
   /// This is awesome
@@ -58,5 +64,10 @@ class HelperFunctions {
   static Future<bool> getDisclaimerSharedPreference() async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
     return preferences.getBool(sharedPreferenceDisclaimerKey);
+  }
+
+  static Future<String> getUserRoleSharedPreference() async {
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    return preferences.getString(sharedPreferenceUserRoleKey);
   }
 }

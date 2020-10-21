@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:lifestylescreening/helper/functions.dart';
 import 'package:lifestylescreening/services/auth.dart';
 import 'package:lifestylescreening/services/database.dart';
-import 'package:lifestylescreening/widgets/buttons/background_dark_button.dart';
-import 'package:lifestylescreening/widgets/buttons/background_white_button.dart';
+import 'package:lifestylescreening/widgets/buttons/button_background.dart';
+import 'package:lifestylescreening/widgets/forms/custom_textformfield.dart';
 import 'package:lifestylescreening/widgets/login/login_visual.dart';
 import 'package:lifestylescreening/widgets/logo/lifestyle_logo.dart';
-import 'package:lifestylescreening/widgets/widgets.dart';
+import 'package:lifestylescreening/widgets/text/white_text.dart';
 
 class SignUp extends StatefulWidget {
   @override
@@ -14,21 +14,25 @@ class SignUp extends StatefulWidget {
 }
 
 class _SignUpState extends State<SignUp> {
-  final _formKey = GlobalKey<FormState>();
+  static const Color black = Color.fromRGBO(72, 72, 72, 1);
+  static const Color red = Color.fromRGBO(255, 129, 128, 1);
 
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _passwordChecker = TextEditingController();
+  final AuthService authService = AuthService();
+  final _formKey = GlobalKey<FormState>();
 
-  AuthService authService;
-  bool _isLoading;
+  bool _isLoading = false;
 
   @override
-  void initState() {
-    authService = AuthService();
-    _isLoading = false;
-    super.initState();
+  void dispose() {
+    _usernameController.dispose();
+    _emailController.dispose();
+    _passwordController.dispose();
+    _passwordChecker.dispose();
+    super.dispose();
   }
 
   @override
@@ -39,168 +43,109 @@ class _SignUpState extends State<SignUp> {
       backgroundColor: Color.fromRGBO(255, 129, 128, 1),
       body: Form(
         key: _formKey,
-        child: Container(
-          //    width: MediaQuery.of(context).size.width,
-          padding: EdgeInsets.symmetric(horizontal: 40),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 50),
           child: ListView(
+            shrinkWrap: true,
             children: [
-              SizedBox(
-                height: 16,
+              SizedBox(height: MediaQuery.of(context).size.height / 28),
+              LifestyleLogo(
+                size: 18,
+                description: "Meld je aan voor een nieuw account",
               ),
-              Center(child: LifestyleLogo(size: 50)),
-              SizedBox(
-                height: 6,
-              ),
-              Center(
-                child: Text(
-                  "Meld je aan voor een nieuw account",
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 16,
-                  ),
+
+              SizedBox(height: MediaQuery.of(context).size.height / 14),
+              Padding(
+                padding: const EdgeInsets.only(left: 8),
+                child: WhiteText(
+                  text: "Vul hier uw gebruikersnaam in",
+                  size: 14,
                 ),
               ),
-              SizedBox(
-                height: 16,
-              ),
-              Container(
-                width: MediaQuery.of(context).size.width,
-                padding: EdgeInsets.only(bottom: 10, top: 10, left: 5),
-                child: Text(
-                  "Gebruikersnaam: ",
-                  textAlign: TextAlign.left,
-                  style: TextStyle(color: Colors.white, fontSize: 14),
-                ),
-              ),
-              TextFormField(
-                textInputAction: TextInputAction.next,
-                controller: _usernameController,
+              // username
+              CustomTextFormField(
                 keyboardType: TextInputType.visiblePassword,
-                //return value if theres an value otherwise reutrn error
-                // mssge
-                validator: (val) {
-                  return val.isEmpty ? "Enter gebruikersnaam" : null;
-                },
-                decoration: inputDecoration(context),
-              ),
-              SizedBox(
-                height: 16,
+                textcontroller: _usernameController,
+                errorMessage: "Geen geldige gebruikersnaam",
+                validator: 1,
+                secureText: false,
               ),
               //email
-              Container(
-                width: MediaQuery.of(context).size.width,
-                padding: EdgeInsets.only(bottom: 10, top: 10, left: 5),
-                child: Text(
-                  "Vul hier uw e-mail adres in: ",
-                  textAlign: TextAlign.left,
-                  style: TextStyle(color: Colors.white, fontSize: 14),
+              Padding(
+                padding: const EdgeInsets.only(left: 8, top: 16),
+                child: WhiteText(
+                  text: "Vul hier uw e-mail adres in",
+                  size: 14,
                 ),
               ),
-              TextFormField(
-                textInputAction: TextInputAction.next,
-                controller: _emailController,
+              CustomTextFormField(
                 keyboardType: TextInputType.emailAddress,
-                //return value if theres an value otherwise reutrn
-                //error mssge
-                validator: (val) =>
-                    validateEmail(val) ? null : "Enter correct email",
-                decoration: inputDecoration(context),
+                textcontroller: _emailController,
+                errorMessage: "Gebruik een geldige e-mail adres",
+                validator: 2,
+                secureText: false,
               ),
-              SizedBox(
-                height: 16,
-              ),
-              //pass
-              Container(
-                width: MediaQuery.of(context).size.width,
-                padding: EdgeInsets.only(bottom: 10, top: 10, left: 5),
-                child: Text(
-                  "Vul hier uw wachtwoord in: ",
-                  textAlign: TextAlign.left,
-                  style: TextStyle(color: Colors.white, fontSize: 14),
-                ),
-              ),
-              //Password
-              TextFormField(
-                textInputAction: TextInputAction.next,
-                obscureText: true,
-                controller: _passwordController,
-                keyboardType: TextInputType.visiblePassword,
-                //return value if theres an value otherwise reutrn
-                // error mssge
-                validator: (val) {
-                  return val.isEmpty ? "Enter correct password" : null;
-                },
-                decoration: inputDecoration(context),
-              ),
-              SizedBox(
-                height: 16,
-              ),
-              Container(
-                width: MediaQuery.of(context).size.width,
-                padding: EdgeInsets.only(bottom: 10, top: 10, left: 5),
-                child: Text(
-                  "Vul hier uw wachtwoord in opnieuw in: ",
-                  textAlign: TextAlign.left,
-                  style: TextStyle(color: Colors.white, fontSize: 14),
-                ),
-              ),
-              //Password
-              TextFormField(
-                textInputAction: TextInputAction.done,
-                obscureText: true,
-                controller: _passwordChecker,
-                keyboardType: TextInputType.visiblePassword,
-                //return value if theres an value otherwise reutrn
-                //error mssge
-                validator: (val) {
-                  return val != _passwordController.text
-                      ? "Password komt niet overeen"
-                      : null;
-                },
-                decoration: inputDecoration(context),
-              ),
-              SizedBox(
-                height: 30,
-              ),
-              // inloggen
-              _isLoading
-                  ? Center(child: CircularProgressIndicator())
-                  : Align(
-                      child: SizedBox(
-                        width: MediaQuery.of(context).size.width / 2.5,
-                        child: Material(
-                          color: Color.fromRGBO(72, 72, 72, 1),
-                          borderRadius: BorderRadius.circular(40),
-                          child: InkWell(
-                              borderRadius: BorderRadius.circular(40.0),
-                              child: BackgroundDarkButton(
-                                  text: "Aanmelden", size: 18),
-                              onTap: () {
-                                signUp();
-                              }),
-                        ),
-                      ),
-                    ),
 
+              Padding(
+                padding: const EdgeInsets.only(left: 8, top: 16),
+                child: WhiteText(
+                  text: "Vul hier uw wachtwoord in",
+                  size: 14,
+                ),
+              ),
+              //Password
+              CustomTextFormField(
+                keyboardType: TextInputType.visiblePassword,
+                textcontroller: _passwordController,
+                errorMessage: "Gebruik minimaal 6 karakters",
+                validator: 1,
+                secureText: true,
+              ),
+
+              Padding(
+                padding: const EdgeInsets.only(left: 8, top: 16),
+                child: WhiteText(
+                  text: "Vul hier uw wachtwoord opnieuw in",
+                  size: 14,
+                ),
+              ),
+              //Password Checker
+              CustomTextFormField(
+                keyboardType: TextInputType.visiblePassword,
+                textcontroller: _passwordChecker,
+                errorMessage: "wachtwoord komt niet overeen",
+                validator: 3,
+                secureText: true,
+                passwordChecker: _passwordController.text,
+              ),
+              SizedBox(height: MediaQuery.of(context).size.height / 30),
+              // inloggen
+              Container(
+                margin: const EdgeInsets.only(left: 60, right: 60),
+                child: _isLoading
+                    ? Center(
+                        child: CircularProgressIndicator(),
+                      )
+                    : ButtonBackground(
+                        text: 'Aanmelden',
+                        size: 18,
+                        onTap: registerAccount,
+                        colorbackground: black,
+                        dark: true,
+                      ),
+              ),
               SizedBox(
                 height: 16,
               ),
               // terug
-              Align(
-                child: SizedBox(
-                  width: MediaQuery.of(context).size.width / 2.5,
-                  child: Material(
-                    color: Color.fromRGBO(255, 129, 128, 1),
-                    borderRadius: BorderRadius.circular(40),
-                    child: InkWell(
-                      splashColor: Colors.white,
-                      borderRadius: BorderRadius.circular(40.0),
-                      child: BackgroundWhiteButton(text: "Terug", size: 18),
-                      onTap: () {
-                        Navigator.pop(context);
-                      },
-                    ),
-                  ),
+              Container(
+                margin: const EdgeInsets.only(left: 60, right: 60),
+                child: ButtonBackground(
+                  text: 'Terug',
+                  size: 18,
+                  onTap: goBack,
+                  colorbackground: red,
+                  dark: false,
                 ),
               ),
             ],
@@ -210,40 +155,22 @@ class _SignUpState extends State<SignUp> {
     );
   }
 
-  signUp() async {
+  void goBack() {
+    Navigator.pop(context);
+  }
+
+  void registerAccount() {
+    setState(() {
+      _isLoading = true;
+    });
     if (_formKey.currentState.validate()) {
-      setState(() {
-        _isLoading = true;
-      });
-      await authService
+      authService
           .signUpWithEmailAndPassword(
               _emailController.text, _passwordController.text)
           .then((value) {
         if (value != null) {
-          /// uploading user info to Firestore
-          Map<String, String> userInfo = {
-            "userName": _usernameController.text,
-            "email": _emailController.text,
-            "role": "user",
-          };
-          DatabaseService().addUserData(userInfo).then((result) {
-            HelperFunctions.saveUserLoggedInSharedPreference(true);
-            HelperFunctions.saveUserNameSharedPreference(
-                _usernameController.text);
-            //   print("${_usernameController.text} username saved");
-
-            HelperFunctions.saveUserEmailSharedPreference(
-                _emailController.text);
-
-            HelperFunctions.saveUserPasswordSharedPreference(
-                _passwordController.text);
-
-            Navigator.pushReplacement(context,
-                MaterialPageRoute(builder: (context) => LoginVisual("user")));
-          });
-
-          // HelperFunctions.saveUserLoggedInSharedPreference(true);
-
+          /// mapping user data
+          saveUserData();
         }
       });
     } else {
@@ -253,18 +180,25 @@ class _SignUpState extends State<SignUp> {
     }
   }
 
-  bool validateEmail(String value) {
-    Pattern pattern =
-        r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
-    RegExp regex = RegExp(pattern);
-    return (!regex.hasMatch(value)) ? false : true;
-  }
+  saveUserData() async {
+    Map<String, String> userInfo = {
+      "userName": _usernameController.text,
+      "email": _emailController.text,
+      "role": "user",
+    };
 
-  @override
-  void dispose() {
-    _emailController.dispose();
-    _passwordController.dispose();
-    _passwordChecker.dispose();
-    super.dispose();
+    /// uploading user info to Firestore
+    await DatabaseService().addUserData(userInfo).then((result) async {
+      //storing user data in sharedpref
+      await HelperFunctions.saveUserNameSharedPreference(
+          _usernameController.text);
+      await HelperFunctions.saveUserEmailSharedPreference(
+          _emailController.text);
+      await HelperFunctions.saveUserPasswordSharedPreference(
+          _passwordController.text);
+
+      await Navigator.pushReplacement(context,
+          MaterialPageRoute(builder: (context) => LoginVisual("user")));
+    });
   }
 }
