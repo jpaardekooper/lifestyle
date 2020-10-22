@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "38810730106",
+    "firebase_url": "https://lifestyle-screening.firebaseio.com",
+    "project_id": "lifestyle-screening",
+    "storage_bucket": "lifestyle-screening.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:38810730106:android:a614693ffe308401d505c3",
+        "android_client_info": {
+          "package_name": "nl.monitor.lifestylescreening"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "38810730106-vf05a5f2ij862ug66rbs90ikjjah8470.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBL07T8w8hMdi9LvQlfXfNr-LoolI0S49E"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "38810730106-vf05a5f2ij862ug66rbs90ikjjah8470.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -1,4 +1,4 @@
-package com.hhs_lifestyle_monitor
+package nl.monitor.lifestylescreening
 
 import io.flutter.embedding.android.FlutterActivity
 
