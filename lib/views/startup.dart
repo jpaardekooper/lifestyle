@@ -32,7 +32,7 @@ class _HomeScreenState extends State<StartUp> {
 
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color.fromRGBO(255, 129, 128, 1),
+      backgroundColor: const Color.fromRGBO(255, 129, 128, 1),
       body: Container(
         margin: EdgeInsets.only(left: 80, right: 80),
         child: ListView(

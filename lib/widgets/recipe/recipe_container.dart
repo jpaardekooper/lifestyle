@@ -1,6 +1,7 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
-import 'card_details.dart';
+import 'recipe_details.dart';
 
 class RecipeStyle extends StatelessWidget {
   RecipeStyle({this.name, this.id, this.url});
@@ -15,9 +16,9 @@ class RecipeStyle extends StatelessWidget {
       constraints: const BoxConstraints(minWidth: 40.0, minHeight: 40.0),
       onPressed: () {},
       child: Icon(
-        // Conditional expression:
-        inFavorites ? Icons.favorite : Icons.favorite_border,
-      ),
+          // Conditional expression:
+          inFavorites ? Icons.favorite : Icons.favorite_border,
+          color: Colors.black),
       elevation: 2.0,
       fillColor: Colors.white,
       shape: CircleBorder(),
@@ -94,10 +95,17 @@ class RecipeStyle extends StatelessWidget {
                     aspectRatio: 16 / 8,
                     child: Hero(
                       tag: "url",
-                      child: Image.network(
-                        url,
+                      child: CachedNetworkImage(
+                        placeholder: (context, url) =>
+                            CircularProgressIndicator(),
+                        imageUrl: url,
                         fit: BoxFit.fill,
                       ),
+
+                      //  Image.network(
+                      //   ,
+                      //   fit: BoxFit.fill,
+                      // ),
                     ),
                   ),
                   //needs to become a statefull widget to do something properly

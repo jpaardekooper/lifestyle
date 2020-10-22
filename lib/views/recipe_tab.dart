@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:lifestylescreening/widgets/cards/recipe_style.dart';
+import 'package:lifestylescreening/widgets/recipe/recipe_container.dart';
 import 'package:lifestylescreening/widgets/transitions/fade_transition.dart';
 
 class RecipeTab extends StatefulWidget {

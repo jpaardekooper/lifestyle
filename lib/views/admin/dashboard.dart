@@ -42,8 +42,11 @@ class _DashboardState extends State<Dashboard> {
               padding: EdgeInsets.only(right: 20.0),
               child: GestureDetector(
                 onTap: () async {
-                  // await auth.signOut();
+                  //  await auth.signOut();
                   await HelperFunctions.saveUserLoggedInSharedPreference(false);
+                  await HelperFunctions.removeUserNameSharedPreference();
+                  await HelperFunctions.removeUserEmailSharedPreference();
+                  await HelperFunctions.removeUserPasswordSharedPreference();
 
                   await Navigator.pushReplacement(context,
                       MaterialPageRoute(builder: (context) => StartUp()));

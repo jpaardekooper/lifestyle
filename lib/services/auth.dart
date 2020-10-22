@@ -80,6 +80,7 @@ class AuthService {
         await HelperFunctions.saveUserNameSharedPreference(username);
         await HelperFunctions.saveUserEmailSharedPreference(email);
         await HelperFunctions.saveUserPasswordSharedPreference(password);
+        await HelperFunctions.saveUserRoleSharedPreference("user");
       });
       return true;
 
@@ -154,6 +155,7 @@ class AuthService {
       await HelperFunctions.saveUserNameSharedPreference(username);
       await HelperFunctions.saveUserEmailSharedPreference(email);
       await HelperFunctions.saveUserPasswordSharedPreference(password);
+      await HelperFunctions.saveUserRoleSharedPreference(role);
 
       return role;
       // ignore: avoid_catches_without_on_clauses

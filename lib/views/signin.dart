@@ -110,7 +110,7 @@ class _SignInState extends State<SignIn> {
                   ),
                 ],
               ),
-              SizedBox(height: MediaQuery.of(context).size.height / 10),
+              SizedBox(height: MediaQuery.of(context).size.height / 18),
               Container(
                 margin: const EdgeInsets.only(left: 60, right: 60),
                 child: _isLoading

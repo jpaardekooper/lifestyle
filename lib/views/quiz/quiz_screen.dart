@@ -16,12 +16,13 @@ class _QuizScreenState extends State<QuizScreen> {
   /// Global Variables
 
   String _myName = "";
-  String _myEmail = "";
+  String _role = "";
 
   /// Stream
   Stream infoStream;
   getMyInfoAndQuiz() async {
     _myName = await HelperFunctions.getUserNameSharedPreference();
+    _role = await HelperFunctions.getUserRoleSharedPreference();
     // _myEmail = await HelperFunctions.getUserEmailSharedPreference();
     // print("Filling up some dat $_myName");
     // print("Filling up some dat $_myEmail");
@@ -58,7 +59,7 @@ class _QuizScreenState extends State<QuizScreen> {
                         padding: EdgeInsets.only(right: 20.0),
                         child: GestureDetector(
                           onTap: () async {
-                            // await auth.signOut();
+                            await auth.signOut();
                             await HelperFunctions
                                 .saveUserLoggedInSharedPreference(false);
 
@@ -75,7 +76,7 @@ class _QuizScreenState extends State<QuizScreen> {
                   ],
                 ),
                 body: QuizHelper(),
-                floatingActionButton: _myEmail != "email@example.com"
+                floatingActionButton: _role != "admin"
                     ? Container()
                     : FloatingActionButton(
                         child: Icon(Icons.add),

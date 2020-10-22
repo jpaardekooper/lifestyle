@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -197,15 +198,18 @@ class QuizTile extends StatelessWidget {
           Stack(
             children: [
               ClipRRect(
-                  borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(8),
-                      topRight: Radius.circular(8)),
-                  child: Image.network(
-                    imgUrl,
-                    width: MediaQuery.of(context).size.width - 48,
-                    fit: BoxFit.cover,
-                    height: 150,
-                  )),
+                borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(8), topRight: Radius.circular(8)),
+                child: CachedNetworkImage(
+                  placeholder: (context, url) => Container(
+                      width: MediaQuery.of(context).size.width - 48,
+                      child: Center(child: CircularProgressIndicator())),
+                  imageUrl: imgUrl,
+                  fit: BoxFit.fill,
+                  width: MediaQuery.of(context).size.width - 48,
+                  height: 150,
+                ),
+              ),
               Container(
                 padding: EdgeInsets.symmetric(vertical: 8, horizontal: 16),
                 width: MediaQuery.of(context).size.width,

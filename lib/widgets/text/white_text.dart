@@ -11,9 +11,7 @@ class WhiteText extends StatelessWidget {
       text,
       textAlign: TextAlign.left,
       style: TextStyle(
-        fontSize: size,
-        color: Colors.white,
-      ),
+          fontSize: size, color: Colors.white, fontWeight: FontWeight.w700),
     );
   }
 }

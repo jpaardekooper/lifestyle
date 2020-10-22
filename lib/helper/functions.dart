@@ -70,4 +70,20 @@ class HelperFunctions {
     SharedPreferences preferences = await SharedPreferences.getInstance();
     return preferences.getString(sharedPreferenceUserRoleKey);
   }
+
+//removing shared pref
+  static Future<void> removeUserNameSharedPreference() async {
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    return preferences.remove(sharedPreferenceUserNameKey);
+  }
+
+  static Future<void> removeUserEmailSharedPreference() async {
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    return preferences.remove(sharedPreferenceUserEmailKey);
+  }
+
+  static Future<void> removeUserPasswordSharedPreference() async {
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    return preferences.remove(sharedPreferenceUserPassKey);
+  }
 }
