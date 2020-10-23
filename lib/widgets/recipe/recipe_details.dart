@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:lifestylescreening/widgets/recipe/custom_sliverscroll.dart';
-import 'package:lifestylescreening/widgets/recipe/recipe_detail_value.dart';
+import 'package:lifestylescreening/widgets/recipe/ingredients_value.dart';
 import 'package:lifestylescreening/widgets/text/dark_text.dart';
 import 'package:lifestylescreening/widgets/text/grey_text.dart';
 
