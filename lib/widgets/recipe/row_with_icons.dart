@@ -17,7 +17,7 @@ class RowWithIconAndText extends StatelessWidget {
       ),
       Text(
         text,
-        style: TextStyle(fontSize: 10),
+        style: TextStyle(fontSize: 12),
       )
     ]);
   }
