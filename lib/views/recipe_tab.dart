@@ -5,6 +5,7 @@ import 'package:lifestylescreening/widgets/buttons/button_icon.dart';
 import 'package:lifestylescreening/widgets/recipe/recipe_overview.dart';
 import 'package:lifestylescreening/widgets/recipe/stacked_container.dart';
 import 'package:lifestylescreening/widgets/text/dark_text.dart';
+
 import 'package:lifestylescreening/widgets/transitions/fade_transition.dart';
 
 class RecipeTab extends StatefulWidget {
@@ -23,20 +24,6 @@ class _RecipeTabState extends State<RecipeTab> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        // backgroundColor: Colors.grey,
-        // appBar: AppBar(
-        //   centerTitle: true,
-        //   title: Text(
-        //     "Recepten",
-        //     style: TextStyle(color: Colors.blue),
-        //   ),
-        //   backgroundColor: Colors.white,
-        //   shape: ContinuousRectangleBorder(
-        //     borderRadius: BorderRadius.only(
-        //         bottomLeft: Radius.circular(30),
-        //         bottomRight: Radius.circular(30)),
-        //   ),
-        // ),
         body: SingleChildScrollView(
       child: Padding(
         padding: const EdgeInsets.only(left: 40, right: 40),
@@ -147,71 +134,77 @@ door onze voedingsexperts!'''),
                     color: Colors.red,
                     fontSize: 24,
                     fontWeight: FontWeight.w800)),
-
-            StackedContainer(
-              imgUrl:
-                  "https://bettyskitchen.nl/wp-content/uploads/2019/08/pinda_kip_uit_de_slowcooker_%C2%A9-bettyskitchen_DSC_3039-650x892.jpg",
-              borderTop: true,
-            ),
             SizedBox(
               height: 30,
             ),
-            Center(
-              child: ToggleButtons(
-                children: <Widget>[
-                  Container(
-                      width: MediaQuery.of(context).size.width / 4,
-                      child: Center(
-                        child: Text("Ochtend",
-                            style: TextStyle(
-                                fontSize: 18,
-                                color: isSelectedNr == 0
-                                    ? Colors.white
-                                    : Colors.black)),
-                      )),
+            StackedContainer(
+              imgUrl:
+                  "https://bettyskitchen.nl/wp-content/uploads/2019/08/pinda_kip_uit_de_slowcooker_%C2%A9-bettyskitchen_DSC_3039-650x892.jpg",
+              topLeft: true,
+              topRight: true,
+              bottomLeft: true,
+              bottomRight: true,
+              size: 20,
+            ),
+            SizedBox(
+              height: 40,
+            ),
 
-                  //    Icon(Icons.ac_unit),
-                  Container(
-                      width: MediaQuery.of(context).size.width / 4,
-                      child: Center(
-                        child: Text("Middag",
+            ToggleButtons(
+              children: <Widget>[
+                Container(
+                    width: MediaQuery.of(context).size.width / 4,
+                    child: Center(
+                      child: Text("Ochtend",
+                          style: TextStyle(
+                              fontSize: 18,
+                              color: isSelectedNr == 0
+                                  ? Colors.white
+                                  : Colors.black)),
+                    )),
+
+                //    Icon(Icons.ac_unit),
+                Container(
+                    width: MediaQuery.of(context).size.width / 4,
+                    child: Center(
+                      child: Text("Middag",
+                          style: TextStyle(
+                              fontSize: 18,
+                              color: isSelectedNr == 1
+                                  ? Colors.white
+                                  : Colors.black)),
+                    )),
+                Container(
+                    width: MediaQuery.of(context).size.width / 4,
+                    child: Center(
+                        child: Text("Avond",
                             style: TextStyle(
                                 fontSize: 18,
-                                color: isSelectedNr == 1
+                                color: isSelectedNr == 2
                                     ? Colors.white
-                                    : Colors.black)),
-                      )),
-                  Container(
-                      width: MediaQuery.of(context).size.width / 4,
-                      child: Center(
-                          child: Text("Avond",
-                              style: TextStyle(
-                                  fontSize: 18,
-                                  color: isSelectedNr == 2
-                                      ? Colors.white
-                                      : Colors.black)))),
-                ],
-                borderRadius: BorderRadius.all(Radius.circular(19)),
-                splashColor: const Color.fromRGBO(255, 129, 128, 1),
-                selectedBorderColor: const Color.fromRGBO(255, 129, 128, 1),
-                fillColor: const Color.fromRGBO(255, 129, 128, 1),
-                borderWidth: 1,
-                onPressed: (int index) {
-                  setState(() {
-                    isSelectedNr = index;
-                    for (int buttonIndex = 0;
-                        buttonIndex < isSelected.length;
-                        buttonIndex++) {
-                      if (buttonIndex == index) {
-                        isSelected[buttonIndex] = !isSelected[buttonIndex];
-                      } else {
-                        isSelected[buttonIndex] = false;
-                      }
+                                    : Colors.black)))),
+              ],
+              borderRadius: BorderRadius.all(Radius.circular(19)),
+              splashColor: const Color.fromRGBO(255, 129, 128, 1),
+              selectedBorderColor: const Color.fromRGBO(255, 129, 128, 1),
+              fillColor: const Color.fromRGBO(255, 129, 128, 1),
+              highlightColor: const Color.fromRGBO(255, 129, 128, 1),
+              borderWidth: 1,
+              onPressed: (int index) {
+                setState(() {
+                  isSelectedNr = index;
+                  for (int buttonIndex = 0;
+                      buttonIndex < isSelected.length;
+                      buttonIndex++) {
+                    if (buttonIndex == index) {
+                      isSelected[buttonIndex] = true;
+                    } else {
+                      isSelected[buttonIndex] = false;
                     }
-                  });
-                },
-                isSelected: isSelected,
-              ),
+                  }
+                });
+              },
+              isSelected: isSelected,
             ),
             SizedBox(
               height: 30,

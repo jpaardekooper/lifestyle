@@ -26,7 +26,7 @@ class MySliverAppBar extends SliverPersistentHeaderDelegate {
         topRight: false,
         bottomLeft: true,
         bottomRight: true,
-        size: 40,
+        borderSize: 40,
       ),
       Opacity(
         opacity: shrinkOffset / expandedHeight,

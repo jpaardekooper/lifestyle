@@ -8,22 +8,24 @@ class PlaceholderImg extends StatelessWidget {
       this.topRight,
       this.bottomLeft,
       this.bottomRight,
-      this.size});
+      this.borderSize});
   final String imgUrl;
   final bool topLeft;
   final bool topRight;
   final bool bottomLeft;
   final bool bottomRight;
-  final double size;
+  final double borderSize;
 
   @override
   Widget build(BuildContext context) {
     return ClipRRect(
         borderRadius: BorderRadius.only(
-          topLeft: topLeft ? Radius.circular(size) : Radius.circular(0),
-          topRight: topRight ? Radius.circular(size) : Radius.circular(0),
-          bottomLeft: bottomLeft ? Radius.circular(size) : Radius.circular(0),
-          bottomRight: bottomRight ? Radius.circular(size) : Radius.circular(0),
+          topLeft: topLeft ? Radius.circular(borderSize) : Radius.circular(0),
+          topRight: topRight ? Radius.circular(borderSize) : Radius.circular(0),
+          bottomLeft:
+              bottomLeft ? Radius.circular(borderSize) : Radius.circular(0),
+          bottomRight:
+              bottomRight ? Radius.circular(borderSize) : Radius.circular(0),
         ),
         child: Hero(
           tag: imgUrl,
@@ -35,7 +37,6 @@ class PlaceholderImg extends StatelessWidget {
                 child: CircularProgressIndicator(),
               ),
             ),
-            height: MediaQuery.of(context).size.height / 4,
             width: MediaQuery.of(context).size.width,
             imageUrl: imgUrl,
             fit: BoxFit.cover,

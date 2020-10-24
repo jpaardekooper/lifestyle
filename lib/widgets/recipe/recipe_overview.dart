@@ -92,7 +92,7 @@ class RecipeOverview extends StatelessWidget {
                     topRight: false,
                     bottomLeft: true,
                     bottomRight: false,
-                    size: 20,
+                    borderSize: 20,
                   )),
               Container(
                 height: MediaQuery.of(context).size.height / 5,
