@@ -9,12 +9,17 @@ import 'package:lifestylescreening/widgets/login/login_visual.dart';
 import 'helper/functions.dart';
 
 void main() {
+  initializeWidgets().then((value) => runApp(MyApp()));
+}
+
+Future<void> initializeWidgets() async {
   WidgetsFlutterBinding.ensureInitialized();
-  Firebase.initializeApp().then((value) => initializeDateFormatting().then(
-        (value) => runApp(
-          MyApp(),
-        ),
-      ));
+  await initializeFirebase();
+}
+
+Future<void> initializeFirebase() async {
+  await Firebase.initializeApp();
+  await initializeDateFormatting();
 }
 
 class MyApp extends StatefulWidget {
