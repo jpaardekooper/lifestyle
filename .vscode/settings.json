@@ -1,0 +1,5 @@
+{
+    "settings": {
+        "eslint.lintTask.enable": true
+    },
+}

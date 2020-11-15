@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:lifestylescreening/widgets/text/button_text.dart';
 
 class ButtonBackground extends StatelessWidget {
   const ButtonBackground(
@@ -26,7 +25,10 @@ class ButtonBackground extends StatelessWidget {
                   color: dark ? colorbackground : Colors.white, width: 2),
             ),
             alignment: Alignment.center,
-            child: ButtonText(text, size),
+            child: Text(
+              text,
+              style: TextStyle(fontSize: size),
+            ),
           ),
           onTap: onTap),
     );

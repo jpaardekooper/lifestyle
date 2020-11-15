@@ -39,7 +39,6 @@ analyzer:
     prefer_is_not_empty: info
     prefer_null_aware_operators: warning
     public_member_api_docs: info
-    sort_constructors_first: info
     unawaited_futures: warning
     unnecessary_await_in_return: warning
     unnecessary_brace_in_string_interps: warning
@@ -96,7 +95,7 @@ linter:
   - prefer_is_not_empty
   - prefer_null_aware_operators
  # - public_member_api_docs
-  - sort_constructors_first
+ # - sort_constructors_first
   - unawaited_futures
   - unnecessary_await_in_return
   - unnecessary_brace_in_string_interps

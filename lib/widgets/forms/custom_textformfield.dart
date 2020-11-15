@@ -2,13 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 class CustomTextFormField extends StatelessWidget {
-  const CustomTextFormField(
-      {this.keyboardType,
-      this.textcontroller,
-      this.errorMessage,
-      this.validator,
-      this.secureText,
-      this.passwordChecker});
+  const CustomTextFormField({
+    this.keyboardType,
+    this.textcontroller,
+    this.errorMessage,
+    this.validator,
+    this.secureText,
+    this.passwordChecker,
+  });
 
   final TextInputType keyboardType;
   final TextEditingController textcontroller;
@@ -21,30 +22,30 @@ class CustomTextFormField extends StatelessWidget {
     return InputDecoration(
       filled: true,
       //  isDense: true,
-      contentPadding: EdgeInsets.all(12),
+      contentPadding: EdgeInsets.all(8),
       fillColor: Colors.white,
       focusedBorder: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(12.0),
+        borderRadius: BorderRadius.circular(8.0),
         borderSide: BorderSide(
           color: Colors.white,
         ),
       ),
       errorBorder: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(12.0),
+        borderRadius: BorderRadius.circular(8.0),
         borderSide: BorderSide(
           color: Colors.red,
         ),
       ),
       focusedErrorBorder: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(12.0),
+        borderRadius: BorderRadius.circular(8.0),
         borderSide: BorderSide(
           color: Colors.red,
         ),
       ),
       enabledBorder: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(12.0),
+        borderRadius: BorderRadius.circular(8.0),
         borderSide: BorderSide(
-          color: Colors.white,
+          color: Colors.grey[100],
           width: 2.0,
         ),
       ),
@@ -67,6 +68,10 @@ class CustomTextFormField extends StatelessWidget {
         textInputAction: TextInputAction.next,
         controller: textcontroller,
         keyboardType: keyboardType,
+        maxLines: secureText ? 1 : 5,
+        minLines: 1,
+        autofocus: false,
+
         //return value if theres an value otherwise reutrn error
         // mssge
         validator: (val) {
@@ -81,6 +86,15 @@ class CustomTextFormField extends StatelessWidget {
               return val != passwordChecker
                   ? "wachtwoord komt niet overeen"
                   : null;
+              break;
+            case 4:
+              return val.isEmpty
+                  ? textcontroller.text =
+                      "https://firebasestorage.googleapis.com/v0/b/lifestyle-screening.appspot.com/o/placeholder.png?alt=media&token=53ff4c6b-f415-4f9d-8144-e1895112062f"
+                  : null;
+              break;
+            case 5:
+              return null;
               break;
             default:
           }
