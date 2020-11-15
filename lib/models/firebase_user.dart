@@ -1,22 +1,20 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 class AppUser {
-  AppUser({this.uid, this.username, this.role});
-  String uid;
-  String username;
+  AppUser({this.id, this.email, this.userName, this.role}) : reference = null;
+
+  String id;
+  String email;
   String role;
+  String userName;
 
-  String get getUserName {
-    return username;
-  }
+  final DocumentReference reference;
 
-  String get getUserRole {
-    return role;
-  }
-
-  set setUserName(String name) {
-    username = name;
-  }
-
-  set setUserRole(String role) {
-    role = role;
-  }
+  AppUser.fromSnapshot(DocumentSnapshot snapshot)
+      : assert(snapshot != null),
+        id = snapshot.id,
+        email = snapshot.data()['email'],
+        role = snapshot.data()['role'],
+        userName = snapshot.data()['userName'],
+        reference = snapshot.reference;
 }

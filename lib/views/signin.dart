@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:lifestylescreening/controllers/auth_controller.dart';
+import 'package:lifestylescreening/models/firebase_user.dart';
 import 'package:lifestylescreening/widgets/buttons/button_background.dart';
 import 'package:lifestylescreening/widgets/forms/custom_textformfield.dart';
+import 'package:lifestylescreening/widgets/inherited/inherited_widget.dart';
 import 'package:lifestylescreening/widgets/login/login_visual.dart';
 import 'package:lifestylescreening/widgets/logo/lifestyle_logo.dart';
-import 'package:lifestylescreening/widgets/text/white_text.dart';
-import 'package:lifestylescreening/services/auth.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
 
 class SignIn extends StatefulWidget {
   @override
@@ -19,7 +21,7 @@ class _SignInState extends State<SignIn> {
   final TextEditingController _passwordController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
   final _key = GlobalKey<ScaffoldState>();
-  AuthService authService = AuthService();
+  AuthController _authController = AuthController();
 
   bool _isLoading = false;
   String userName = "";
@@ -46,100 +48,93 @@ class _SignInState extends State<SignIn> {
     return Scaffold(
       key: _key,
       backgroundColor: const Color.fromRGBO(255, 129, 128, 1),
-      body: Form(
-        key: _formKey,
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 40),
-          child: ListView(
-            shrinkWrap: true,
-            children: [
-              SizedBox(height: MediaQuery.of(context).size.height / 12),
-              LifestyleLogo(
-                size: 24,
-                description: "Log in met je account",
-              ),
-              SizedBox(height: MediaQuery.of(context).size.height / 12),
-              Padding(
-                padding: const EdgeInsets.only(left: 8),
-                child: WhiteText(
-                  text: "Vul hier uw e-mail adres in: ",
-                  size: 14,
+      body: Center(
+        child: Form(
+          key: _formKey,
+          child: Container(
+            padding: const EdgeInsets.symmetric(horizontal: 40),
+            width: kIsWeb
+                ? MediaQuery.of(context).size.width / 2.5
+                : MediaQuery.of(context).size.width,
+            child: ListView(
+              shrinkWrap: true,
+              children: [
+                LifestyleLogo(
+                  size: 24,
+                  description: "Log in met je account",
                 ),
-              ),
-              // username
-              CustomTextFormField(
-                keyboardType: TextInputType.emailAddress,
-                textcontroller: _emailController,
-                errorMessage: "Geen geldige e-mail adres",
-                validator: 1,
-                secureText: false,
-              ),
-              SizedBox(
-                height: 32,
-              ),
-              Padding(
-                padding: const EdgeInsets.only(left: 8),
-                child: WhiteText(
-                  text: "Vul hier uw wachtwoord in: ",
-                  size: 14,
+                SizedBox(height: MediaQuery.of(context).size.height / 12),
+                Padding(
+                    padding: const EdgeInsets.only(left: 8),
+                    child: Text("Vul hier uw e-mail adres in")),
+                // username
+                CustomTextFormField(
+                  keyboardType: TextInputType.emailAddress,
+                  textcontroller: _emailController,
+                  errorMessage: "Geen geldige e-mail adres",
+                  validator: 1,
+                  secureText: false,
                 ),
-              ),
-              // username
-              CustomTextFormField(
-                keyboardType: TextInputType.visiblePassword,
-                textcontroller: _passwordController,
-                errorMessage: "Geen geldige e-mail adres",
-                validator: 1,
-                secureText: true,
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  WhiteText(
-                    text: "Onthoudt mijn gegevens",
-                    size: 14,
-                  ),
-                  Theme(
-                    data: Theme.of(context).copyWith(
-                      unselectedWidgetColor: Colors.white,
-                    ),
-                    child: Checkbox(
-                      value: rememberMe,
-                      onChanged: _onRememberMeChanged,
-                    ),
-                  ),
-                ],
-              ),
-              SizedBox(height: MediaQuery.of(context).size.height / 18),
-              Container(
-                margin: const EdgeInsets.only(left: 60, right: 60),
-                child: _isLoading
-                    ? Center(
-                        child: CircularProgressIndicator(),
-                      )
-                    : ButtonBackground(
-                        text: 'Aanmelden',
-                        size: 18,
-                        onTap: signIn,
-                        colorbackground: black,
-                        dark: true,
+                SizedBox(
+                  height: 32,
+                ),
+                Padding(
+                    padding: const EdgeInsets.only(left: 8),
+                    child: Text("Vul hier uw wachtwoord in")),
+                // username
+                CustomTextFormField(
+                  keyboardType: TextInputType.visiblePassword,
+                  textcontroller: _passwordController,
+                  errorMessage: "Geen geldige e-mail adres",
+                  validator: 1,
+                  secureText: true,
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    Text("Remember me"),
+                    Theme(
+                      data: Theme.of(context).copyWith(
+                        unselectedWidgetColor: Colors.white,
                       ),
-              ),
-              SizedBox(
-                height: 16,
-              ),
-              // terug
-              Container(
-                margin: const EdgeInsets.only(left: 60, right: 60),
-                child: ButtonBackground(
-                  text: 'Terug',
-                  size: 18,
-                  onTap: goBack,
-                  colorbackground: red,
-                  dark: false,
+                      child: Checkbox(
+                        value: rememberMe,
+                        onChanged: _onRememberMeChanged,
+                      ),
+                    ),
+                  ],
                 ),
-              ),
-            ],
+                SizedBox(height: MediaQuery.of(context).size.height / 18),
+                Container(
+                  margin: const EdgeInsets.only(left: 60, right: 60),
+                  child: _isLoading
+                      ? Center(
+                          child: CircularProgressIndicator(),
+                        )
+                      : ButtonBackground(
+                          text: 'Aanmelden',
+                          size: 18,
+                          onTap: signIn,
+                          colorbackground: black,
+                          dark: true,
+                        ),
+                ),
+                SizedBox(
+                  height: 16,
+                ),
+                // terug
+                Container(
+                  margin: const EdgeInsets.only(left: 60, right: 60),
+                  child: ButtonBackground(
+                    text: 'Terug',
+                    size: 18,
+                    onTap: goBack,
+                    colorbackground: red,
+                    dark: false,
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ),
@@ -151,21 +146,26 @@ class _SignInState extends State<SignIn> {
       setState(() {
         _isLoading = true;
       });
-      dynamic result = await authService.signInWithEmailAndPassword(
+      AppUser result = await _authController.signInWithEmailAndPassword(
           _emailController.text, _passwordController.text);
       if (result != null) {
-        String henk = await authService.saveUserDetailsOnLogin(
-            _emailController.text, _passwordController.text, rememberMe);
+        await _authController.saveUserDetailsOnLogin(
+            result, _passwordController.text, rememberMe);
 
-        if (henk != null) {
-          await Navigator.pushReplacement(context,
-              MaterialPageRoute(builder: (context) => LoginVisual(henk)));
-        } else {
-          resetSignInPage();
-        }
+        await Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (context) => InheritedDataProvider(
+              data: result,
+              child: LoginVisual(),
+            ),
+          ),
+        );
       } else {
         resetSignInPage();
       }
+    } else {
+      resetSignInPage();
     }
   }
 

@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:lifestylescreening/services/auth.dart';
+import 'package:lifestylescreening/controllers/auth_controller.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:lifestylescreening/views/disclaimer_screen.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:lifestylescreening/views/startup.dart';
+import 'package:lifestylescreening/views/web/landing_page_view.dart';
+import 'package:lifestylescreening/widgets/inherited/inherited_widget.dart';
 import 'package:lifestylescreening/widgets/login/login_visual.dart';
-
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'helper/functions.dart';
 
 void main() {
@@ -29,26 +30,18 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  AuthService authService = AuthService();
-  bool _disclaimerAccepted = false;
+  AuthController _authController = AuthController();
+
   bool _isLoggedin = false;
-  String _email, _password, _role;
-  dynamic result;
+  String _email, _password;
+  bool mobile;
+  var result;
 
   @override
   void initState() {
-    checkDisclaimerStatus();
-    checkUserLoggedInStatus();
-
     super.initState();
-  }
-
-  Future checkDisclaimerStatus() async {
-    await HelperFunctions.getDisclaimerSharedPreference().then((value) {
-      setState(() {
-        _disclaimerAccepted = value;
-      });
-    });
+    mobile = kIsWeb;
+    checkUserLoggedInStatus();
   }
 
   Future checkUserLoggedInStatus() async {
@@ -71,17 +64,14 @@ class _MyAppState extends State<MyApp> {
       _password = value;
     });
 
-    await HelperFunctions.getUserRoleSharedPreference().then((value) {
-      _role = value;
-    });
-
-    result = await authService.signInWithEmailAndPassword(_email, _password);
+    result =
+        await _authController.signInWithEmailAndPassword(_email, _password);
     setState(() {});
   }
 
   signIn() {
     if (result != null) {
-      return LoginVisual(_role);
+      return InheritedDataProvider(child: LoginVisual(), data: result);
     } else {
       return StartUp();
     }
@@ -91,22 +81,23 @@ class _MyAppState extends State<MyApp> {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Lifestyle Screening',
-      debugShowCheckedModeBanner: true,
+      debugShowCheckedModeBanner: false,
       theme: ThemeData(
         visualDensity: VisualDensity.adaptivePlatformDensity,
         brightness: Brightness.light,
-        primaryColor: const Color(0xFF3b4254),
-        accentColor: const Color(0xFFddb461),
-        iconTheme: IconThemeData(color: Colors.white),
+        primaryColor: const Color(0xFF456A67),
+        accentColor: const Color(0xFFFA9215),
+        fontFamily: 'GTWalsheimPro',
       ),
-      home:
-          //if the vallue is null (not found) change value to false
-          (_disclaimerAccepted ?? false)
+      //   initialRoute: '/landing-page',
+      routes: {'/landing-page': (context) => LandingPageView()},
+      home: kIsWeb
+          ? LandingPageView()
+          : (_isLoggedin ?? false)
               //if the vallue is null (not found) change value to false
-              ? (_isLoggedin ?? false)
-                  ? signIn()
-                  : StartUp()
-              : DisclaimerScreen(),
+
+              ? signIn()
+              : StartUp(),
     );
   }
 }

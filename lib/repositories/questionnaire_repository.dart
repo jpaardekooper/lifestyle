@@ -1,0 +1,163 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/material.dart';
+import 'package:lifestylescreening/models/answer_model.dart';
+import 'package:lifestylescreening/models/question_model.dart';
+import 'package:lifestylescreening/repositories/questionainre_repository_interface.dart';
+
+class QuestionnaireRepository implements IQuestionnaireRepository {
+  @override
+  Future<List<QuestionModel>> getQuestion() async {
+    List<QuestionModel> _questionList = [];
+
+    QuerySnapshot snapshot = await FirebaseFirestore.instance
+        .collection("surveys")
+        .doc('UjU63gtyZX8PlajmzHhX')
+        .collection("questions")
+        //    .where('order', isEqualTo: questionOrder)
+        //  .limit(1)
+        .get();
+
+    snapshot.docs.map((DocumentSnapshot doc) {
+      _questionList.add(QuestionModel.fromSnapshot(doc));
+    }).toList();
+
+    return _questionList;
+  }
+
+  @override
+  Future<List<AnswerModel>> getAnswer(String id) async {
+    List<AnswerModel> _answerList = [];
+
+    QuerySnapshot snapshot = await FirebaseFirestore.instance
+        .collection("surveys")
+        .doc('UjU63gtyZX8PlajmzHhX')
+        .collection("questions")
+        .doc(id)
+        .collection('answers')
+        .orderBy('order', descending: false)
+        .get();
+
+    snapshot.docs.map((DocumentSnapshot doc) {
+      _answerList.add(AnswerModel.fromSnapshot(doc));
+    }).toList();
+
+    return _answerList;
+  }
+
+  @override
+  Stream<QuerySnapshot> streamQuestions(String id) {
+    return FirebaseFirestore.instance
+        .collection('surveys')
+        .doc(id)
+        .collection('questions')
+        .orderBy('order', descending: false)
+        .snapshots();
+  }
+
+  @override
+  List<QuestionModel> fetchQuestions(QuerySnapshot snapshot) {
+    return snapshot.docs.map((DocumentSnapshot doc) {
+      return QuestionModel.fromSnapshot(doc);
+    }).toList();
+  }
+
+  @override
+  Stream<QuerySnapshot> streamAnswers(String id, String questionId) {
+    return FirebaseFirestore.instance
+        .collection('surveys')
+        .doc(id)
+        .collection('questions')
+        .doc(questionId)
+        .collection('answers')
+        .orderBy('order', descending: false)
+        .snapshots();
+  }
+
+  @override
+  List<AnswerModel> fetchAnswers(AsyncSnapshot<QuerySnapshot> snapshot) {
+    return snapshot.data.docs.map((DocumentSnapshot doc) {
+      return AnswerModel.fromSnapshot(doc);
+    }).toList();
+  }
+
+  @override
+  Future<void> setQuestion(
+      String parentId, String id, Map data, bool newQuestion) async {
+    if (newQuestion) {
+      await FirebaseFirestore.instance
+          .collection("surveys")
+          .doc(parentId)
+          .collection("questions")
+          .doc()
+          .set(data)
+          .catchError((e) {});
+    } else {
+      await FirebaseFirestore.instance
+          .collection("surveys")
+          .doc(parentId)
+          .collection("questions")
+          .doc(id)
+          .set(data)
+          .catchError((e) {});
+    }
+  }
+
+  @override
+  Future<void> removeQuestion(String surveyId, String questionId) async {
+    await FirebaseFirestore.instance
+        .collection("surveys")
+        .doc(surveyId)
+        .collection('questions')
+        .doc(questionId)
+        .delete()
+        .catchError((e) {
+      //    print(e);
+    });
+  }
+
+  @override
+  Future<void> setAnswer(String surveyId, String questionId, String answerId,
+      Map data, bool insertNewAnswer) async {
+    if (insertNewAnswer) {
+      await FirebaseFirestore.instance
+          .collection("surveys")
+          .doc(surveyId)
+          .collection("questions")
+          .doc(questionId)
+          .collection('answers')
+          .doc()
+          .set(data)
+          .catchError((e) {
+        //    print(e);
+      });
+    } else {
+      await FirebaseFirestore.instance
+          .collection("surveys")
+          .doc(surveyId)
+          .collection("questions")
+          .doc(questionId)
+          .collection('answers')
+          .doc(answerId)
+          .set(data)
+          .catchError((e) {
+        //   print(e);
+      });
+    }
+  }
+
+  @override
+  Future<void> removeAnswerFromQuestion(
+      String surveyId, String questionId, String answerId) async {
+    await FirebaseFirestore.instance
+        .collection("surveys")
+        .doc(surveyId)
+        .collection('questions')
+        .doc(questionId)
+        .collection('answers')
+        .doc(answerId)
+        .delete()
+        .catchError((e) {
+      //    print(e);
+    });
+  }
+}
