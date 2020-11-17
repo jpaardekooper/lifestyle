@@ -2,9 +2,17 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:lifestylescreening/views/user/chat_tab.dart';
+import 'package:lifestylescreening/widgets/text/body_text.dart';
+import 'package:lifestylescreening/widgets/text/extra_text.dart';
+import 'package:lifestylescreening/widgets/text/h1_text.dart';
+import 'package:lifestylescreening/widgets/text/h2_text.dart';
+import 'package:lifestylescreening/widgets/text/h3_green_blue_text.dart';
+import 'package:lifestylescreening/widgets/text/h3_grey_text.dart';
+import 'package:lifestylescreening/widgets/text/h3_orange_text.dart';
+import 'package:lifestylescreening/widgets/text/intro_grey_text.dart';
+import 'package:lifestylescreening/widgets/text/intro_light_grey_text.dart';
 
 import 'package:lifestylescreening/widgets/inherited/inherited_widget.dart';
-import 'package:lifestylescreening/widgets/transitions/fade_transition.dart';
 
 class PageFour extends StatefulWidget {
   PageFour({Key key}) : super(key: key);
@@ -19,21 +27,21 @@ class _PageFourState extends State<PageFour> {
     final _userData = InheritedDataProvider.of(context);
 
     return Scaffold(
-      appBar: AppBar(
-        title: Text("Stel gerust een vraag"),
+      backgroundColor: Colors.white,
+      body: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          H1Text(text: "Lorem ipsum dolar sit amet"),
+          H2Text(text: "Lorem ipsum dolar sit amet"),
+          H3GreyText(text: "Lorem ipsum dolar sit amet"),
+          H3OrangeText(text: "Lorem ipsum dolar sit amet"),
+          H3GreenBlueText(text: "Lorem ipsum dolar sit amet"),
+          IntroLightGreyText(text: "Lorem ipsum dolar sit amet"),
+          IntroGreyText(text: "Lorem ipsum dolar sit amet"),
+          ExtraText(text: "Lorem ipsum dolar sit amet"),
+          BodyText(text: "Lorem ipsum dolar sit amet"),
+        ],
       ),
-      body: StreamBuilder<QuerySnapshot>(
-          stream: FirebaseFirestore.instance
-              .collection("categories")
-              .orderBy('order', descending: false)
-              .snapshots(),
-          builder:
-              (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
-            if (!snapshot.hasData) return Text("There is no expense");
-            return FadeInTransition(
-                child: ListView(
-                    children: getExpenseItems(snapshot, _userData.data.email)));
-          }),
     );
   }
 
