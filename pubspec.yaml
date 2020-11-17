@@ -60,16 +60,15 @@ flutter_icons:
 # The following section is specific to Flutter.
 flutter:
   fonts:
-   - family: GTWalsheimPro
+   - family: Sofia
      fonts:
-       - asset: assets/fonts/GTWalsheimPro-UltraLight.ttf
-       - asset: assets/fonts/GTWalsheimPro-UltraBold.ttf
-       - asset: assets/fonts/GTWalsheimPro-Thin.ttf
-       - asset: assets/fonts/GTWalsheimPro-Regular.ttf
-       - asset: assets/fonts/GTWalsheimPro-Medium.ttf
-       - asset: assets/fonts/GTWalsheimPro-Light.ttf
-       - asset: assets/fonts/GTWalsheimPro-Bold.ttf
-       - asset: assets/fonts/GTWalsheimPro-Black.ttf        
+       - asset: assets/fonts/Sofia-Pro-Black-Az.ttf
+       - asset: assets/fonts/Sofia-Pro-Bold-Az.ttf
+       - asset: assets/fonts/Sofia-Pro-Light-Az.ttf
+       - asset: assets/fonts/Sofia-Pro-Medium-Az.ttf
+       - asset: assets/fonts/Sofia-Pro-Regular-Az.ttf
+       - asset: assets/fonts/Sofia-Pro-UltraLight-Az.ttf
+    
   assets: 
   - playstore.png
   - health.png

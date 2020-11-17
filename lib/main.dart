@@ -87,7 +87,7 @@ class _MyAppState extends State<MyApp> {
         brightness: Brightness.light,
         primaryColor: const Color(0xFF456A67),
         accentColor: const Color(0xFFFA9215),
-        fontFamily: 'GTWalsheimPro',
+        fontFamily: 'Sofia',
       ),
       //   initialRoute: '/landing-page',
       routes: {'/landing-page': (context) => LandingPageView()},
