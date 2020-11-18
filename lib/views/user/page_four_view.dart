@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:lifestylescreening/healthpoint_icons.dart';
 import 'package:lifestylescreening/views/user/chat_tab.dart';
 import 'package:lifestylescreening/widgets/text/body_text.dart';
 import 'package:lifestylescreening/widgets/text/extra_text.dart';
@@ -40,6 +41,7 @@ class _PageFourState extends State<PageFour> {
           IntroGreyText(text: "Lorem ipsum dolar sit amet"),
           ExtraText(text: "Lorem ipsum dolar sit amet"),
           BodyText(text: "Lorem ipsum dolar sit amet"),
+          Icon(HealthpointIcons.streak1Icon),
         ],
       ),
     );

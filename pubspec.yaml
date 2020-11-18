@@ -68,7 +68,9 @@ flutter:
        - asset: assets/fonts/Sofia-Pro-Medium-Az.ttf
        - asset: assets/fonts/Sofia-Pro-Regular-Az.ttf
        - asset: assets/fonts/Sofia-Pro-UltraLight-Az.ttf
-    
+   - family:  HealthpointIcons
+     fonts:
+      - asset: assets/icon/HealthpointIcons.ttf
   assets: 
   - playstore.png
   - health.png
