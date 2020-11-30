@@ -92,7 +92,7 @@ class _DashboardState extends State<Dashboard>
                   controller: tabController,
                   children: [
                     DashboardOverview(),
-                    MessageOverView(),
+                    MessageOverView(userEmail: _userData.data.email,),
                     RecipeView(),
                     SurveyView()
                   ],

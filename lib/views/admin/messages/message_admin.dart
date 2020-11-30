@@ -1,14 +1,19 @@
+import 'dart:async';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:lifestylescreening/controllers/chat_controller.dart';
+import 'package:lifestylescreening/healthpoint_icons.dart';
+import 'package:lifestylescreening/models/message_model.dart';
+import 'package:lifestylescreening/views/admin/messages/admin_message_tile.dart';
+import 'package:lifestylescreening/widgets/text/h2_text.dart';
 import 'package:lifestylescreening/widgets/transitions/fade_transition.dart';
 
 class MessageAdmin extends StatefulWidget {
-  MessageAdmin({@required this.email, this.sender, this.id});
+  MessageAdmin({@required this.email, this.id});
 
   final String email;
-  final bool sender;
   final String id;
 
   @override
@@ -18,21 +23,29 @@ class MessageAdmin extends StatefulWidget {
 class _MessageAdminState extends State<MessageAdmin> {
   TextEditingController messageController = TextEditingController();
   ChatController _chatController = ChatController();
-
-  // String userEmail = "";
-  String description = "";
+  StreamSubscription<QuerySnapshot> _currentSubscription;
+  List<MessageModel> messageList = <MessageModel>[];
+  bool loading = true;
 
   @override
   void initState() {
-    //   getMyEmail();
+    _currentSubscription =
+        _chatController.streamAdminChat(widget.id).listen(_updateMessage);
     super.initState();
   }
 
   @override
   void dispose() {
     messageController.dispose();
-
+    _currentSubscription?.cancel();
     super.dispose();
+  }
+
+  void _updateMessage(QuerySnapshot snapshot) {
+    setState(() {
+      loading = false;
+      messageList = _chatController.getMessageList(snapshot);
+    });
   }
 
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
@@ -42,41 +55,40 @@ class _MessageAdminState extends State<MessageAdmin> {
     return Scaffold(
       key: _scaffoldKey,
       appBar: AppBar(
-        title: Text(widget.id),
-        backgroundColor: Colors.red,
+        title: ListTile(
+          visualDensity:
+              VisualDensity(horizontal: VisualDensity.maximumDensity),
+          title: H2Text(text: widget.id),
+        ),
+        backgroundColor: Colors.white,
+        centerTitle: true,
+        leading: IconButton(
+          icon: Icon(HealthpointIcons.arrowLeftIcon),
+          color: Theme.of(context).primaryColor,
+          onPressed: () =>
+              {FocusScope.of(context).unfocus(), Navigator.of(context).pop()},
+        ),
+        bottom: PreferredSize(
+            child: Container(
+              color: Theme.of(context).primaryColor,
+              height: 4.0,
+            ),
+            preferredSize: Size.fromHeight(4.0)),
       ),
       body: Column(
         mainAxisSize: MainAxisSize.max,
         children: <Widget>[
           Expanded(
-            child: StreamBuilder<QuerySnapshot>(
-              stream: _chatController.streamAdminChat(widget.id),
-              builder: (BuildContext context,
-                  AsyncSnapshot<QuerySnapshot> snapshot) {
-                if (!snapshot.hasData || snapshot.data.docs.isEmpty) {
-                  return welcomeChatMessage();
-                }
-                if (snapshot.data.docs.isEmpty) {
-                  return welcomeChatMessage();
-                }
-                return ListView.builder(
-                  addAutomaticKeepAlives: true,
-                  reverse: false,
-                  padding: EdgeInsets.all(20),
-                  itemCount: snapshot.data.docs.length,
-                  itemBuilder: (BuildContext context, int index) {
-                    return FadeInTransition(
-                      child: MessageTile(
-                        message:
-                            snapshot.data.docs[index].data()["description"],
-                        sendByMe: snapshot.data.docs[index].data()["sender"],
-                        dateTime: snapshot.data.docs[index]
-                            .data()["timestamp"]
-                            .toDate()
-                            .toString(),
-                      ),
-                    );
-                  },
+            child: ListView.builder(
+              reverse: false,
+              padding: EdgeInsets.all(20),
+              itemCount: messageList.length,
+              itemBuilder: (BuildContext context, int index) {
+                MessageModel message = messageList[index];
+                return FadeInTransition(
+                  child: AdminMessageTile(
+                    message: message,
+                  ),
                 );
               },
             ),
@@ -94,10 +106,10 @@ class _MessageAdminState extends State<MessageAdmin> {
                     textInputAction: TextInputAction.newline,
                     keyboardType: TextInputType.multiline,
                     textCapitalization: TextCapitalization.sentences,
-                    cursorColor: Colors.red,
+                    cursorColor: Theme.of(context).primaryColor,
                     controller: messageController,
                     decoration: InputDecoration(
-                        hintText: "Verstuur bericht",
+                        hintText: "Typ uw bericht...",
                         fillColor: Colors.grey[400],
                         hintStyle: TextStyle(
                           color: Colors.black,
@@ -109,16 +121,15 @@ class _MessageAdminState extends State<MessageAdmin> {
                           borderRadius: BorderRadius.circular(23),
                         ),
                         focusedBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: Colors.red, width: 1.0),
+                          borderSide: BorderSide(
+                              color: Theme.of(context).primaryColor,
+                              width: 1.0),
                           borderRadius: BorderRadius.circular(23),
                         ),
                         contentPadding: EdgeInsets.only(left: 32, right: 32)),
                   ),
                 ),
               ),
-              // SizedBox(
-              //   width: 10,
-              // ),
               GestureDetector(
                 onTap: () async {
                   await sendMessage();
@@ -128,7 +139,7 @@ class _MessageAdminState extends State<MessageAdmin> {
                   height: 45,
                   width: 45,
                   decoration: BoxDecoration(
-                      color: Colors.red,
+                      color: Theme.of(context).primaryColor,
                       borderRadius: BorderRadius.circular(40)),
                   child: Icon(Icons.send, color: Colors.white),
                 ),
@@ -154,100 +165,5 @@ class _MessageAdminState extends State<MessageAdmin> {
         messageController.clear();
       });
     }
-  }
-
-  welcomeChatMessage() {
-    return MessageTile(
-      message: '''
-Welkom bij de chat van Lifestyle Monitor!
-Hier kun u uw vragen stellen die u misschien kan hebben over deze applicatie.
-Alles wat u hoeft te doen is een vraag typen en deze naar ons sturen, iemand van Lifestyle Monitor zal deze vraag zo snel mogelijk beantwoorden!
-          ''',
-      sendByMe: false,
-      dateTime: "",
-    );
-  }
-}
-
-class MessageTile extends StatefulWidget {
-  MessageTile({@required this.message, @required this.sendByMe, this.dateTime});
-
-  final String message;
-  final String dateTime;
-  final bool sendByMe;
-
-  @override
-  _MessageTileState createState() => _MessageTileState();
-}
-
-class _MessageTileState extends State<MessageTile> {
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: [
-        Container(
-          margin: !widget.sendByMe
-              //true
-              ? EdgeInsets.only(
-                  left: MediaQuery.of(context).size.width / 3.5,
-                  right: 8,
-                  top: 8,
-                  bottom: 8)
-              //false
-              : EdgeInsets.only(
-                  left: 8,
-                  top: 8,
-                  bottom: 8,
-                  right: MediaQuery.of(context).size.width / 3.5),
-          padding: EdgeInsets.all(10),
-          decoration: BoxDecoration(
-            //change color to match the same as the sender
-            color: !widget.sendByMe
-                //true
-                ? Color(0xff007EF4)
-                //false
-                : Colors.red,
-            borderRadius: BorderRadius.circular(15),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.grey.withOpacity(0.5),
-                spreadRadius: 2,
-                blurRadius: 5,
-              ),
-            ],
-          ),
-          child: Text(widget.message,
-              textAlign: TextAlign.start,
-              style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 16,
-                  fontFamily: 'OverpassRegular',
-                  fontWeight: FontWeight.w300)),
-        ),
-        !widget.sendByMe
-            //true
-            ? Container(
-                padding: EdgeInsets.only(right: 16),
-                child: Text(
-                  widget.dateTime,
-                  textAlign: TextAlign.end,
-                  style: TextStyle(
-                    fontSize: 10,
-                  ),
-                ))
-            //false
-            : Container(
-                padding: EdgeInsets.only(left: 16),
-                child: Text(
-                  widget.dateTime,
-                  textAlign: TextAlign.start,
-                  style: TextStyle(
-                    fontSize: 10,
-                  ),
-                ),
-              ),
-      ],
-    );
   }
 }
