@@ -1,44 +1,69 @@
+import 'dart:async';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:lifestylescreening/controllers/chat_controller.dart';
+import 'package:lifestylescreening/healthpoint_icons.dart';
+import 'package:lifestylescreening/models/user_message_model.dart';
 import 'package:lifestylescreening/views/admin/messages/message_admin.dart';
 import 'package:lifestylescreening/widgets/transitions/fade_transition.dart';
 
-class MessageOverView extends StatelessWidget {
-  const MessageOverView({this.userEmail});
+class MessageOverView extends StatefulWidget {
+  MessageOverView({this.userEmail});
   final userEmail;
 
   @override
-  Widget build(BuildContext context) {
-    return StreamBuilder<QuerySnapshot>(
-      stream: FirebaseFirestore.instance
-          .collection("messages")
-          .orderBy('category', descending: false)
-          .snapshots(),
-      builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
-        if (!snapshot.hasData) return Text("There is no expense");
-        return FadeInTransition(
-            child: ListView(children: getExpenseItems(snapshot)));
-      },
-    );
+  _MessageOverViewState createState() => _MessageOverViewState();
+}
+
+class _MessageOverViewState extends State<MessageOverView> {
+  ChatController _chatController = ChatController();
+  StreamSubscription<QuerySnapshot> _currentSubscription;
+  List<UserMessageModel> messageList = <UserMessageModel>[];
+  bool loading = true;
+
+  @override
+  void initState() {
+    _currentSubscription = _chatController
+        .streamUserMessage(widget.userEmail)
+        .listen(_updateMessage);
+    super.initState();
   }
 
-  getExpenseItems(AsyncSnapshot<QuerySnapshot> snapshot) {
-    return snapshot.data.docs
-        .map((doc) => MessageCard(
-            category: doc['category'],
-            email: userEmail,
-            sender: false,
-            id: doc.id))
-        .toList();
+  @override
+  void dispose() {
+    _currentSubscription?.cancel();
+    super.dispose();
+  }
+
+  void _updateMessage(QuerySnapshot snapshot) {
+    setState(() {
+      loading = false;
+      messageList = _chatController.getUserMessageList(snapshot);
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return ListView.builder(
+      reverse: false,
+      padding: EdgeInsets.all(20),
+      itemCount: messageList.length,
+      itemBuilder: (BuildContext context, int index) {
+        UserMessageModel message = messageList[index];
+        return FadeInTransition(
+          child: MessageCard(
+            messageModel: message,
+          ),
+        );
+      },
+    );
   }
 }
 
 class MessageCard extends StatelessWidget {
-  MessageCard({this.category, this.email, this.sender, this.id});
-  final String category;
-  final String email;
-  final bool sender;
-  final String id;
+  MessageCard({this.messageModel});
+  final UserMessageModel messageModel;
 
   @override
   Widget build(BuildContext context) {
@@ -46,7 +71,7 @@ class MessageCard extends StatelessWidget {
       margin: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
       padding: EdgeInsets.all(10),
       decoration: BoxDecoration(
-        color: Color(0xff007EF4),
+        color: const Color(0xFFA1CFBE),
         borderRadius: BorderRadius.circular(15),
         boxShadow: [
           BoxShadow(
@@ -62,19 +87,20 @@ class MessageCard extends StatelessWidget {
             context,
             MaterialPageRoute(
               builder: (context) =>
-                  MessageAdmin(email: email, sender: sender, id: id),
+                  MessageAdmin(email: messageModel.expert, id: messageModel.id),
             ),
           );
         },
         child: ListTile(
           leading: Icon(
             Icons.question_answer,
-            color: Colors.white,
+            size: 35,
+            color: Theme.of(context).primaryColor,
           ),
-          title: Text(id),
-          subtitle: Text(category),
+          title: Text(messageModel.id),
+          subtitle: Text(messageModel.expert),
           trailing: Material(
-            color: Color(0xff007EF4),
+            color: Colors.transparent,
             child: SizedBox(
               height: 45,
               width: 45,
@@ -82,7 +108,8 @@ class MessageCard extends StatelessWidget {
                 customBorder: CircleBorder(),
                 highlightColor: Colors.white,
                 child: Icon(
-                  Icons.arrow_forward,
+                  HealthpointIcons.arrowRightIcon,
+                  color: Theme.of(context).primaryColor,
                   size: 24,
                 ),
               ),
