@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:lifestylescreening/helper/functions.dart';
-import 'package:lifestylescreening/widgets/dialog/disclaimer_dialog.dart';
-import 'package:lifestylescreening/views/signin.dart';
-import 'package:lifestylescreening/views/signup.dart';
+import 'package:lifestylescreening/views/user/tutorial/disclaimer_view.dart';
+import 'package:lifestylescreening/views/user/tutorial/signin.dart';
+import 'package:lifestylescreening/widgets/cards/disclaimer_card.dart';
 import 'package:lifestylescreening/widgets/web/bottom_bar.dart';
 import 'package:lifestylescreening/widgets/web/start_survey.dart';
 
@@ -27,7 +27,7 @@ class _LandingPageViewState extends State<LandingPageView> {
   Future checkDisclaimerStatus() async {
     await HelperFunctions.getDisclaimerSharedPreference().then((value) {
       setState(() {
-        _disclaimerAccepted = value;
+        _disclaimerAccepted = false;
       });
     });
   }
@@ -65,7 +65,7 @@ class _LandingPageViewState extends State<LandingPageView> {
                       onTap: () {
                         Navigator.of(context).push(
                           MaterialPageRoute(
-                            builder: (_) => SignUp(),
+                            builder: (_) => DisclaimerView(),
                           ),
                         );
                       },
@@ -122,9 +122,7 @@ class _LandingPageViewState extends State<LandingPageView> {
             //  mainAxisSize: MainAxisSize.max,
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
-              (_disclaimerAccepted ?? false)
-                  ? StartSurvey()
-                  : DisclaimerScreen(onTap: onTap),
+              (_disclaimerAccepted ?? false) ? StartSurvey() : DisclaimerCard(),
               SizedBox(height: screenSize.height / 3),
               BottomBar(),
             ],

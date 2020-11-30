@@ -60,7 +60,7 @@ class _EditQuestionDialogState extends State<EditQuestionDialog> {
             keyboardType: TextInputType.number,
             textcontroller: orderController,
             errorMessage: "Geen geldige titel",
-            validator: 1,
+            validator: 6,
             secureText: false,
           ),
         )
@@ -74,13 +74,15 @@ class _EditQuestionDialogState extends State<EditQuestionDialog> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Flexible(
-          child: SelectCategory(
-            selectedCategory: _selectedCategory,
-            callBack: (val) => setState(() => _selectedCategory = val),
-          ),
+        SelectCategory(
+          selectedCategory: _selectedCategory,
+          callBack: (val) => setState(() => _selectedCategory = val),
         ),
-        Flexible(child: Text(_selectedCategory)),
+        Flexible(
+            child: Text(
+          _selectedCategory,
+          textDirection: TextDirection.rtl,
+        )),
       ],
     );
   }
@@ -119,6 +121,7 @@ class _EditQuestionDialogState extends State<EditQuestionDialog> {
 
   @override
   Widget build(BuildContext context) {
+    FocusScope.of(context).unfocus();
     return AlertDialog(
       scrollable: true,
       title: widget.newQuestion ? Text("NIEUW") : Text(widget.question.id),

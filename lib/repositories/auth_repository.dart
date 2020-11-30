@@ -1,13 +1,20 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/material.dart';
 import 'package:lifestylescreening/helper/functions.dart';
+import 'package:lifestylescreening/models/bmi_model.dart';
 import 'package:lifestylescreening/models/firebase_user.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:lifestylescreening/models/goals_model.dart';
+import 'package:lifestylescreening/models/interest_model.dart';
 import 'package:lifestylescreening/repositories/auth_repository_interface.dart';
+import 'package:lifestylescreening/views/user/tutorial/startup.dart';
 
 class AuthRepository extends IAuthRepository {
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
-  Future<AppUser> userFromFirebaseUser(User user) async {
+  Future<AppUser> userFromFirebaseUser(
+    User user,
+  ) async {
     AppUser _appUser;
 
     if (user != null) {
@@ -49,16 +56,26 @@ class AuthRepository extends IAuthRepository {
 
   @override
   Future signUpWithEmailAndPassword(
-      String email, String username, String password) async {
+    String email,
+    String username,
+    String password,
+    BMI bmi,
+    List<InterestModel> interestList,
+    List<GoalsModel> goalsList,
+  ) async {
     try {
       var _appUser = await _auth.createUserWithEmailAndPassword(
           email: email, password: password);
 
-      Map<String, String> userInfo = {
+      Map<String, dynamic> userInfo = {
         "userName": username,
         "email": email,
         "role": "user",
         "uid": _appUser.user.uid,
+        "age": bmi.age,
+        "height": bmi.height,
+        "weight": bmi.weight,
+        "gender": bmi.gender,
       };
 
       await FirebaseFirestore.instance
@@ -66,14 +83,40 @@ class AuthRepository extends IAuthRepository {
           .add(userInfo)
           .catchError((e) {
         //   print(e);
-      }).then((value) {
-        HelperFunctions.saveUserNameSharedPreference(username);
-        HelperFunctions.saveUserEmailSharedPreference(email);
-        HelperFunctions.saveUserPasswordSharedPreference(password);
-        HelperFunctions.saveUserRoleSharedPreference("user");
+      }).then((value) async {
+        for (int i = 0; i < interestList.length; i++) {
+          Map<String, dynamic> interestsInfo = {
+            "interest": interestList[i].interest,
+          };
+
+          await FirebaseFirestore.instance
+              .collection("users")
+              .doc(value.id)
+              .collection("interests")
+              .add(interestsInfo)
+              .catchError((e) {});
+        }
+
+        for (int i = 0; i < goalsList.length; i++) {
+          Map<String, dynamic> goalsInfo = {
+            "goal": goalsList[i].goals,
+          };
+
+          await FirebaseFirestore.instance
+              .collection("users")
+              .doc(value.id)
+              .collection("goals")
+              .add(goalsInfo)
+              .catchError((e) {});
+        }
+        await HelperFunctions.saveUserNameSharedPreference(username);
+        await HelperFunctions.saveUserEmailSharedPreference(email);
+        await HelperFunctions.saveUserPasswordSharedPreference(password);
+        await HelperFunctions.saveUserRoleSharedPreference("user");
       });
 
       User firebaseUser = _appUser.user;
+
       return userFromFirebaseUser(firebaseUser);
     } on FirebaseAuthException catch (e) {
       if (e.code == 'user-not-found') {
@@ -87,8 +130,17 @@ class AuthRepository extends IAuthRepository {
   }
 
   @override
-  Future signOut() async {
+  Future signOut(BuildContext context) async {
     try {
+      FocusScope.of(context).unfocus();
+      await HelperFunctions.saveUserLoggedInSharedPreference(false);
+      await HelperFunctions.removeUserNameSharedPreference();
+      await HelperFunctions.removeUserEmailSharedPreference();
+      await HelperFunctions.removeUserPasswordSharedPreference();
+
+      await Navigator.pushReplacement(
+          context, MaterialPageRoute(builder: (context) => StartUp()));
+
       return await _auth.signOut();
       // ignore: avoid_catches_without_on_clauses
     } catch (e) {

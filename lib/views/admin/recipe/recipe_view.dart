@@ -55,23 +55,25 @@ class _RecipeViewState extends State<RecipeView> {
 
   void _addNewRecipe() {
     showDialog(
-        barrierDismissible: false,
-        context: context,
-        builder: (BuildContext context) {
-          return EditRecipe(
-            recipe: RecipeModel(),
-            isNewRecipe: true,
-          );
-        });
+      barrierDismissible: false,
+      context: context,
+      builder: (BuildContext context) {
+        return EditRecipe(
+          recipe: RecipeModel(),
+          isNewRecipe: true,
+        );
+      },
+    );
   }
 
   void _removeRecipe(RecipeModel recipe) {
     showDialog(
-        context: context,
-        barrierDismissible: false,
-        builder: (BuildContext context) {
-          return RemoveRecipe(recipe: recipe);
-        });
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return RemoveRecipe(recipe: recipe);
+      },
+    );
   }
 
   @override

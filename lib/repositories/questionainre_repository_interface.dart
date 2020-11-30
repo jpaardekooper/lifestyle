@@ -1,13 +1,20 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:lifestylescreening/models/answer_model.dart';
+import 'package:lifestylescreening/models/category_model.dart';
 import 'package:lifestylescreening/models/question_model.dart';
 
 abstract class IQuestionnaireRepository {
   //user functions
 
-  //single question for user
-  Future<List<QuestionModel>> getQuestion();
+  //get question for user for DTD test
+  Future<List<QuestionModel>> getDTDQuestion();
+
+  //get question for user for Screening test
+  Future<List<QuestionModel>> getScreeningQuestion(String category);
+
+  Future<List<CategoryModel>> fetchCategories();
+
   //get options for question
   Future<List<AnswerModel>> getAnswer(String questionId);
 

@@ -1,42 +1,49 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:lifestylescreening/widgets/text/h2_text.dart';
 
 class LifestyleLogo extends StatelessWidget {
   LifestyleLogo({@required this.size, this.description});
 
   final double size;
   final String description;
+
   @override
   Widget build(BuildContext context) {
     return Hero(
-      tag: 'logo',
+      tag: 'intro-text',
       child: Material(
-          color: Colors.red,
-          type: MaterialType.transparency, // likely needed
-          child: RichText(
-            textAlign: TextAlign.center,
-            text: TextSpan(
-              text: 'MHealth ',
-              style: TextStyle(
-                  fontWeight: FontWeight.w500,
-                  color: Colors.white,
-                  fontSize: 50,
-                  decoration: TextDecoration.none),
-              children: <TextSpan>[
-                TextSpan(
-                  text: '\n',
+        color: Colors.transparent,
+        borderOnForeground: false,
+        child: Container(
+          color: Colors.transparent,
+          constraints: BoxConstraints(
+            minWidth: MediaQuery.of(context).size.width,
+            minHeight: MediaQuery.of(context).size.height * 0.2,
+          ),
+          child: SingleChildScrollView(
+            physics: NeverScrollableScrollPhysics(),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Image(
+                  image: AssetImage('assets/images/hart.png'),
+                  width: size,
+                  height: size,
                 ),
-                TextSpan(
-                  text: description ?? "",
-                  style: TextStyle(
-                      fontWeight: FontWeight.normal,
-                      color: Colors.white,
-                      fontSize: size,
-                      decoration: TextDecoration.none),
+                SizedBox(
+                  height: 10,
+                ),
+                H2Text(text: description ?? ""),
+                SizedBox(
+                  height: 25,
                 ),
               ],
             ),
-          )),
+          ),
+        ),
+      ),
     );
   }
 }

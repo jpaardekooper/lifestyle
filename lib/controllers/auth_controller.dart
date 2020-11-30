@@ -1,4 +1,8 @@
+import 'package:flutter/material.dart';
+import 'package:lifestylescreening/models/bmi_model.dart';
 import 'package:lifestylescreening/models/firebase_user.dart';
+import 'package:lifestylescreening/models/goals_model.dart';
+import 'package:lifestylescreening/models/interest_model.dart';
 import 'package:lifestylescreening/repositories/auth_repository.dart';
 import 'package:lifestylescreening/repositories/auth_repository_interface.dart';
 
@@ -10,12 +14,25 @@ class AuthController {
   }
 
   Future signUpWithEmailAndPassword(
-      String email, String username, String password) {
-    return _authRepository.signInWithEmailAndPassword(email, password);
+    String email,
+    String username,
+    String password,
+    BMI bmi,
+    List<InterestModel> interestList,
+    List<GoalsModel> goalsList,
+  ) {
+    return _authRepository.signUpWithEmailAndPassword(
+      email,
+      username,
+      password,
+      bmi,
+      interestList,
+      goalsList,
+    );
   }
 
-  Future signOut() {
-    return _authRepository.signOut();
+  Future signOut(BuildContext context) {
+    return _authRepository.signOut(context);
   }
 
   saveUserDetailsOnLogin(AppUser user, String password, bool rememberMe) {

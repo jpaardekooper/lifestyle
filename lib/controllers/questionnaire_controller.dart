@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:lifestylescreening/models/answer_model.dart';
+import 'package:lifestylescreening/models/category_model.dart';
 import 'package:lifestylescreening/models/question_model.dart';
 import 'package:lifestylescreening/repositories/questionnaire_repository.dart';
 import 'package:lifestylescreening/repositories/questionainre_repository_interface.dart';
@@ -10,8 +11,17 @@ class QuestionnaireController {
       QuestionnaireRepository();
 
 //Fetch a question for the user
-  Future<List<QuestionModel>> fetchQuestion() {
-    return _questionnaireRepository.getQuestion();
+  Future<List<QuestionModel>> fetchDTDQuestion() {
+    return _questionnaireRepository.getDTDQuestion();
+  }
+
+  //Fetch a question for the user
+  Future<List<QuestionModel>> fetchScreeningQuestion(String category) {
+    return _questionnaireRepository.getScreeningQuestion(category);
+  }
+
+  Future<List<CategoryModel>> fetchCategories() {
+    return _questionnaireRepository.fetchCategories();
   }
 
 //fetch an answer for the question
