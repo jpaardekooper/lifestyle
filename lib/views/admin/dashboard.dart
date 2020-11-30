@@ -5,7 +5,7 @@ import 'package:lifestylescreening/views/admin/dashboard_overview.dart';
 import 'package:lifestylescreening/views/admin/messages/messages_overview.dart';
 import 'package:lifestylescreening/views/admin/recipe/recipe_view.dart';
 import 'package:lifestylescreening/views/admin/survey/survey_view.dart';
-import 'package:lifestylescreening/views/startup.dart';
+import 'package:lifestylescreening/views/user/tutorial/startup.dart';
 import 'package:lifestylescreening/widgets/inherited/inherited_widget.dart';
 
 class Dashboard extends StatefulWidget {

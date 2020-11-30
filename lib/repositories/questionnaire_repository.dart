@@ -1,27 +1,59 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:lifestylescreening/models/answer_model.dart';
+import 'package:lifestylescreening/models/category_model.dart';
 import 'package:lifestylescreening/models/question_model.dart';
 import 'package:lifestylescreening/repositories/questionainre_repository_interface.dart';
 
 class QuestionnaireRepository implements IQuestionnaireRepository {
   @override
-  Future<List<QuestionModel>> getQuestion() async {
-    List<QuestionModel> _questionList = [];
+  Future<List<QuestionModel>> getDTDQuestion() async {
+    QuerySnapshot snapshot = await FirebaseFirestore.instance
+        .collection("surveys")
+        .doc('UjU63gtyZX8PlajmzHhX')
+        .collection("questions")
+        .orderBy('order', descending: false)
+        //    .where('order', isEqualTo: questionOrder)
+        //  .limit(1)
+        .get();
+
+    return snapshot.docs.map((DocumentSnapshot doc) {
+      return QuestionModel.fromSnapshot(doc);
+    }).toList();
+  }
+
+  @override
+  Future<List<QuestionModel>> getScreeningQuestion(String category) async {
+    List<QuestionModel> screeningList = [];
 
     QuerySnapshot snapshot = await FirebaseFirestore.instance
         .collection("surveys")
         .doc('UjU63gtyZX8PlajmzHhX')
         .collection("questions")
-        //    .where('order', isEqualTo: questionOrder)
-        //  .limit(1)
+        .where("category", isEqualTo: category)
         .get();
 
     snapshot.docs.map((DocumentSnapshot doc) {
-      _questionList.add(QuestionModel.fromSnapshot(doc));
+      screeningList.add(QuestionModel.fromSnapshot(doc));
     }).toList();
 
-    return _questionList;
+    screeningList.sort((a, b) => a.order.compareTo(b.order));
+
+    return screeningList;
+  }
+
+  @override
+  Future<List<CategoryModel>> fetchCategories() async {
+    QuerySnapshot snapshot = await FirebaseFirestore.instance
+        .collection("surveys")
+        .doc('UjU63gtyZX8PlajmzHhX')
+        .collection("categories")
+        .orderBy('order', descending: false)
+        .get();
+
+    return snapshot.docs.map((DocumentSnapshot doc) {
+      return CategoryModel.fromSnapshot(doc);
+    }).toList();
   }
 
   @override

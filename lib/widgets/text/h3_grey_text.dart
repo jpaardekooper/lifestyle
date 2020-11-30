@@ -8,11 +8,11 @@ class H3GreyText extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Text(
-      text.toUpperCase(),
+      text,
       style: TextStyle(
         color: const Color(0xFFA2A4A3),
         fontFamily: 'Sofia',
-        fontSize: 15,
+        fontSize: 13,
         fontWeight: FontWeight.bold,
       ),
     );

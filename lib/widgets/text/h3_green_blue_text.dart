@@ -12,7 +12,7 @@ class H3GreenBlueText extends StatelessWidget {
       style: TextStyle(
         color: const Color(0xFF73B39A),
         fontFamily: 'Sofia',
-        fontSize: 15,
+        fontSize: MediaQuery.of(context).size.height * 0.02,
         fontWeight: FontWeight.bold,
       ),
     );

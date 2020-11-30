@@ -7,13 +7,17 @@ class H2Text extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Text(
-      text,
-      style: TextStyle(
-        color: Theme.of(context).primaryColor,
-        fontFamily: 'Sofia',
-        fontSize: 25,
-        fontWeight: FontWeight.bold,
+    return Material(
+      color: Colors.transparent,
+      type: MaterialType.transparency,
+      child: Text(
+        text,
+        style: TextStyle(
+            color: Theme.of(context).primaryColor,
+            fontFamily: 'Sofia',
+            fontSize: MediaQuery.of(context).size.height * 0.03,
+            fontWeight: FontWeight.bold,
+            decoration: TextDecoration.none),
       ),
     );
   }

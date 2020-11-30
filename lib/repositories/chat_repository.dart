@@ -1,5 +1,4 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/rendering.dart';
 import 'package:lifestylescreening/models/admin_model.dart';
 import 'package:lifestylescreening/models/message_model.dart';
 import 'package:lifestylescreening/models/user_message_model.dart';
@@ -127,22 +126,18 @@ class ChatRepository extends IChatRepository {
       //    print(e);
     });
 
-    await FirebaseFirestore.instance
-        .collection("messages")
-        .doc(id)
-        .update({
-          'open': false,
-        })
-        .catchError((e) {
+    await FirebaseFirestore.instance.collection("messages").doc(id).update({
+      'open': false,
+    }).catchError((e) {
       //    print(e);
     });
   }
 
   @override
-  Future<void> closeChat(String id) async{
+  Future<void> closeChat(String id) async {
     await FirebaseFirestore.instance.collection("messages").doc(id).update({
       'ref': 'closed',
-    }).catchError((e){
+    }).catchError((e) {
       //    print(e);
     });
   }

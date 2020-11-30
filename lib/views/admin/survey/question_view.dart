@@ -139,13 +139,13 @@ class _QuestionViewState extends State<QuestionView> {
         Row(
           children: [
             IconButton(
-              icon: Icon(Icons.edit, size: 18),
+              icon: Icon(Icons.edit, size: 16),
               onPressed: () {
                 _editQuestion(question);
               },
             ),
             IconButton(
-              icon: Icon(Icons.delete, size: 18, color: Colors.red),
+              icon: Icon(Icons.delete, size: 16, color: Colors.red),
               onPressed: () {
                 _removeQuestion(question);
               },

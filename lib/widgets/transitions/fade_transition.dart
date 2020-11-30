@@ -17,10 +17,10 @@ class _FadeInTransitionState extends State<FadeInTransition>
   void initState() {
     _controller = AnimationController(
       vsync: this,
-      duration: Duration(milliseconds: 800),
+      duration: Duration(milliseconds: 1000),
     );
     _animation = Tween(
-      begin: 0.0,
+      begin: 0.1,
       end: 1.0,
     ).animate(_controller);
     super.initState();

@@ -48,7 +48,7 @@ class _StartSurveyState extends State<StartSurvey> {
 
   Widget fetchQuestion(BuildContext context) {
     return FutureBuilder<List<QuestionModel>>(
-      future: _questionnaireController.fetchQuestion(),
+      future: _questionnaireController.fetchDTDQuestion(),
       builder: (context, snapshot) {
         _questionList = snapshot.data;
         if (_questionList == null || _questionList.isEmpty) {
