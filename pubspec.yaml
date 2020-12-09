@@ -25,6 +25,7 @@ dependencies:
     sdk: flutter
   cached_network_image: ^2.3.3
   firebase_core: ^0.5.2
+  flutter_switch: ^0.0.2
   firebase_auth: ^0.18.3
   cloud_firestore: ^0.14.3
   shared_preferences: ^0.5.12
@@ -75,4 +76,5 @@ flutter:
   - assets/images/
   - playstore.png
   - health.png
+  - settings-info.png
   uses-material-design: true
