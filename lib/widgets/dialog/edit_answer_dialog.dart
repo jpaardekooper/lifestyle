@@ -3,6 +3,7 @@ import 'package:lifestylescreening/controllers/questionnaire_controller.dart';
 import 'package:lifestylescreening/models/answer_model.dart';
 import 'package:lifestylescreening/models/question_model.dart';
 import 'package:lifestylescreening/widgets/forms/custom_textformfield.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
 
 class Formule {
   const Formule(this.id, this.text);
@@ -249,24 +250,37 @@ class _EditAnswerDialogState extends State<EditAnswerDialog> {
     return AlertDialog(
       scrollable: true,
       // title: widget.answer. ? Text("NIEUW") : Text(widget.question.id),
-      content: SingleChildScrollView(
-        child: _isLoading
-            ? CircularProgressIndicator()
-            : Form(
-                key: _formKey,
-                child: Column(
-                  mainAxisSize: MainAxisSize.max,
-                  children: [
-                    showQuestion(context),
-                    showEditWidgets(context),
-                  ],
-                ),
-              ),
+      content: Builder(
+        builder: (context) {
+          Size size = MediaQuery.of(context).size;
+          return Container(
+            width: kIsWeb ? size.width - 300 : size.width,
+            height: size.height - 50,
+            child: SingleChildScrollView(
+              child: _isLoading
+                  ? CircularProgressIndicator()
+                  : Form(
+                      key: _formKey,
+                      child: Column(
+                        mainAxisSize: MainAxisSize.max,
+                        children: [
+                          showQuestion(context),
+                          showEditWidgets(context),
+                        ],
+                      ),
+                    ),
+            ),
+          );
+        },
       ),
+
       actions: <Widget>[
         FlatButton(
           child: Text('CANCEL'),
           onPressed: () => Navigator.pop(context),
+        ),
+        SizedBox(
+          width: 30,
         ),
         RaisedButton(
           child: Text('Opslaan'),

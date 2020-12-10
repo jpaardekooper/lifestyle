@@ -54,81 +54,84 @@ class LoginVisual extends StatelessWidget {
         goToWelcomePage(context, data);
       }
     });
-    return Scaffold(
-      key: _scaffoldKey,
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          Stack(
-            children: [
-              CustomPaint(
-                size: Size(MediaQuery.of(context).size.width,
-                    MediaQuery.of(context).size.height),
-                painter: TopLargeWavePainter(
-                  color: ColorTheme.extraLightOrange,
-                ),
-              ),
-              Positioned.fill(
-                bottom: size.height / 6,
-                child: Align(
-                  alignment: Alignment.center,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          H2Text(text: "Welkom bij HealthPoint"),
-                          SizedBox(height: 10),
-                          H1Text(text: data.userName),
-                        ],
-                      ),
-                      //loops through 3 images
-                      Hero(
-                        tag: 'welcome-logo',
-                        child: ImageTransition(),
-                      ),
-                    ],
+    return WillPopScope(
+      onWillPop: () => Future.value(false),
+      child: Scaffold(
+        key: _scaffoldKey,
+        body: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Stack(
+              children: [
+                CustomPaint(
+                  size: Size(MediaQuery.of(context).size.width,
+                      MediaQuery.of(context).size.height),
+                  painter: TopLargeWavePainter(
+                    color: ColorTheme.extraLightOrange,
                   ),
                 ),
-              ),
-              Positioned.fill(
-                bottom: size.height / 6,
-                child: Align(
-                  alignment: Alignment.bottomCenter,
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Container(
-                        constraints: BoxConstraints(
-                          maxWidth: size.width / 2,
-                          minWidth: size.width / 2,
+                Positioned.fill(
+                  bottom: size.height / 6,
+                  child: Align(
+                    alignment: Alignment.center,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            H2Text(text: "Welkom bij HealthPoint"),
+                            SizedBox(height: 10),
+                            H1Text(text: data.userName),
+                          ],
                         ),
-                        child: H3GreyText(
-                          text: "Uw gegevens worden ingeladen. . . ",
+                        //loops through 3 images
+                        Hero(
+                          tag: 'welcome-logo',
+                          child: ImageTransition(),
                         ),
-                      ),
-                      SizedBox(
-                        height: size.height * 0.02,
-                      ),
-                      Container(
+                      ],
+                    ),
+                  ),
+                ),
+                Positioned.fill(
+                  bottom: size.height / 6,
+                  child: Align(
+                    alignment: Alignment.bottomCenter,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Container(
                           constraints: BoxConstraints(
                             maxWidth: size.width / 2,
                             minWidth: size.width / 2,
                           ),
-                          child: LinearProgressIndicator()),
-                    ],
+                          child: H3GreyText(
+                            text: "Uw gegevens worden ingeladen. . . ",
+                          ),
+                        ),
+                        SizedBox(
+                          height: size.height * 0.02,
+                        ),
+                        Container(
+                            constraints: BoxConstraints(
+                              maxWidth: size.width / 2,
+                              minWidth: size.width / 2,
+                            ),
+                            child: LinearProgressIndicator()),
+                      ],
+                    ),
                   ),
-                ),
-              )
-            ],
-          ),
-        ],
+                )
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }

@@ -23,18 +23,19 @@ class QuestionnaireRepository implements IQuestionnaireRepository {
   }
 
   @override
-  Future<List<QuestionModel>> getScreeningQuestion(String category) async {
+  Future<List<QuestionModel>> getScreeningQuestion(
+      String id, String category) async {
     List<QuestionModel> screeningList = [];
 
     QuerySnapshot snapshot = await FirebaseFirestore.instance
         .collection("surveys")
-        .doc('UjU63gtyZX8PlajmzHhX')
+        .doc(id)
         .collection("questions")
         .where("category", isEqualTo: category)
         .get();
 
     snapshot.docs.map((DocumentSnapshot doc) {
-      screeningList.add(QuestionModel.fromSnapshot(doc));
+      return screeningList.add(QuestionModel.fromSnapshot(doc));
     }).toList();
 
     screeningList.sort((a, b) => a.order.compareTo(b.order));
@@ -43,10 +44,10 @@ class QuestionnaireRepository implements IQuestionnaireRepository {
   }
 
   @override
-  Future<List<CategoryModel>> fetchCategories() async {
+  Future<List<CategoryModel>> fetchCategories(String id) async {
     QuerySnapshot snapshot = await FirebaseFirestore.instance
         .collection("surveys")
-        .doc('UjU63gtyZX8PlajmzHhX')
+        .doc(id)
         .collection("categories")
         .orderBy('order', descending: false)
         .get();
@@ -62,7 +63,7 @@ class QuestionnaireRepository implements IQuestionnaireRepository {
 
     QuerySnapshot snapshot = await FirebaseFirestore.instance
         .collection("surveys")
-        .doc('UjU63gtyZX8PlajmzHhX')
+        .doc('Ru3rbllaRSHCGZDIpKvn')
         .collection("questions")
         .doc(id)
         .collection('answers')

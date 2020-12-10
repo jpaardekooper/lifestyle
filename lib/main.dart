@@ -81,8 +81,10 @@ class _MyAppState extends State<MyApp> {
         accentColor: const Color(0xFFFA9215),
         fontFamily: 'Sofia',
       ),
-      //   initialRoute: '/landing-page',
-      routes: {'/landing-page': (context) => LandingPageView()},
+      routes: {
+        '/landing-page': (context) => LandingPageView(),
+        '/start': (context) => StartUp()
+      },
       home: kIsWeb
           ? LandingPageView()
           : (_isLoggedin ?? false)

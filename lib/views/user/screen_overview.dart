@@ -37,7 +37,7 @@ class ScreenOverview extends StatelessWidget {
   void startScreeningTest(BuildContext context) {
     Navigator.of(context).push(
       createRoute(
-        ScreeningView(),
+        ScreeningView(id: 'Ru3rbllaRSHCGZDIpKvn'),
       ),
     );
   }

@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:lifestylescreening/controllers/auth_controller.dart';
 import 'package:lifestylescreening/helper/functions.dart';
 import 'package:lifestylescreening/views/admin/dashboard_overview.dart';
 import 'package:lifestylescreening/views/admin/messages/messages_overview.dart';
@@ -32,16 +33,6 @@ class _DashboardState extends State<Dashboard>
       });
   }
 
-  signOut() async {
-    await HelperFunctions.saveUserLoggedInSharedPreference(false);
-    await HelperFunctions.removeUserNameSharedPreference();
-    await HelperFunctions.removeUserEmailSharedPreference();
-    await HelperFunctions.removeUserPasswordSharedPreference();
-
-    await Navigator.pushReplacement(
-        context, MaterialPageRoute(builder: (context) => StartUp()));
-  }
-
   @override
   Widget build(BuildContext context) {
     final _userData = InheritedDataProvider.of(context);
@@ -57,9 +48,8 @@ class _DashboardState extends State<Dashboard>
             Padding(
                 padding: EdgeInsets.only(right: 20.0),
                 child: GestureDetector(
-                  onTap: () {
-                    //  await auth.signOut();
-                    signOut();
+                  onTap: () async {
+                    await AuthController().signOut(context);
                   },
                   child: Icon(
                     Icons.exit_to_app,
@@ -92,7 +82,9 @@ class _DashboardState extends State<Dashboard>
                   controller: tabController,
                   children: [
                     DashboardOverview(),
-                    MessageOverView(userEmail: _userData.data.email,),
+                    MessageOverView(
+                      userEmail: _userData.data.email,
+                    ),
                     RecipeView(),
                     SurveyView()
                   ],

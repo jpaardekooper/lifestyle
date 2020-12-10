@@ -7,7 +7,8 @@ import 'package:lifestylescreening/widgets/buttons/confirm_orange_button.dart';
 import 'package:lifestylescreening/widgets/inherited/inherited_timer_service.dart';
 
 class ScreeningView extends StatefulWidget {
-  ScreeningView({Key key}) : super(key: key);
+  ScreeningView({Key key, @required this.id}) : super(key: key);
+  final String id;
 
   @override
   _ScreeningViewState createState() => _ScreeningViewState();
@@ -116,7 +117,8 @@ class _ScreeningViewState extends State<ScreeningView> {
         ),
         body: FutureBuilder<List<CategoryModel>>(
           //fetching data from the corresponding questionId
-          future: _questionnaireController.fetchCategories(),
+          future:
+              _questionnaireController.fetchCategories('Ru3rbllaRSHCGZDIpKvn'),
           builder: (context, snapshot) {
             if (snapshot.connectionState != ConnectionState.done)
               return Center(
@@ -165,6 +167,7 @@ class _ScreeningViewState extends State<ScreeningView> {
                         addAnswer: addAnswer,
                         value: progressIndicator ?? valueforQuestion,
                         category: _categoryList[indexValue].category,
+                        id: widget.id ?? 'Ru3rbllaRSHCGZDIpKvn',
                       ),
                       Padding(
                         padding: const EdgeInsets.all(20.0),

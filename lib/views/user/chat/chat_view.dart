@@ -58,7 +58,6 @@ class _ChatScreen extends State<ChatScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      resizeToAvoidBottomInset: false,
       appBar: AppBar(
         title: ListTile(
           visualDensity:
@@ -100,81 +99,80 @@ class _ChatScreen extends State<ChatScreen> {
       body: loading
           ? Center(child: Text("Data wordt geladen"))
           : Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: <Widget>[
-              Expanded(
-                child: ListView.builder(
-                  reverse: false,
-                  shrinkWrap: true,
-                  padding: EdgeInsets.all(20),
-                  itemCount: messageList.length,
-                  itemBuilder: (BuildContext context, int index) {
-                    MessageModel message = messageList[index];
-                    return FadeInTransition(
-                      child: MessageTile(
-                        message: message,
-                      ),
-                    );
-                  },
-                ),
-              ),
-              Row(
-                children: [
-                  Expanded(
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: TextField(
-                        enableSuggestions: false,
-                        autocorrect: false,
-                        maxLines: 4,
-                        minLines: 1,
-                        textInputAction: TextInputAction.newline,
-                        keyboardType: TextInputType.multiline,
-                        textCapitalization:
-                            TextCapitalization.sentences,
-                        cursorColor: Theme.of(context).accentColor,
-                        controller: messageController,
-                        decoration: InputDecoration(
-                            hintText: "Typ uw bericht...",
-                            fillColor: Colors.grey[400],
-                            hintStyle: TextStyle(
-                              color: Colors.black,
-                              fontSize: 14,
-                            ),
-                            enabledBorder: OutlineInputBorder(
-                              borderSide: BorderSide(
-                                  color: Colors.grey[500], width: 1.0),
-                              borderRadius: BorderRadius.circular(23),
-                            ),
-                            focusedBorder: OutlineInputBorder(
-                              borderSide: BorderSide(
-                                  color: Theme.of(context).accentColor,
-                                  width: 1.0),
-                              borderRadius: BorderRadius.circular(23),
-                            ),
-                            contentPadding:
-                                EdgeInsets.only(left: 32, right: 32)),
-                      ),
-                    ),
-                  ),
-                  GestureDetector(
-                    onTap: () async {
-                      await sendMessage();
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: <Widget>[
+                Expanded(
+                  child: ListView.builder(
+                    reverse: false,
+                    shrinkWrap: true,
+                    padding: EdgeInsets.all(20),
+                    itemCount: messageList.length,
+                    itemBuilder: (BuildContext context, int index) {
+                      MessageModel message = messageList[index];
+                      return FadeInTransition(
+                        child: MessageTile(
+                          message: message,
+                        ),
+                      );
                     },
-                    child: Container(
-                      margin: EdgeInsets.only(left: 10, right: 10),
-                      height: 45,
-                      width: 45,
-                      decoration: BoxDecoration(
-                          color: Theme.of(context).accentColor,
-                          borderRadius: BorderRadius.circular(40)),
-                      child: Icon(Icons.send, color: Colors.white),
-                    ),
                   ),
-                ],
-              ),
-            ],
-          ),
+                ),
+                Row(
+                  children: [
+                    Expanded(
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: TextField(
+                          enableSuggestions: false,
+                          autocorrect: false,
+                          maxLines: 4,
+                          minLines: 1,
+                          textInputAction: TextInputAction.newline,
+                          keyboardType: TextInputType.multiline,
+                          textCapitalization: TextCapitalization.sentences,
+                          cursorColor: Theme.of(context).accentColor,
+                          controller: messageController,
+                          decoration: InputDecoration(
+                              hintText: "Typ uw bericht...",
+                              fillColor: Colors.grey[400],
+                              hintStyle: TextStyle(
+                                color: Colors.black,
+                                fontSize: 14,
+                              ),
+                              enabledBorder: OutlineInputBorder(
+                                borderSide: BorderSide(
+                                    color: Colors.grey[500], width: 1.0),
+                                borderRadius: BorderRadius.circular(23),
+                              ),
+                              focusedBorder: OutlineInputBorder(
+                                borderSide: BorderSide(
+                                    color: Theme.of(context).accentColor,
+                                    width: 1.0),
+                                borderRadius: BorderRadius.circular(23),
+                              ),
+                              contentPadding:
+                                  EdgeInsets.only(left: 32, right: 32)),
+                        ),
+                      ),
+                    ),
+                    GestureDetector(
+                      onTap: () async {
+                        await sendMessage();
+                      },
+                      child: Container(
+                        margin: EdgeInsets.only(left: 10, right: 10),
+                        height: 45,
+                        width: 45,
+                        decoration: BoxDecoration(
+                            color: Theme.of(context).accentColor,
+                            borderRadius: BorderRadius.circular(40)),
+                        child: Icon(Icons.send, color: Colors.white),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
     );
   }
 

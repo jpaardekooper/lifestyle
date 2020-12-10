@@ -13,6 +13,7 @@ class ScreeningQnaView extends StatelessWidget {
     @required this.addController,
     @required this.value,
     @required this.category,
+    @required this.id,
   }) : super(key: key);
 
   final VoidCallback addController;
@@ -20,6 +21,8 @@ class ScreeningQnaView extends StatelessWidget {
   final double value;
 
   final String category;
+
+  final String id;
 
   final Function(int, QuestionnaireModel) addAnswer;
 
@@ -63,7 +66,7 @@ class ScreeningQnaView extends StatelessWidget {
           minHeight: 5,
         ),
         FutureBuilder<List<QuestionModel>>(
-          future: _questionnaireController.fetchScreeningQuestion(category),
+          future: _questionnaireController.fetchScreeningQuestion(id, category),
           builder: (context, snapshot) {
             _questionList = snapshot.data;
 

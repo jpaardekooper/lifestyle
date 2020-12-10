@@ -11,9 +11,9 @@ abstract class IQuestionnaireRepository {
   Future<List<QuestionModel>> getDTDQuestion();
 
   //get question for user for Screening test
-  Future<List<QuestionModel>> getScreeningQuestion(String category);
+  Future<List<QuestionModel>> getScreeningQuestion(String id, String category);
 
-  Future<List<CategoryModel>> fetchCategories();
+  Future<List<CategoryModel>> fetchCategories(String id);
 
   //get options for question
   Future<List<AnswerModel>> getAnswer(String questionId);
