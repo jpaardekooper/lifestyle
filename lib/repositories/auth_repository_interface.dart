@@ -15,6 +15,8 @@ abstract class IAuthRepository {
       List<InterestModel> interestList,
       List<GoalsModel> goalsList);
 
+  Future updateUserData(String userId, String userName, BMI bmi);
+
   Future signOut(BuildContext context);
 
   saveUserDetailsOnLogin(AppUser user, String password, bool rememberMe);

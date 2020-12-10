@@ -130,6 +130,17 @@ class AuthRepository extends IAuthRepository {
   }
 
   @override
+  Future updateUserData(String userId, String userName, BMI bmi) async {
+    await FirebaseFirestore.instance.collection("users").doc(userId).update({
+      'userName': userName,
+      "age": bmi.age,
+      "height": bmi.height,
+      "weight": bmi.weight,
+      "gender": bmi.gender,
+    });
+  }
+
+  @override
   Future signOut(BuildContext context) async {
     try {
       FocusScope.of(context).unfocus();
