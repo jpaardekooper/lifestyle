@@ -31,6 +31,10 @@ class AuthController {
     );
   }
 
+  Future updateUserData(String userId, String userName, BMI bmi) {
+    return _authRepository.updateUserData(userId, userName, bmi);
+  }
+
   Future signOut(BuildContext context) {
     return _authRepository.signOut(context);
   }

@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:lifestylescreening/healthpoint_icons.dart';
 import 'package:lifestylescreening/views/user/screen_overview.dart';
-import 'package:lifestylescreening/views/user/page_settings.dart';
+import 'package:lifestylescreening/views/user/settings/page_settings.dart';
 import 'package:lifestylescreening/views/user/page_two_view.dart';
 import 'package:lifestylescreening/views/user/ask_question_view.dart';
 import 'package:lifestylescreening/views/user/recipe_tab.dart';
