@@ -7,7 +7,9 @@ import 'package:lifestylescreening/views/user/screening/screening_view.dart';
 import 'package:lifestylescreening/widgets/buttons/confirm_orange_button.dart';
 import 'package:lifestylescreening/widgets/buttons/ghost_grey_button.dart';
 import 'package:lifestylescreening/widgets/buttons/ghost_orange_button.dart';
+import 'package:lifestylescreening/widgets/colors/color_theme.dart';
 import 'package:lifestylescreening/widgets/inherited/inherited_widget.dart';
+import 'package:lifestylescreening/widgets/painter/top_small_wave_painter.dart';
 import 'package:lifestylescreening/widgets/text/body_text.dart';
 import 'package:lifestylescreening/widgets/text/h1_text.dart';
 import 'package:lifestylescreening/widgets/text/intro_grey_text.dart';
@@ -27,79 +29,94 @@ class _AskQuestionViewState extends State<AskQuestionView> {
   @override
   Widget build(BuildContext context) {
     final _userData = InheritedDataProvider.of(context);
-    return Scaffold(
-      backgroundColor: Colors.white,
-      body: SingleChildScrollView(
-        child: Stack(
-          children: [
-            Center(
-              child: Container(
-                width: MediaQuery.of(context).size.width - 50,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    SizedBox(height: 100),
-                    H1Text(text: "Kom in contact met experts"),
-                    SizedBox(height: 10),
-                    IntroLightGreyText(
-                        text:
-                            // ignore: lines_longer_than_80_chars
-                            "Contact opnemen met een expert heeft verschillende voordelen. Als je onzeker bent over een gezondheidsrisico of als je nieuwschierig bent over hoe het advies van een expert je verder kan helpen, kan dat hier worden gedaan"),
-                    SizedBox(height: 40),
-                    ClipRRect(
-                      borderRadius: BorderRadius.circular(40),
-                      child: Image.asset('assets/playstore.png'),
-                    ),
-                    SizedBox(height: 100),
-                    H1Text(text: "Een gepersonaliseerde health scan"),
-                    SizedBox(height: 10),
-                    IntroLightGreyText(
-                        text:
-                            // ignore: lines_longer_than_80_chars
-                            "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse finibus condimentum purus, eget pharetra sem ultricies sed. In hac habitasse platea dictumst. Aliquam erat volutpat. Aenean tristique tortor vitae mattis feugiat. Praesent in volutpat dolor. Phasellus finibus dictum viverra. Nunc hendrerit, est vitae accumsan bibendum, dolor tellus tempor felis, cursus fringilla odio nisi et arcu."),
-                    SizedBox(height: 20),
-                    SizedBox(
-                      width: MediaQuery.of(context).size.width * 0.35,
-                      child: ConfirmOrangeButton(
-                        text: "Start scan",
-                        onTap: () => {
-                          Navigator.of(context).push(
-                            createRoute(
-                              ScreeningView(),
-                            ),
-                          ),
-                        },
-                      ),
-                    ),
-                    SizedBox(height: 75),
-                    H1Text(text: "Beschikbare experts"),
-                    FutureBuilder<List<AdminModel>>(
-                      future: _chatController.getExperts(),
-                      builder: (BuildContext context, snapshot) {
-                        List<AdminModel> _adminList = snapshot.data;
-                        if (!snapshot.hasData) {
-                          return Center(child: CircularProgressIndicator());
-                        } else {
-                          return ListView.builder(
-                            physics: NeverScrollableScrollPhysics(),
-                            shrinkWrap: true,
-                            itemCount: _adminList.length,
-                            itemBuilder: (BuildContext context, index) {
-                              AdminModel _adminModel = _adminList[index];
-                              return ExpertOptions(
-                                  adminModel: _adminModel,
-                                  email: _userData.data.email);
-                            },
-                          );
-                        }
-                      },
-                    ),
-                  ],
-                ),
+    Size size = MediaQuery.of(context).size;
+    return SingleChildScrollView(
+      child: Stack(
+        children: [
+          Hero(
+            tag: 'background',
+            child: CustomPaint(
+              size: Size(size.width, size.height),
+              painter: TopSmallWavePainter(
+                color: ColorTheme.extraLightOrange,
               ),
             ),
-          ],
-        ),
+          ),
+          Center(
+            child: Container(
+              width: MediaQuery.of(context).size.width - 50,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  SizedBox(height: 100),
+                  H1Text(text: "Kom in contact met "),
+                  H1Text(text: "Specialisten"),
+                  SizedBox(height: 10),
+                  IntroLightGreyText(
+                      text:
+                          // ignore: lines_longer_than_80_chars
+                          "Contact opnemen met een expert heeft verschillende voordelen. Als je onzeker bent over een gezondheidsrisico of als je nieuwschierig bent over hoe het advies van een expert je verder kan helpen, kan dat hier worden gedaan"),
+                  SizedBox(height: 40),
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(40),
+                    child: Image.asset(
+                      'assets/images/doctor.jpg',
+                      height: MediaQuery.of(context).size.height / 4,
+                      fit: BoxFit.cover,
+                      width: MediaQuery.of(context).size.width,
+                    ),
+                  ),
+                  SizedBox(height: 40),
+                  H1Text(text: "Een gepersonaliseerde health scan"),
+                  SizedBox(height: 10),
+                  IntroLightGreyText(
+                      text:
+                          // ignore: lines_longer_than_80_chars
+                          "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse finibus condimentum purus, eget pharetra sem ultricies sed. "),
+                  SizedBox(height: 20),
+                  SizedBox(
+                    width: MediaQuery.of(context).size.width * 0.35,
+                    child: ConfirmOrangeButton(
+                      text: "Start scan",
+                      onTap: () => {
+                        Navigator.of(context).push(
+                          createRoute(
+                            ScreeningView(
+                              id: 'Ru3rbllaRSHCGZDIpKvn',
+                            ),
+                          ),
+                        ),
+                      },
+                    ),
+                  ),
+                  SizedBox(height: 75),
+                  H1Text(text: "Beschikbare experts"),
+                  FutureBuilder<List<AdminModel>>(
+                    future: _chatController.getExperts(),
+                    builder: (BuildContext context, snapshot) {
+                      List<AdminModel> _adminList = snapshot.data;
+                      if (!snapshot.hasData) {
+                        return Center(child: CircularProgressIndicator());
+                      } else {
+                        return ListView.builder(
+                          physics: NeverScrollableScrollPhysics(),
+                          shrinkWrap: true,
+                          itemCount: _adminList.length,
+                          itemBuilder: (BuildContext context, index) {
+                            AdminModel _adminModel = _adminList[index];
+                            return ExpertOptions(
+                                adminModel: _adminModel,
+                                email: _userData.data.email);
+                          },
+                        );
+                      }
+                    },
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }

@@ -16,12 +16,13 @@ class QuestionnaireController {
   }
 
   //Fetch a question for the user
-  Future<List<QuestionModel>> fetchScreeningQuestion(String category) {
-    return _questionnaireRepository.getScreeningQuestion(category);
+  Future<List<QuestionModel>> fetchScreeningQuestion(
+      String id, String category) {
+    return _questionnaireRepository.getScreeningQuestion(id, category);
   }
 
-  Future<List<CategoryModel>> fetchCategories() {
-    return _questionnaireRepository.fetchCategories();
+  Future<List<CategoryModel>> fetchCategories(String id) {
+    return _questionnaireRepository.fetchCategories(id);
   }
 
 //fetch an answer for the question

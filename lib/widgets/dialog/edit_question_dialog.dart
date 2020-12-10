@@ -4,6 +4,8 @@ import 'package:lifestylescreening/controllers/questionnaire_controller.dart';
 import 'package:lifestylescreening/models/question_model.dart';
 import 'package:lifestylescreening/widgets/forms/custom_textformfield.dart';
 import 'package:lifestylescreening/widgets/cards/select_category.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
+import 'package:lifestylescreening/widgets/text/h1_text.dart';
 
 class EditQuestionDialog extends StatefulWidget {
   const EditQuestionDialog(
@@ -53,7 +55,7 @@ class _EditQuestionDialogState extends State<EditQuestionDialog> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Flexible(child: Text("Vraag volgorde")),
+        Flexible(child: H1Text(text: "Vraag volgorde")),
         SizedBox(
           width: 50,
           child: CustomTextFormField(
@@ -92,7 +94,7 @@ class _EditQuestionDialogState extends State<EditQuestionDialog> {
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
-        Text("Vraagstelling: "),
+        H1Text(text: "Vraagstelling: "),
         CustomTextFormField(
           keyboardType: TextInputType.multiline,
           textcontroller: questionController,
@@ -121,29 +123,38 @@ class _EditQuestionDialogState extends State<EditQuestionDialog> {
 
   @override
   Widget build(BuildContext context) {
-    FocusScope.of(context).unfocus();
     return AlertDialog(
       scrollable: true,
       title: widget.newQuestion ? Text("NIEUW") : Text(widget.question.id),
-      content: SingleChildScrollView(
-        child: _isLoading
-            ? CircularProgressIndicator()
-            : Form(
-                key: _formKey,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    showQuestion(context),
-                    showOrder(context),
-                    showCategories(context),
-                  ],
-                ),
-              ),
-      ),
+      content: Builder(builder: (context) {
+        Size size = MediaQuery.of(context).size;
+        return Container(
+          width: kIsWeb ? size.width - 300 : size.width,
+          height: size.height - 50,
+          child: SingleChildScrollView(
+            child: _isLoading
+                ? CircularProgressIndicator()
+                : Form(
+                    key: _formKey,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        showQuestion(context),
+                        showOrder(context),
+                        showCategories(context),
+                      ],
+                    ),
+                  ),
+          ),
+        );
+      }),
       actions: <Widget>[
         FlatButton(
           child: Text('CANCEL'),
           onPressed: () => Navigator.pop(context),
+        ),
+        SizedBox(
+          width: 30,
         ),
         RaisedButton(
             child: Text('Opslaan'),

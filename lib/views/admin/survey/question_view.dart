@@ -10,6 +10,7 @@ import 'package:lifestylescreening/models/survey_model.dart';
 import 'package:lifestylescreening/widgets/dialog/edit_answer_dialog.dart';
 import 'package:lifestylescreening/widgets/dialog/edit_question_dialog.dart';
 import 'package:lifestylescreening/widgets/dialog/remove_question_dialog.dart';
+import 'package:lifestylescreening/widgets/text/h1_text.dart';
 
 class QuestionView extends StatefulWidget {
   const QuestionView({@required this.surveyDetails});
@@ -134,8 +135,8 @@ class _QuestionViewState extends State<QuestionView> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Text("Vraag: ${question.order}"),
-        Text("categorie: ${question.category}"),
+        H1Text(text: "Vraag: ${question.order}"),
+        H1Text(text: "categorie: ${question.category}"),
         Row(
           children: [
             IconButton(
@@ -178,7 +179,7 @@ class _QuestionViewState extends State<QuestionView> {
       ),
       builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
         if (!snapshot.hasData) {
-          return CircularProgressIndicator();
+          return Container();
         } else {
           List<AnswerModel> _answerList =
               _questionnaireController.fetchAnswers(snapshot);
@@ -267,7 +268,7 @@ class _QuestionViewState extends State<QuestionView> {
             itemBuilder: (BuildContext ctxt, int index) {
               QuestionModel question = _questionList[index];
               if (_questionList.isEmpty) {
-                return CircularProgressIndicator();
+                return Container();
               } else {
                 return Container(
                   padding:
@@ -300,13 +301,20 @@ class _QuestionViewState extends State<QuestionView> {
       appBar: AppBar(
         title: Text(widget.surveyDetails.title),
       ),
-      body: _isLoading
-          ? CircularProgressIndicator()
-          : _questionList.isNotEmpty
-              ? showQuestionAndAnswer(context)
-              : Center(
-                  child: Text('Geen vragen gevonden'),
-                ),
+      body: Center(
+        child: Container(
+          width: MediaQuery.of(context).size.width < 1300
+              ? MediaQuery.of(context).size.width
+              : MediaQuery.of(context).size.width - 310,
+          child: _isLoading
+              ? Center(child: CircularProgressIndicator())
+              : _questionList.isNotEmpty
+                  ? showQuestionAndAnswer(context)
+                  : Center(
+                      child: Text('Geen vragen gevonden'),
+                    ),
+        ),
+      ),
       floatingActionButton: FloatingActionButton(
         onPressed: () => _addQuestion(context),
         child: Icon(Icons.add),

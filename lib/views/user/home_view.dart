@@ -42,73 +42,76 @@ class _HomeState extends State<Home> {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        body: ValueListenableBuilder(
-          builder: (BuildContext context, int value, Widget child) {
-            // This builder will only get called when the counter
-            // is updated.
-            return _widgetOptions.elementAt(counter.value);
-          },
-          valueListenable: counter,
-        ),
-        bottomNavigationBar: ValueListenableBuilder(
-            valueListenable: counter,
+    return WillPopScope(
+      onWillPop: () => Future.value(false),
+      child: SafeArea(
+        child: Scaffold(
+          body: ValueListenableBuilder(
             builder: (BuildContext context, int value, Widget child) {
-              return BottomNavigationBar(
-                iconSize: MediaQuery.of(context).size.width * 0.05,
-                selectedItemColor: Colors.white,
-                unselectedItemColor: Colors.black,
-                showSelectedLabels: false,
-                showUnselectedLabels: false,
-                type: BottomNavigationBarType.fixed,
-                items: <BottomNavigationBarItem>[
-                  BottomNavigationBarItem(
-                    icon: BottomNavigationLogo(
-                      bottomAppIcon: HealthpointIcons.houseIcon,
-                      bottomAppName: 'overzicht',
-                      visible: counter.value == 0,
+              // This builder will only get called when the counter
+              // is updated.
+              return _widgetOptions.elementAt(counter.value);
+            },
+            valueListenable: counter,
+          ),
+          bottomNavigationBar: ValueListenableBuilder(
+              valueListenable: counter,
+              builder: (BuildContext context, int value, Widget child) {
+                return BottomNavigationBar(
+                  iconSize: MediaQuery.of(context).size.width * 0.05,
+                  selectedItemColor: Colors.white,
+                  unselectedItemColor: Colors.black,
+                  showSelectedLabels: false,
+                  showUnselectedLabels: false,
+                  type: BottomNavigationBarType.fixed,
+                  items: <BottomNavigationBarItem>[
+                    BottomNavigationBarItem(
+                      icon: BottomNavigationLogo(
+                        bottomAppIcon: HealthpointIcons.houseIcon,
+                        bottomAppName: 'overzicht',
+                        visible: counter.value == 0,
+                      ),
+                      label: 'overzicht',
                     ),
-                    label: 'overzicht',
-                  ),
-                  BottomNavigationBarItem(
-                    icon: BottomNavigationLogo(
-                      bottomAppIcon: HealthpointIcons.checklistIcon,
-                      bottomAppName: 'doelen',
-                      visible: counter.value == 1,
+                    BottomNavigationBarItem(
+                      icon: BottomNavigationLogo(
+                        bottomAppIcon: HealthpointIcons.checklistIcon,
+                        bottomAppName: 'doelen',
+                        visible: counter.value == 1,
+                      ),
+                      label: 'doelen',
                     ),
-                    label: 'doelen',
-                  ),
-                  BottomNavigationBarItem(
-                    icon: BottomNavigationLogo(
-                      bottomAppIcon: HealthpointIcons.tabIcon,
-                      bottomAppName: 'recepten',
-                      visible: counter.value == 2,
+                    BottomNavigationBarItem(
+                      icon: BottomNavigationLogo(
+                        bottomAppIcon: HealthpointIcons.tabIcon,
+                        bottomAppName: 'recepten',
+                        visible: counter.value == 2,
+                      ),
+                      label: 'recepten',
                     ),
-                    label: 'recepten',
-                  ),
-                  BottomNavigationBarItem(
-                    icon: BottomNavigationLogo(
-                      bottomAppIcon: HealthpointIcons.messageIcon,
-                      bottomAppName: 'stel een vraag',
-                      visible: counter.value == 3,
+                    BottomNavigationBarItem(
+                      icon: BottomNavigationLogo(
+                        bottomAppIcon: HealthpointIcons.messageIcon,
+                        bottomAppName: 'stel een vraag',
+                        visible: counter.value == 3,
+                      ),
+                      label: 'stel een vraag',
                     ),
-                    label: 'stel een vraag',
-                  ),
-                  BottomNavigationBarItem(
-                    icon: BottomNavigationLogo(
-                      bottomAppIcon: HealthpointIcons.settingsIcon,
-                      bottomAppName: 'instellingen',
-                      visible: counter.value == 4,
+                    BottomNavigationBarItem(
+                      icon: BottomNavigationLogo(
+                        bottomAppIcon: HealthpointIcons.settingsIcon,
+                        bottomAppName: 'instellingen',
+                        visible: counter.value == 4,
+                      ),
+                      label: 'instellingen',
                     ),
-                    label: 'instellingen',
-                  ),
-                ],
-                currentIndex: counter.value,
-                //    selectedItemColor: Colors.red[800],
-                onTap: _onItemTapped,
-              );
-            }),
+                  ],
+                  currentIndex: counter.value,
+                  //    selectedItemColor: Colors.red[800],
+                  onTap: _onItemTapped,
+                );
+              }),
+        ),
       ),
     );
   }

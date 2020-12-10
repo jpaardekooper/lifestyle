@@ -142,22 +142,16 @@ class AuthRepository extends IAuthRepository {
 
   @override
   Future signOut(BuildContext context) async {
-    try {
-      FocusScope.of(context).unfocus();
-      await HelperFunctions.saveUserLoggedInSharedPreference(false);
-      await HelperFunctions.removeUserNameSharedPreference();
-      await HelperFunctions.removeUserEmailSharedPreference();
-      await HelperFunctions.removeUserPasswordSharedPreference();
+    FocusScope.of(context).unfocus();
+    await HelperFunctions.saveUserLoggedInSharedPreference(false);
+    await HelperFunctions.removeUserNameSharedPreference();
+    await HelperFunctions.removeUserEmailSharedPreference();
+    await HelperFunctions.removeUserPasswordSharedPreference();
 
-      await Navigator.pushReplacement(
-          context, MaterialPageRoute(builder: (context) => StartUp()));
+    await _auth.signOut();
 
-      return await _auth.signOut();
-      // ignore: avoid_catches_without_on_clauses
-    } catch (e) {
-      //  print(e.toString());
-      return null;
-    }
+    await Navigator.pushReplacement(
+        context, MaterialPageRoute(builder: (context) => StartUp()));
   }
 
   @override
