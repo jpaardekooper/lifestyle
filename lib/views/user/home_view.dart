@@ -1,11 +1,13 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:lifestylescreening/healthpoint_icons.dart';
+import 'package:lifestylescreening/views/user/recipe/recipe_tab.dart';
+
 import 'package:lifestylescreening/views/user/screen_overview.dart';
 import 'package:lifestylescreening/views/user/settings/page_settings.dart';
 import 'package:lifestylescreening/views/user/page_two_view.dart';
 import 'package:lifestylescreening/views/user/ask_question_view.dart';
-import 'package:lifestylescreening/views/user/recipe_tab.dart';
+
 import 'package:lifestylescreening/widgets/logo/bottom_navigation_logo.dart';
 
 final ValueNotifier<int> counter = ValueNotifier<int>(0);
@@ -24,8 +26,8 @@ class _HomeState extends State<Home> {
   void initState() {
     _widgetOptions = <Widget>[
       ScreenOverview(),
-      RecipeTab(),
       PageTwo(),
+      RecipeTab(),
       AskQuestionView(),
       PageSettings(),
     ];
