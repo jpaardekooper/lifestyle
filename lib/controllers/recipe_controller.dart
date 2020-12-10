@@ -25,4 +25,20 @@ class RecipeController {
   Future<List<RecipeModel>> getRecipeListOnce() {
     return _recipeRepository.getRecipeListOnce();
   }
+
+  Future<List<RecipeModel>> getUserFavoriteRecipe(String userId) {
+    return _recipeRepository.getUserFavoriteRecipe(userId);
+  }
+
+  Future<bool> checkFavoriteMarker(String markerId, String userId) {
+    return _recipeRepository.checkFavoriteMarker(markerId, userId);
+  }
+
+  Future<void> addFavoriteRecipe(String userId, String recipeId) {
+    return _recipeRepository.addFavoriteRecipe(userId, recipeId);
+  }
+
+  Future<void> removeFavoriteRecipe(String userId, String recipeId) {
+    return _recipeRepository.removeFavoriteRecipe(userId, recipeId);
+  }
 }

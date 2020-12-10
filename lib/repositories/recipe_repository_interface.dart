@@ -11,4 +11,12 @@ abstract class IRecipeRepository {
   Future<void> updateRecipe(String recipeId, Map data, bool newItem);
 
   Future<void> removeRecipe(String recipeId);
+
+  Future<List<RecipeModel>> getUserFavoriteRecipe(String userId);
+
+  Future<void> addFavoriteRecipe(String userId, String recipeId);
+
+  Future<void> removeFavoriteRecipe(String userId, String recipeId);
+
+  Future<bool> checkFavoriteMarker(String markerId, String userId);
 }
