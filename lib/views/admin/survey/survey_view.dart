@@ -1,11 +1,13 @@
 import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:lifestylescreening/controllers/survey_controller.dart';
 import 'package:lifestylescreening/models/survey_model.dart';
-import 'package:lifestylescreening/views/admin/survey/question_view.dart';
+import 'package:lifestylescreening/widgets/colors/color_theme.dart';
 import 'package:lifestylescreening/widgets/dialog/edit_survey_dialog.dart';
 import 'package:lifestylescreening/widgets/dialog/remove_survey_dialog.dart';
+import 'package:lifestylescreening/widgets/text/h2_text.dart';
 
 //Overzicht van alle surveys die gepubliceert zijn
 class SurveyView extends StatefulWidget {
@@ -83,63 +85,68 @@ class _SurveyViewState extends State<SurveyView> {
 
         return Padding(
           padding: const EdgeInsets.all(8.0),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              Expanded(
-                child: ListTile(
-                  onTap: () {
-                    Navigator.of(context).push(
-                      MaterialPageRoute(
-                        builder: (_) => QuestionView(
-                          surveyDetails: survey,
+          child: Material(
+            elevation: 8,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                Expanded(
+                  child: ListTile(
+                    tileColor: ColorTheme.extraLightOrange,
+                    title: H2Text(text: survey.title),
+                    subtitle: ListView.builder(
+                      itemCount: survey.category.length,
+                      shrinkWrap: true,
+                      itemBuilder: (context, index) {
+                        return Row(
+                          children: [
+                            Text("${(index + 1)} \t"),
+                            Text(survey.category[index]),
+                          ],
+                        );
+                      },
+                    ),
+                    trailing: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        RawMaterialButton(
+                          child: Icon(
+                            Icons.edit,
+                            color: Colors.black,
+                          ),
+                          onPressed: () {
+                            _editSurveyName(survey);
+                          },
+                          constraints: const BoxConstraints(
+                            minWidth: 35.0,
+                            minHeight: 35.0,
+                          ),
+                          elevation: 2.0,
+                          fillColor: Colors.white,
+                          shape: CircleBorder(),
                         ),
-                      ),
-                    );
-                  },
-                  tileColor: Colors.blue,
-                  title: Text(survey.title),
-                  subtitle: Text(survey.category ?? ""),
-                  trailing: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      RawMaterialButton(
-                        child: Icon(
-                          Icons.edit,
-                          color: Colors.black,
+                        RawMaterialButton(
+                          child: Icon(
+                            Icons.delete,
+                            color: Colors.red,
+                          ),
+                          onPressed: () {
+                            _removeSurvey(survey);
+                          },
+                          constraints: const BoxConstraints(
+                            minWidth: 35.0,
+                            minHeight: 35.0,
+                          ),
+                          elevation: 2.0,
+                          fillColor: Colors.white,
+                          shape: CircleBorder(),
                         ),
-                        onPressed: () {
-                          _editSurveyName(survey);
-                        },
-                        constraints: const BoxConstraints(
-                          minWidth: 35.0,
-                          minHeight: 35.0,
-                        ),
-                        elevation: 2.0,
-                        fillColor: Colors.white,
-                        shape: CircleBorder(),
-                      ),
-                      RawMaterialButton(
-                        child: Icon(
-                          Icons.delete,
-                          color: Colors.red,
-                        ),
-                        onPressed: () {
-                          _removeSurvey(survey);
-                        },
-                        constraints: const BoxConstraints(
-                          minWidth: 35.0,
-                          minHeight: 35.0,
-                        ),
-                        elevation: 2.0,
-                        fillColor: Colors.white,
-                        shape: CircleBorder(),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         );
       },
@@ -157,7 +164,7 @@ class _SurveyViewState extends State<SurveyView> {
               : _surveys.isNotEmpty
                   ? showSurveys(context)
                   : Center(
-                      child: Text('Geen recepten gevonden'),
+                      child: Text('Geen surveys gevonden'),
                       //onPressed: _onAddRandomRecipesPressed,
                     ),
         ),

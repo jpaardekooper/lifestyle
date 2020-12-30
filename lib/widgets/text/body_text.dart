@@ -7,13 +7,16 @@ class BodyText extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Text(
-      text,
-      style: TextStyle(
-        color: const Color(0xFF253635),
-        fontFamily: 'Sofia',
-        fontSize: 17.5,
-        fontWeight: FontWeight.bold,
+    return Material(
+      color: Colors.transparent,
+      child: Text(
+        text,
+        style: TextStyle(
+          color: const Color(0xFF253635),
+          fontFamily: 'Sofia',
+          fontSize: MediaQuery.of(context).size.height * 0.019,
+          fontWeight: FontWeight.bold,
+        ),
       ),
     );
   }

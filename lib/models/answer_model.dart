@@ -5,18 +5,22 @@ class AnswerModel {
       {this.id,
       this.next,
       this.option,
+      this.optionTypeIsNumber,
       this.order,
-      this.isMultipleChoice,
       this.points,
-      this.pointsCalculator})
+      this.pointsCalculator,
+      this.type,
+      this.lastAnswer})
       : reference = null;
   final String id;
   final int next;
   final String option;
+  final bool optionTypeIsNumber;
   final int order;
-  final bool isMultipleChoice;
   final int points;
   final int pointsCalculator;
+  final String type;
+  final String lastAnswer;
 
   final DocumentReference reference;
 
@@ -25,9 +29,11 @@ class AnswerModel {
         id = snapshot.id,
         next = snapshot.data()['next'],
         option = snapshot.data()['option'],
+        optionTypeIsNumber = snapshot.data()['option_type_is_number'],
         order = snapshot.data()['order'],
-        isMultipleChoice = snapshot.data()['isMultipleChoice'],
         points = snapshot.data()['points'],
         pointsCalculator = snapshot.data()['pointsCalculator'],
+        type = snapshot.data()['type'],
+        lastAnswer = snapshot.data()['lastAnswer'] ?? "",
         reference = snapshot.reference;
 }

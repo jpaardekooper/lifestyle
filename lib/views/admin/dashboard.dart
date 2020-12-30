@@ -1,12 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:lifestylescreening/controllers/auth_controller.dart';
-import 'package:lifestylescreening/helper/functions.dart';
-import 'package:lifestylescreening/views/admin/dashboard_overview.dart';
+import 'package:lifestylescreening/views/admin/categories/categories_view.dart';
+import 'package:lifestylescreening/views/admin/dashboard_view.dart';
 import 'package:lifestylescreening/views/admin/messages/messages_overview.dart';
 import 'package:lifestylescreening/views/admin/recipe/recipe_view.dart';
 import 'package:lifestylescreening/views/admin/survey/survey_view.dart';
-import 'package:lifestylescreening/views/user/tutorial/startup.dart';
 import 'package:lifestylescreening/widgets/inherited/inherited_widget.dart';
 
 class Dashboard extends StatefulWidget {
@@ -25,7 +24,7 @@ class _DashboardState extends State<Dashboard>
   @override
   void initState() {
     super.initState();
-    tabController = TabController(vsync: this, length: 4, initialIndex: 0)
+    tabController = TabController(vsync: this, length: 5, initialIndex: 0)
       ..addListener(() {
         setState(() {
           active = tabController.index;
@@ -37,66 +36,70 @@ class _DashboardState extends State<Dashboard>
   Widget build(BuildContext context) {
     final _userData = InheritedDataProvider.of(context);
 
-    return SafeArea(
-      child: Scaffold(
-        // backgroundColor: Colors.blue,
-        appBar: AppBar(
-          automaticallyImplyLeading:
-              MediaQuery.of(context).size.width < 1300 ? true : false,
-          title: Text("DASHBOARD"),
-          actions: <Widget>[
-            Padding(
-                padding: EdgeInsets.only(right: 20.0),
-                child: GestureDetector(
-                  onTap: () async {
-                    await AuthController().signOut(context);
-                  },
-                  child: Icon(
-                    Icons.exit_to_app,
-                    size: 26.0,
-                  ),
-                )),
-          ],
-        ),
-        body: Row(
-          children: <Widget>[
-            MediaQuery.of(context).size.width < 1300
-                ? Container()
-                : Card(
-                    elevation: 2.0,
-                    child: Container(
-                        margin: EdgeInsets.all(0),
-                        height: MediaQuery.of(context).size.height,
-                        width: 300,
-                        color: Colors.white,
-                        child: listDrawerItems(false)),
-                  ),
-            Container(
-              width: MediaQuery.of(context).size.width < 1300
-                  ? MediaQuery.of(context).size.width
-                  : MediaQuery.of(context).size.width - 310,
-              child: InheritedDataProvider(
-                data: _userData.data,
-                child: TabBarView(
-                  physics: NeverScrollableScrollPhysics(),
-                  controller: tabController,
-                  children: [
-                    DashboardOverview(),
-                    MessageOverView(
-                      userEmail: _userData.data.email,
+    return WillPopScope(
+      onWillPop: () => Future.value(false),
+      child: SafeArea(
+        child: Scaffold(
+          // backgroundColor: Colors.blue,
+          appBar: AppBar(
+            automaticallyImplyLeading:
+                MediaQuery.of(context).size.width < 1300 ? true : false,
+            title: Text("DASHBOARD"),
+            actions: <Widget>[
+              Padding(
+                  padding: EdgeInsets.only(right: 20.0),
+                  child: GestureDetector(
+                    onTap: () async {
+                      await AuthController().signOut(context);
+                    },
+                    child: Icon(
+                      Icons.exit_to_app,
+                      size: 26.0,
                     ),
-                    RecipeView(),
-                    SurveyView()
-                  ],
+                  )),
+            ],
+          ),
+          body: Row(
+            children: <Widget>[
+              MediaQuery.of(context).size.width < 1300
+                  ? Container()
+                  : Card(
+                      elevation: 2.0,
+                      child: Container(
+                          margin: EdgeInsets.all(0),
+                          height: MediaQuery.of(context).size.height,
+                          width: 300,
+                          color: Colors.white,
+                          child: listDrawerItems(false)),
+                    ),
+              Container(
+                width: MediaQuery.of(context).size.width < 1300
+                    ? MediaQuery.of(context).size.width
+                    : MediaQuery.of(context).size.width - 310,
+                child: InheritedDataProvider(
+                  data: _userData.data,
+                  child: TabBarView(
+                    physics: NeverScrollableScrollPhysics(),
+                    controller: tabController,
+                    children: [
+                      DashboardView(),
+                      MessageOverView(
+                        userEmail: _userData.data.email,
+                      ),
+                      RecipeView(),
+                      CategoriesView(),
+                      SurveyView()
+                    ],
+                  ),
                 ),
-              ),
-            )
-          ],
-        ),
+              )
+            ],
+          ),
 
-        drawer: Padding(
-            padding: EdgeInsets.only(top: 56),
-            child: Drawer(child: listDrawerItems(true))),
+          drawer: Padding(
+              padding: EdgeInsets.only(top: 56),
+              child: Drawer(child: listDrawerItems(true))),
+        ),
       ),
     );
   }
@@ -203,19 +206,51 @@ class _DashboardState extends State<Dashboard>
             alignment: Alignment.centerLeft,
             child: Container(
               padding: EdgeInsets.only(top: 22, bottom: 22, right: 22),
-              child: Row(children: [
-                Icon(Icons.category),
-                SizedBox(
-                  width: 8,
-                ),
-                Text(
-                  "Survey",
-                  style: TextStyle(
-                    fontSize: 18,
-                    fontFamily: 'HelveticaNeue',
+              child: Row(
+                children: [
+                  Icon(Icons.category),
+                  SizedBox(
+                    width: 8,
                   ),
-                ),
-              ]),
+                  Text(
+                    "Categorieën",
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontFamily: 'HelveticaNeue',
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+        FlatButton(
+          color: tabController.index == 4 ? Colors.grey[100] : Colors.white,
+          onPressed: () {
+            tabController.animateTo(4);
+            if (drawerStatus) {
+              Navigator.pop(context);
+            }
+          },
+          child: Align(
+            alignment: Alignment.centerLeft,
+            child: Container(
+              padding: EdgeInsets.only(top: 22, bottom: 22, right: 22),
+              child: Row(
+                children: [
+                  Icon(Icons.category),
+                  SizedBox(
+                    width: 8,
+                  ),
+                  Text(
+                    "Survey",
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontFamily: 'HelveticaNeue',
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
         ),

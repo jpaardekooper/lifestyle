@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:lifestylescreening/models/category_model.dart';
 
 //setting data when a dropdown menu item is selected
 typedef void StringCallback(String val);
@@ -17,16 +18,19 @@ class SelectCategory extends StatelessWidget {
       stream: FirebaseFirestore.instance.collection("categories").snapshots(),
       builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
         if (!snapshot.hasData) return Text("Er zijn geen categoriën gevonden");
+        // List<CategoryModel> _cat = snapshot.data;
+        // return
+
         return DropdownButton(
           hint: Text(
             "Categorieën lijst",
-            style: TextStyle(fontSize: 14),
+            //   style: TextStyle(fontSize: 14),
           ),
           icon: Icon(
             Icons.arrow_downward,
           ),
-          iconSize: 24,
-          elevation: 16,
+          //   iconSize: 24,
+          //  elevation: 16,
           onChanged: (value) {
             selectedCategory = value['category'];
             callBack(value['category']);

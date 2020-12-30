@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 class ColorTheme {
+  static const accentOrange = Color(0xFFFA9215);
   static const darkGrey = Color(0xFF2E5350);
   static const lightGrey = Color(0xFFA2A4A3);
   static const grey = Color(0xFF253635);

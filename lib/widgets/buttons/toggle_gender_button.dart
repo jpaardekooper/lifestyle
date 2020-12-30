@@ -35,8 +35,8 @@ class _ToggleGenderButtonState extends State<ToggleGenderButton> {
         color: Theme.of(context).primaryColor,
         borderRadius: BorderRadius.circular(8),
         constraints: BoxConstraints(
-            minWidth: (MediaQuery.of(context).size.width - 40) / 2.2,
-            maxWidth: (MediaQuery.of(context).size.width - 40) / 2.2,
+            minWidth: (MediaQuery.of(context).size.width - 40) / 2.3,
+            maxWidth: (MediaQuery.of(context).size.width - 40) / 2.3,
             minHeight: 40),
         children: <Widget>[
           Padding(

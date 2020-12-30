@@ -1,24 +1,42 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:lifestylescreening/models/answer_model.dart';
 
 class CustomAnswerFormField extends StatelessWidget {
-  const CustomAnswerFormField({
-    this.keyboardType,
-    this.textcontroller,
-    this.errorMessage,
-    this.validator,
-    this.hintText,
-  });
+  const CustomAnswerFormField(
+      {this.keyboardType,
+      this.textcontroller,
+      this.errorMessage,
+      this.validator,
+      this.hintText,
+      this.function,
+      this.suffixText,
+      this.answerModel});
 
   final TextInputType keyboardType;
   final TextEditingController textcontroller;
   final String errorMessage;
   final int validator;
   final String hintText;
+  final Function(AnswerModel) function;
+  final AnswerModel answerModel;
+  final String suffixText;
 
   inputDecoration(BuildContext context) {
     return InputDecoration(
       filled: true,
+      suffixIcon: suffixText == null
+          ? null
+          : Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Text(
+                suffixText ?? "",
+                style: TextStyle(
+                    color: Theme.of(context).accentColor,
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold),
+              ),
+            ),
       hintText: hintText ?? "",
       contentPadding: const EdgeInsets.all(0),
       fillColor: Colors.transparent,
@@ -78,15 +96,18 @@ class CustomAnswerFormField extends StatelessWidget {
         validator: (val) {
           switch (validator) {
             case 1:
+              function(answerModel);
               return val.isEmpty ? errorMessage : null;
               break;
             case 2:
+              function(answerModel);
               if (double.tryParse(val) != null) {
                 return null;
               } else {
                 return 'Vul een geldig getal in';
               }
               break;
+
             default:
               return val.isEmpty ? errorMessage : null;
           }

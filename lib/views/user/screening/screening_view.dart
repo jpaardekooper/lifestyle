@@ -1,184 +1,451 @@
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 import 'package:flutter/material.dart';
 import 'package:lifestylescreening/controllers/questionnaire_controller.dart';
-import 'package:lifestylescreening/models/category_model.dart';
-import 'package:lifestylescreening/models/questionnaire_model.dart';
-import 'package:lifestylescreening/views/user/screening/fetch_question_and_answer_view.dart';
+import 'package:lifestylescreening/models/answer_model.dart';
+import 'package:lifestylescreening/models/firebase_user.dart';
+
+import 'package:lifestylescreening/models/question_model.dart';
+
+import 'package:lifestylescreening/models/survey_model.dart';
+import 'package:lifestylescreening/models/survey_result_model.dart';
+
 import 'package:lifestylescreening/widgets/buttons/confirm_orange_button.dart';
+import 'package:lifestylescreening/widgets/cards/selected_answer_card.dart';
 import 'package:lifestylescreening/widgets/inherited/inherited_timer_service.dart';
+import 'package:lifestylescreening/widgets/text/h1_text.dart';
+import 'package:lifestylescreening/widgets/text/h2_text.dart';
 
 class ScreeningView extends StatefulWidget {
-  ScreeningView({Key key, @required this.id}) : super(key: key);
-  final String id;
-
+  const ScreeningView({@required this.user, @required this.surveyTitle});
+  final AppUser user;
+  final String surveyTitle;
   @override
   _ScreeningViewState createState() => _ScreeningViewState();
 }
 
 class _ScreeningViewState extends State<ScreeningView> {
-  int nextQuestionInQue;
-
-  double progressIndicator;
-
-  double valueforQuestion;
-
-  List<TextEditingController> _textControllerList;
-
   final QuestionnaireController _questionnaireController =
       QuestionnaireController();
 
-  List<CategoryModel> _categoryList;
-
   final _formKey = GlobalKey<FormState>();
 
-  int indexValue;
-
+  double progressIndicatorValue;
+  int categoryIndex;
   int screeningDuration;
-
   final timerService = TimerService();
-
+  List<TextEditingController> _controllerList;
+  // List<QuestionModel> _questionList;
+  List<SurveyResultModel> _surveyResult;
+  List<SurveyModel> _surveyList;
+  List<AnswerModel> _userAnswers;
+  List<String> _questions;
+  String category;
+  // bool lastSurveyCategory;
   @override
   void initState() {
-    nextQuestionInQue = 1;
-
-    valueforQuestion = 0.0;
-
-    _textControllerList = [];
-
-    _categoryList = [];
-
-    indexValue = 0;
+    category = "";
+    categoryIndex = 0;
+    progressIndicatorValue = 0;
+    timerService.start();
+    _controllerList = [];
+//    _questionList = [];
+    _surveyResult = [];
+    _surveyList = [];
+    _userAnswers = [];
+    _questions = [];
+    //   lastSurveyCategory = false;
     super.initState();
   }
 
   @override
   void dispose() {
-    _textControllerList.clear();
+    timerService.stop();
+
+    timerService.dispose();
     super.dispose();
   }
 
-  void nextQuestion() {
-    for (int i = 0; i < _textControllerList.length; i++) {
-      //   print(_textControllerList[i].text);
+  void addAnswerToList(AnswerModel answer) {
+    if (!_userAnswers.contains(answer)) {
+      _userAnswers.add(answer);
+    } else {
+      _userAnswers.remove(answer);
+      _userAnswers.add(answer);
     }
+  }
 
+  void nextQuestion(double progressValue) async {
     if (_formKey.currentState.validate()) {
+      FocusScope.of(context).unfocus();
       screeningDuration = timerService.currentDuration.inSeconds;
-      //   print("HET HEEFT ${timerService.currentDuration.inSeconds} geduurd");
+      List<String> _ansersToFirebaseList = [];
+      List<String> categoriesList = [];
+      //total score for a category
+      int userCategoryScore = 0;
+
+      // only for category bewegen
+      int scorecalc = 0;
+      for (int i = 0; i < _userAnswers.length; i++) {
+        //different score calculation for category bewegen
+        if (category == "Bewegen") {
+          switch (_userAnswers[i].pointsCalculator) {
+            case 0:
+              userCategoryScore += _userAnswers[i].points;
+              break;
+            case 1:
+              scorecalc +=
+                  (double.parse(_controllerList[i].text) * 0.5).round();
+              break;
+            case 2:
+              scorecalc += (double.parse(_controllerList[i].text) * 1).round();
+              break;
+            case 3:
+              scorecalc += (double.parse(_controllerList[i].text) * 2).round();
+              break;
+            case 4:
+              if (_userAnswers[i].lastAnswer == _controllerList[i].text)
+                userCategoryScore += _userAnswers[i].points;
+              break;
+          }
+        } else {
+          switch (_userAnswers[i].pointsCalculator) {
+            case 0:
+              userCategoryScore += _userAnswers[i].points;
+              break;
+            case 1:
+              userCategoryScore +=
+                  (int.parse(_controllerList[i].text) * 0.5).round();
+              break;
+            case 2:
+              userCategoryScore +=
+                  (int.parse(_controllerList[i].text) * 1).round();
+              break;
+            case 3:
+              userCategoryScore +=
+                  (int.parse(_controllerList[i].text) * 2).round();
+              break;
+            case 4:
+              if (_userAnswers[i].lastAnswer == _controllerList[i].text)
+                userCategoryScore += _userAnswers[i].points;
+              break;
+          }
+        }
+
+        _ansersToFirebaseList.add(_controllerList[i].text);
+      }
+
+      if (scorecalc < 30) {
+        userCategoryScore += 1;
+      }
+
+      Map<String, dynamic> data = {
+        "question": FieldValue.arrayUnion(_questions),
+        "answer": FieldValue.arrayUnion(_ansersToFirebaseList),
+        "points": userCategoryScore,
+        "duration": screeningDuration,
+        "date": DateTime.now()
+      };
+
+      int totalScorevalue = 0;
+      List<int> scorevalues = [];
+
+      if (_surveyList.isNotEmpty) {
+        categoriesList = _surveyList.first.category;
+
+        scorevalues.add(userCategoryScore);
+      }
+      if (_surveyResult.isNotEmpty) {
+        categoriesList = _surveyResult.first.categories;
+
+        scorevalues = _surveyResult.first.points_per_category;
+        scorevalues.add(userCategoryScore);
+
+        totalScorevalue = _surveyResult.first.total_points;
+        for (int i = 0;
+            i < _surveyResult.first.points_per_category.length;
+            i++) {
+          totalScorevalue += _surveyResult.first.points_per_category[i];
+        }
+      }
+
+      Map<String, dynamic> surveyData = {
+        "email": widget.user.email,
+        "index": categoryIndex + 1,
+        "categories": FieldValue.arrayUnion(categoriesList),
+        "category_points": FieldValue.arrayUnion(scorevalues),
+        "total_points": totalScorevalue,
+        "total_duration": screeningDuration,
+        "finished": false,
+        "date": DateTime.now(),
+      };
+
+      //user cat score
+
+      await _questionnaireController.setUserSurveyAnswer(widget.surveyTitle,
+          widget.user, category, categoryIndex, surveyData, data, false);
 
       timerService.reset();
       setState(() {
-        progressIndicator = valueforQuestion + 1;
-        indexValue += 1;
+        //starting timer again
+        timerService.start();
+        _controllerList.clear();
+        _userAnswers.clear();
+        _ansersToFirebaseList.clear();
+        _surveyResult.clear();
+        _surveyList.clear();
+        _questions.clear();
+        category = "";
       });
-
-      //add data to databse soon;;;;
-
-      _textControllerList.clear();
     }
   }
 
-  void addAnswerToList(String question, String answer, int points) {
-    // print(question + " " + answer + " " + points.toString());
+  Widget showAnsers(String category, QuestionModel question, int index) {
+    return FutureBuilder<List<AnswerModel>>(
+      //fetching data from the corresponding questionId
+      future: _questionnaireController.fetchAnswer(category, question.id),
+      builder: (context, snapshot) {
+        List<AnswerModel> _answerList = snapshot.data;
+        if (snapshot.connectionState != ConnectionState.done)
+          return Center(
+            child: Container(),
+          );
+        if (!snapshot.hasData) {
+          return Center(
+            child: Container(),
+          );
+        } else {
+          return SelectedAnswerCard(
+            answerList: _answerList,
+            controller: _controllerList[index],
+            function: addAnswerToList,
+          );
+        }
+      },
+    );
   }
 
-  Widget showNextQuestionButton() {
-    return Padding(
-      padding: const EdgeInsets.only(top: 20.0),
-      child: ConfirmOrangeButton(
-        text: "Volgende",
-        onTap: nextQuestion,
+  Widget getScreeningQuestion(String category) {
+    return FutureBuilder<List<QuestionModel>>(
+        future: _questionnaireController.fetchScreeningQuestion(category),
+        builder: (context, snapshot) {
+          final List<QuestionModel> _questionList = snapshot.data;
+          if (snapshot.connectionState != ConnectionState.done)
+            return Center(
+              child: CircularProgressIndicator(),
+            );
+          if (!snapshot.hasData) {
+            return Center(
+              child: CircularProgressIndicator(),
+            );
+          } else {
+            //looping through questions list
+            return ListView.builder(
+              physics: NeverScrollableScrollPhysics(),
+              shrinkWrap: true,
+              itemCount: _questionList.length,
+              itemBuilder: (BuildContext context, index) {
+                final QuestionModel question = _questionList[index];
+                _controllerList.add(TextEditingController());
+                _questions.add(question.question);
+                return Padding(
+                  padding: const EdgeInsets.all(20.0),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      //show question number and question
+                      Row(
+                        children: [
+                          Flexible(
+                            child: H2Text(
+                              text: "${question.order}.\t${question.question} ",
+                            ),
+                          ),
+                        ],
+                      ),
+                      //check if question url exist and not equal to 0
+                      question.url.contains("https://") && question.url != 0
+                          ? CachedNetworkImage(
+                              imageUrl: question.url,
+                              progressIndicatorBuilder:
+                                  (context, url, downloadProgress) =>
+                                      CircularProgressIndicator(
+                                          value: downloadProgress.progress),
+                              errorWidget: (context, url, error) =>
+                                  Icon(Icons.error),
+                            )
+                          : Container(),
+                      //show answers for the question
+                      //adding category question and index of iteration
+                      showAnsers(category, question, index),
+                    ],
+                  ),
+                );
+              },
+            );
+          }
+        });
+  }
+
+  Widget showFirstTimeSurvey(double _progressValue, String category) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        //progress value
+        LinearProgressIndicator(
+          value: progressIndicatorValue == 0
+              ? _progressValue
+              : progressIndicatorValue,
+          backgroundColor: Colors.white,
+          valueColor:
+              AlwaysStoppedAnimation<Color>(Theme.of(context).accentColor),
+          minHeight: 5,
+        ),
+
+        Padding(
+          padding: const EdgeInsets.all(20.0),
+          child: H1Text(text: "Vragen over $category"),
+        ),
+        getScreeningQuestion(category),
+        Padding(
+          padding: const EdgeInsets.all(20.0),
+          child: ConfirmOrangeButton(
+            text: "Volgende",
+            onTap: () {
+              nextQuestion(_progressValue);
+            },
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget surveyIsFinished(SurveyResultModel surveyResult) {
+    return Center(
+      child: Padding(
+        padding: const EdgeInsets.all(20.0),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Text("Bedankt voor uw deelname"),
+            ConfirmOrangeButton(
+                text: "Terug",
+                onTap: () {
+                  _questionnaireController.setSurveyToFalse(
+                      widget.surveyTitle, widget.user, surveyResult);
+                  Navigator.of(context).pop();
+                }),
+          ],
+        ),
       ),
     );
   }
 
-//question loading side
-  void addController() {
-    _textControllerList.add(TextEditingController());
-  }
+  Widget getScreeningCategories() {
+    return FutureBuilder<List<SurveyResultModel>>(
+        //fetching data from the corresponding questionId
+        future: _questionnaireController.checkSurveyResult(
+            widget.surveyTitle, widget.user.email),
+        builder: (context, snapshot) {
+          _surveyResult = snapshot.data;
+          //while loading
+          if (snapshot.connectionState != ConnectionState.done)
+            return Center(
+              child: CircularProgressIndicator(),
+            );
+          //no data found or doesnt exist
+          //doing quiz for the first time
+          if (!snapshot.hasData || _surveyResult.isEmpty) {
+            return FutureBuilder<List<SurveyModel>>(
+              //fetching data from the corresponding questionId
+              future:
+                  _questionnaireController.fetchCategories(widget.surveyTitle),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState != ConnectionState.done)
+                  return Center(
+                    child: CircularProgressIndicator(),
+                  );
+                if (!snapshot.hasData) {
+                  return Center(
+                    child: CircularProgressIndicator(),
+                  );
+                } else {
+                  //if data has been found
+                  _surveyList = snapshot.data;
+                  category = _surveyList.first.category[categoryIndex];
+                  final _progressValue =
+                      1.0 / _surveyList.first.category.length.toDouble();
 
-//check radio button with current list tile
-  void addAnswer(int index, QuestionnaireModel userAnswer) {
-    // print(index);
-    _textControllerList.elementAt(index).text = userAnswer.answer;
+                  progressIndicatorValue = _progressValue * categoryIndex;
+
+                  if (categoryIndex >= _surveyList.first.category.length - 1) {
+                    return surveyIsFinished(_surveyResult.first);
+                  }
+                  //showing the actual survey data
+                  else {
+                    //widget if no data has been found or first quiz
+                    return showFirstTimeSurvey(_progressValue, category);
+                  }
+                }
+              },
+            );
+          } else {
+            final _progressValue =
+                1.0 / _surveyResult.first.categories.length.toDouble();
+
+            categoryIndex = _surveyResult.first.index;
+
+            if (_surveyResult.first.finished) {
+              categoryIndex = 0;
+            }
+
+            progressIndicatorValue = _progressValue * categoryIndex;
+
+            category = _surveyResult.first.categories[categoryIndex];
+
+            if (categoryIndex >= _surveyResult.first.categories.length - 1 &&
+                _surveyResult.first.finished == false) {
+              return surveyIsFinished(_surveyResult.first);
+            } else {
+              return showFirstTimeSurvey(_progressValue, category);
+            }
+          }
+        });
   }
 
   @override
   Widget build(BuildContext context) {
-    timerService.start();
-    return TimerServiceProvider(
-      service: timerService,
-      child: Scaffold(
-        appBar: AppBar(
-          title: Text(
-            "HealthPoint Screening",
-            style: TextStyle(fontSize: 14),
-          ),
-          centerTitle: true,
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(
+          "HealthPoint Screening",
         ),
-        body: FutureBuilder<List<CategoryModel>>(
-          //fetching data from the corresponding questionId
-          future:
-              _questionnaireController.fetchCategories('Ru3rbllaRSHCGZDIpKvn'),
-          builder: (context, snapshot) {
-            if (snapshot.connectionState != ConnectionState.done)
-              return Center(
-                child: CircularProgressIndicator(),
-              );
-            if (!snapshot.hasData) {
-              return Center(
-                child: CircularProgressIndicator(),
-              );
-            } else {
-              _categoryList = snapshot.data;
-              valueforQuestion = 1.0 / _categoryList.length.toDouble();
-
-              if (indexValue > _categoryList.length - 1) {
-                return Center(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Text("Bedankt voor uw deelname"),
-                      ConfirmOrangeButton(
-                        text: "Terug",
-                        onTap: () => Navigator.of(context).pop(),
-                      ),
-                    ],
-                  ),
-                );
-              }
-              return SingleChildScrollView(
-                child: Form(
-                  key: _formKey,
-                  child: Column(
-                    children: [
-                      // AnimatedBuilder(
-                      //   animation: timerService, // listen to ChangeNotifier
-                      //   builder: (context, child) {
-                      //     return Column(
-                      //       children: [
-                      //         Text('Elapsed: ${timerService.currentDuration}'),
-                      //       ],
-                      //     );
-                      //   },
-                      // ),
-                      ScreeningQnaView(
-                        addController: addController,
-                        addAnswer: addAnswer,
-                        value: progressIndicator ?? valueforQuestion,
-                        category: _categoryList[indexValue].category,
-                        id: widget.id ?? 'Ru3rbllaRSHCGZDIpKvn',
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.all(20.0),
-                        child: showNextQuestionButton(),
-                      ),
-                    ],
-                  ),
-                ),
-              );
-            }
-          },
+        centerTitle: true,
+      ),
+      body: TimerServiceProvider(
+        service: timerService,
+        child: SingleChildScrollView(
+          child: Form(
+            key: _formKey,
+            child: Column(
+              children: [
+                getScreeningCategories()
+                // TimerServiceProvider(
+                //   service: timerService,
+                //   child: AnimatedBuilder(
+                //     animation: timerService, // listen to ChangeNotifier
+                //     builder: (context, child) {
+                //       return Text(
+                //           'Elapsed: ${timerService.currentDuration.inSeconds}');
+                //     },
+                //   ),
+                // ),
+              ],
+            ),
+          ),
         ),
       ),
     );

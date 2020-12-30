@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:lifestylescreening/controllers/questionnaire_controller.dart';
+import 'package:lifestylescreening/models/category_model.dart';
 import 'package:lifestylescreening/models/question_model.dart';
 
 class RemoveQuestion extends StatelessWidget {
-  RemoveQuestion({this.surveyId, this.question});
-  final String surveyId;
+  RemoveQuestion({this.category, this.question, this.totalQuestions});
+  final CategoryModel category;
   final QuestionModel question;
+  final int totalQuestions;
 
   final QuestionnaireController _questionnaireController =
       QuestionnaireController();
@@ -36,7 +38,7 @@ class RemoveQuestion extends StatelessWidget {
         RaisedButton(
           child: Text('Opslaan'),
           onPressed: () => _questionnaireController
-              .removeQuestion(surveyId, question.id)
+              .removeQuestion(category, question.id, totalQuestions)
               .then((value) => Navigator.of(context).pop()),
         )
       ],

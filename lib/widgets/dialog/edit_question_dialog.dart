@@ -1,19 +1,20 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:lifestylescreening/controllers/questionnaire_controller.dart';
+import 'package:lifestylescreening/models/category_model.dart';
 import 'package:lifestylescreening/models/question_model.dart';
 import 'package:lifestylescreening/widgets/forms/custom_textformfield.dart';
-import 'package:lifestylescreening/widgets/cards/select_category.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:lifestylescreening/widgets/text/h1_text.dart';
 
 class EditQuestionDialog extends StatefulWidget {
-  const EditQuestionDialog(
-      {@required this.parentId,
-      @required this.question,
-      this.newQuestion,
-      this.totalQuestion});
-  final String parentId;
+  const EditQuestionDialog({
+    @required this.category,
+    @required this.question,
+    this.newQuestion,
+    this.totalQuestion,
+  });
+  final CategoryModel category;
   final QuestionModel question;
   final bool newQuestion;
   final int totalQuestion;
@@ -24,13 +25,14 @@ class EditQuestionDialog extends StatefulWidget {
 
 class _EditQuestionDialogState extends State<EditQuestionDialog> {
   //Question: category,example,has_followup,next,order,question,
-  String _selectedCategory = "";
-  TextEditingController orderController = TextEditingController();
-  TextEditingController questionController = TextEditingController();
-  bool _isLoading = true;
-  final _formKey = GlobalKey<FormState>();
   final QuestionnaireController _questionnaireController =
       QuestionnaireController();
+  TextEditingController orderController = TextEditingController();
+  TextEditingController questionController = TextEditingController();
+  TextEditingController imageController = TextEditingController();
+  bool _isLoading = true;
+  final _formKey = GlobalKey<FormState>();
+  bool hasImage = false;
 
   @override
   void initState() {
@@ -39,7 +41,12 @@ class _EditQuestionDialogState extends State<EditQuestionDialog> {
     orderController.text =
         (widget.question.order ?? widget.totalQuestion).toString();
     questionController.text = widget.question.question ?? "";
-    _selectedCategory = widget.question.category ?? "";
+    imageController.text = widget.question.url ?? "0";
+    if (widget.question.url == "0" || widget.question.url == null) {
+      hasImage = false;
+    } else {
+      hasImage = true;
+    }
 
     _isLoading = false;
   }
@@ -55,36 +62,16 @@ class _EditQuestionDialogState extends State<EditQuestionDialog> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Flexible(child: H1Text(text: "Vraag volgorde")),
-        SizedBox(
-          width: 50,
+        Flexible(flex: 3, child: H1Text(text: "Vraag volgorde")),
+        Flexible(
           child: CustomTextFormField(
             keyboardType: TextInputType.number,
             textcontroller: orderController,
             errorMessage: "Geen geldige titel",
-            validator: 6,
+            validator: 5,
             secureText: false,
           ),
         )
-      ],
-    );
-  }
-
-  set string(String value) => setState(() => _selectedCategory = value);
-
-  Widget showCategories(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        SelectCategory(
-          selectedCategory: _selectedCategory,
-          callBack: (val) => setState(() => _selectedCategory = val),
-        ),
-        Flexible(
-            child: Text(
-          _selectedCategory,
-          textDirection: TextDirection.rtl,
-        )),
       ],
     );
   }
@@ -106,17 +93,62 @@ class _EditQuestionDialogState extends State<EditQuestionDialog> {
     );
   }
 
+  Widget showUrl(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisAlignment: MainAxisAlignment.start,
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Flexible(
+                flex: 3, child: H1Text(text: "Heeft het een afbeelding?: ")),
+            Flexible(
+              child: Switch(
+                value: hasImage,
+                onChanged: (value) {
+                  setState(() {
+                    hasImage = value;
+                  });
+                },
+                activeTrackColor: Colors.lightGreenAccent,
+                activeColor: Colors.green,
+              ),
+            ),
+          ],
+        ),
+        hasImage
+            ? CustomTextFormField(
+                keyboardType: TextInputType.multiline,
+                textcontroller: imageController,
+                errorMessage: "Geen geldige url",
+                hintText: "https://...",
+                validator: 1,
+                secureText: false,
+              )
+            : Container(),
+        SizedBox(
+          height: 20,
+        ),
+      ],
+    );
+  }
+
   void saveQuestionChanges(BuildContext context) {
+    if (!hasImage) {
+      imageController.text = "0";
+    }
     if (_formKey.currentState.validate()) {
       // category,example,has_followup,next,order,question,
       Map<String, dynamic> data = {
-        "category": _selectedCategory,
         "order": int.parse(orderController.text),
         "question": questionController.text,
+        "url": imageController.text
       };
+
       _questionnaireController
-          .setQuestion(
-              widget.parentId, widget.question.id, data, widget.newQuestion)
+          .setQuestion(widget.category, widget.question.id, data,
+              widget.totalQuestion, widget.newQuestion)
           .then((value) => Navigator.pop(context));
     }
   }
@@ -131,21 +163,27 @@ class _EditQuestionDialogState extends State<EditQuestionDialog> {
         return Container(
           width: kIsWeb ? size.width - 300 : size.width,
           height: size.height - 50,
-          child: SingleChildScrollView(
-            child: _isLoading
-                ? CircularProgressIndicator()
-                : Form(
-                    key: _formKey,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        showQuestion(context),
-                        showOrder(context),
-                        showCategories(context),
-                      ],
-                    ),
+          child: _isLoading
+              ? CircularProgressIndicator()
+              : Form(
+                  key: _formKey,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      showQuestion(context),
+                      SizedBox(
+                        height: 20,
+                      ),
+                      showOrder(context),
+                      SizedBox(
+                        height: 20,
+                      ),
+                      showUrl(context)
+                      //         showCategories(context),
+                    ],
                   ),
-          ),
+                ),
         );
       }),
       actions: <Widget>[

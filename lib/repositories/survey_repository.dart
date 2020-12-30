@@ -23,6 +23,12 @@ class SurveyRepository implements ISurveyRepository {
           .doc()
           .set(data)
           .catchError((e) {});
+
+      await FirebaseFirestore.instance
+          .collection("results")
+          .doc()
+          .set(data)
+          .catchError((e) {});
     } else {
       await FirebaseFirestore.instance
           .collection("surveys")
@@ -39,5 +45,12 @@ class SurveyRepository implements ISurveyRepository {
         .doc(id)
         .delete()
         .catchError((e) {});
+  }
+
+  @override
+  Future<void> removeCategory(String id, String data) async {
+    await FirebaseFirestore.instance.collection("surveys").doc(id).update({
+      "category": FieldValue.arrayRemove([data])
+    }).catchError((e) {});
   }
 }

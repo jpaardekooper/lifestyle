@@ -21,4 +21,8 @@ class SurveyController {
   Future<void> removeSurvey(String id) {
     return _surveyRepository.removeSurvey(id);
   }
+
+  Future<void> removeCategory(String id, String data) {
+    return _surveyRepository.removeCategory(id, data);
+  }
 }

@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:lifestylescreening/controllers/survey_controller.dart';
 import 'package:lifestylescreening/models/survey_model.dart';
+import 'package:lifestylescreening/widgets/colors/color_theme.dart';
 import 'package:lifestylescreening/widgets/forms/custom_textformfield.dart';
 import 'package:lifestylescreening/widgets/cards/select_category.dart';
 import 'dart:math' as math;
 
+import 'package:lifestylescreening/widgets/text/h2_text.dart';
+
 class EditSurveyView extends StatefulWidget {
-  EditSurveyView({this.surveyInfo, this.newItem});
+  const EditSurveyView({this.surveyInfo, this.newItem});
   final SurveyModel surveyInfo;
   final bool newItem;
 
@@ -17,53 +20,150 @@ class EditSurveyView extends StatefulWidget {
 class _EditSurveyViewState extends State<EditSurveyView> {
   final SurveyController _surveyController = SurveyController();
   TextEditingController _surveyNameController = TextEditingController();
+  List<String> reorderCategoryList = [];
 
   final _formKey = GlobalKey<FormState>();
 
-  String _selectedCategory;
-
   void initState() {
     super.initState();
-    _selectedCategory = widget.surveyInfo.category ?? "";
+    reorderCategoryList = widget.surveyInfo.category ?? [];
     _surveyNameController.text = widget.surveyInfo.title ?? "";
   }
 
   Widget showTitle(BuildContext context) {
-    return Row(
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Container(
-          width: 50,
-          child: Text(
-            "Titel:",
-          ),
+        H2Text(
+          text: "Titel:",
         ),
-        Flexible(
-          child: CustomTextFormField(
-            keyboardType: TextInputType.name,
-            textcontroller: _surveyNameController,
-            errorMessage: "Geen geldige titel",
-            validator: 1,
-            secureText: false,
-          ),
+        CustomTextFormField(
+          keyboardType: TextInputType.name,
+          textcontroller: _surveyNameController,
+          errorMessage: "Geen geldige titel",
+          validator: 1,
+          secureText: false,
         ),
       ],
     );
   }
 
+  String _selectedCategory = "";
   set string(String value) => setState(() => _selectedCategory = value);
 
-  Widget showCategories(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+  Widget showCategoriesList(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Flexible(
-          child: SelectCategory(
-            selectedCategory: _selectedCategory,
-            callBack: (val) => setState(() => _selectedCategory = val),
-          ),
+        H2Text(
+          text: "Voeg een categorie toe:",
         ),
-        Flexible(child: Text(_selectedCategory)),
+        SelectCategory(
+          selectedCategory: _selectedCategory,
+          callBack: (val) => setState(() => _selectedCategory = val),
+        ),
+        SizedBox(
+          height: 10,
+        ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Flexible(child: Text(_selectedCategory)),
+            reorderCategoryList.contains(_selectedCategory) ||
+                    _selectedCategory.isEmpty
+                ? Container()
+                : RawMaterialButton(
+                    child: Icon(
+                      Icons.add,
+                      color: Colors.orange,
+                    ),
+                    onPressed: () {
+                      setState(() {
+                        if (!reorderCategoryList.contains(_selectedCategory)) {
+                          reorderCategoryList.add(_selectedCategory);
+                        }
+                        FocusScope.of(context).unfocus();
+                      });
+                    },
+                    constraints: const BoxConstraints(
+                      minWidth: 35.0,
+                      minHeight: 35.0,
+                    ),
+                    elevation: 2.0,
+                    fillColor: Colors.white,
+                    shape: CircleBorder(),
+                  ),
+          ],
+        ),
       ],
+    );
+  }
+
+  void onReorder(int oldIndex, int newIndex) {
+    if (newIndex > oldIndex) {
+      newIndex -= 1;
+    }
+
+    setState(() {
+      String game = reorderCategoryList[oldIndex];
+
+      reorderCategoryList.removeAt(oldIndex);
+      reorderCategoryList.insert(newIndex, game);
+    });
+  }
+
+  List<ListTile> getListItems() => reorderCategoryList
+      .asMap()
+      .map((i, item) => MapEntry(i, buildTenableListTile(item, i)))
+      .values
+      .toList();
+
+  ListTile buildTenableListTile(String item, int index) {
+    return ListTile(
+      tileColor: ColorTheme.extraLightOrange,
+      key: ValueKey(item),
+      title: Text(item),
+      leading: Text("#${index + 1}"),
+      trailing: InkWell(
+        onTap: () {
+          if (widget.newItem) {
+            setState(() {
+              reorderCategoryList.removeAt(index);
+            });
+          } else {
+            _surveyController.removeCategory(widget.surveyInfo.id, item);
+
+            setState(() {
+              reorderCategoryList.removeAt(index);
+            });
+          }
+        },
+        child: Icon(
+          Icons.delete,
+          color: Colors.red,
+        ),
+      ),
+    );
+  }
+
+  Widget showCategories() {
+    return Container(
+      height: 300,
+      child: ReorderableListView(
+        header: Row(
+          children: [
+            Icon(Icons.info),
+            Expanded(
+              child: Text(
+                "Hou de categorie ingedrukt om de volgorde te wijzigen",
+                style: TextStyle(fontStyle: FontStyle.italic),
+              ),
+            ),
+          ],
+        ),
+        onReorder: onReorder,
+        children: getListItems(),
+      ),
     );
   }
 
@@ -92,7 +192,11 @@ class _EditSurveyViewState extends State<EditSurveyView> {
                 SizedBox(
                   height: 25,
                 ),
-                showCategories(context),
+                showCategoriesList(context),
+                SizedBox(
+                  height: 25,
+                ),
+                showCategories(),
               ],
             ),
           ),
@@ -111,9 +215,9 @@ class _EditSurveyViewState extends State<EditSurveyView> {
 
   void saveSurveyChanges(BuildContext context) {
     if (_formKey.currentState.validate()) {
-      Map<String, String> data = {
+      Map<String, dynamic> data = {
         "title": _surveyNameController.text,
-        "category": _selectedCategory,
+        "category": reorderCategoryList,
       };
 
       _surveyController

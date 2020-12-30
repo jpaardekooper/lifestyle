@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:lifestylescreening/models/answer_model.dart';
 
 class CustomTextFormField extends StatelessWidget {
   const CustomTextFormField({
@@ -11,6 +12,8 @@ class CustomTextFormField extends StatelessWidget {
     this.passwordChecker,
     this.suffixText,
     this.hintText,
+    this.function,
+    this.answerModel,
   });
 
   final TextInputType keyboardType;
@@ -21,11 +24,13 @@ class CustomTextFormField extends StatelessWidget {
   final String passwordChecker;
   final String suffixText;
   final String hintText;
+  final Function(AnswerModel) function;
+  final AnswerModel answerModel;
 
   inputDecoration(BuildContext context) {
     return InputDecoration(
       filled: true,
-      suffixIcon: validator == 6
+      suffixIcon: suffixText == null
           ? null
           : Padding(
               padding: const EdgeInsets.all(16.0),
@@ -81,7 +86,7 @@ class CustomTextFormField extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.only(top: 10.0),
       child: TextFormField(
-        obscureText: secureText,
+        obscureText: secureText ?? false,
         textInputAction: TextInputAction.next,
         controller: textcontroller,
         keyboardType: keyboardType,
@@ -92,6 +97,8 @@ class CustomTextFormField extends StatelessWidget {
         //return value if theres an value otherwise reutrn error
         // mssge
         validator: (val) {
+          //add answer to list
+
           switch (validator) {
             case 1:
               return val.isEmpty ? errorMessage : null;
@@ -119,11 +126,23 @@ class CustomTextFormField extends StatelessWidget {
               } else {
                 return 'Vul een geldig getal in';
               }
-
+              break;
+            //this is only for answer screening
+            case 7:
+              function(answerModel);
+              if (double.tryParse(val) != null) {
+                return null;
+              } else {
+                return 'Vul een geldig getal in';
+              }
+              break;
+            case 8:
+              function(answerModel);
+              return val.isEmpty ? errorMessage : null;
               break;
             default:
+              return val.isEmpty ? errorMessage : null;
           }
-          return val.isEmpty ? errorMessage : null;
         },
       ),
     );

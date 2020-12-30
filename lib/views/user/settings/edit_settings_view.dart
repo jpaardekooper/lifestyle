@@ -65,8 +65,10 @@ class _EditSettingsViewState extends State<EditSettingsView> {
         leading: IconButton(
           icon: Icon(HealthpointIcons.arrowLeftIcon),
           color: Theme.of(context).primaryColor,
-          onPressed: () =>
-              {FocusScope.of(context).unfocus(), Navigator.of(context).pop()},
+          onPressed: () {
+            FocusScope.of(context).unfocus();
+            Navigator.of(context).pop();
+          },
         ),
       ),
       body: Form(

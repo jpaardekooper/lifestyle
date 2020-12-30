@@ -8,7 +8,7 @@ class H3GreenBlueText extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Text(
-      text.toUpperCase(),
+      text,
       style: TextStyle(
         color: const Color(0xFF73B39A),
         fontFamily: 'Sofia',

@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:lifestylescreening/controllers/auth_controller.dart';
 import 'package:lifestylescreening/healthpoint_icons.dart';
+import 'package:lifestylescreening/models/firebase_user.dart';
 import 'package:lifestylescreening/views/user/screening/screening_view.dart';
 import 'package:lifestylescreening/views/user/overview/show_goals_tab.dart';
 import 'package:lifestylescreening/views/user/overview/show_recent_recipes_tab.dart';
@@ -12,7 +13,6 @@ import 'package:lifestylescreening/widgets/painter/bottom_large_wave_painter.dar
 import 'package:lifestylescreening/widgets/painter/top_small_wave_painter.dart';
 import 'package:lifestylescreening/widgets/text/h1_text.dart';
 import 'package:lifestylescreening/views/user/home_view.dart' as tabscreen;
-import 'package:lifestylescreening/widgets/transitions/route_transition.dart';
 
 class ScreenOverview extends StatelessWidget {
   ScreenOverview({Key key}) : super(key: key);
@@ -34,11 +34,14 @@ class ScreenOverview extends StatelessWidget {
     tabscreen.counter.value = 1;
   }
 
-  void startScreeningTest(BuildContext context) {
-    Navigator.of(context).push(
-      createRoute(
-        ScreeningView(id: 'Ru3rbllaRSHCGZDIpKvn'),
-      ),
+  void startScreeningTest(BuildContext ctx, AppUser user) {
+    Navigator.push(
+      ctx,
+      MaterialPageRoute(
+          builder: (context) => ScreeningView(
+                user: user,
+                surveyTitle: "Screening test",
+              )),
     );
   }
 
@@ -155,7 +158,7 @@ class ScreenOverview extends StatelessWidget {
                         ),
                         ConfirmOrangeButton(
                             onTap: () {
-                              startScreeningTest(context);
+                              startScreeningTest(context, _userData.data);
                             },
                             text: "Screening"),
                       ],
@@ -242,28 +245,25 @@ class ScreenOverview extends StatelessWidget {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        SizedBox(
-                          width: size.width / 2,
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              H1Text(
-                                text: "Blijf Fit",
-                              ),
-                              H1Text(
-                                text: "En wordt",
-                              ),
-                              H1Text(
-                                text: "Gezond",
-                              ),
-                            ],
-                          ),
+                        Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            H1Text(
+                              text: "Blijf Fit",
+                            ),
+                            H1Text(
+                              text: "En wordt",
+                            ),
+                            H1Text(
+                              text: "Gezond",
+                            ),
+                          ],
                         ),
                         GestureDetector(
                           onTap: () => updatecounterToSettings(),
                           child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            mainAxisAlignment: MainAxisAlignment.end,
                             children: [
                               Text(
                                 "Meer informatie",
@@ -271,6 +271,9 @@ class ScreenOverview extends StatelessWidget {
                                     fontSize: size.height * 0.024,
                                     color: Theme.of(context).accentColor,
                                     fontWeight: FontWeight.bold),
+                              ),
+                              SizedBox(
+                                width: 10,
                               ),
                               Icon(
                                 HealthpointIcons.arrowRightIcon,

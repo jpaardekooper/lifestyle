@@ -82,7 +82,8 @@ class _AskQuestionViewState extends State<AskQuestionView> {
                         Navigator.of(context).push(
                           createRoute(
                             ScreeningView(
-                              id: 'Ru3rbllaRSHCGZDIpKvn',
+                              user: _userData.data,
+                              surveyTitle: "Screening test",
                             ),
                           ),
                         ),

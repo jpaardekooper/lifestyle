@@ -2,7 +2,10 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:lifestylescreening/models/answer_model.dart';
 import 'package:lifestylescreening/models/category_model.dart';
+import 'package:lifestylescreening/models/firebase_user.dart';
 import 'package:lifestylescreening/models/question_model.dart';
+import 'package:lifestylescreening/models/survey_model.dart';
+import 'package:lifestylescreening/models/survey_result_model.dart';
 import 'package:lifestylescreening/repositories/questionainre_repository_interface.dart';
 
 class QuestionnaireRepository implements IQuestionnaireRepository {
@@ -23,64 +26,75 @@ class QuestionnaireRepository implements IQuestionnaireRepository {
   }
 
   @override
-  Future<List<QuestionModel>> getScreeningQuestion(
-      String id, String category) async {
-    List<QuestionModel> screeningList = [];
+  Future<List<QuestionModel>> getScreeningQuestion(String category) async {
+    // List<QuestionModel> screeningList = [];
 
     QuerySnapshot snapshot = await FirebaseFirestore.instance
-        .collection("surveys")
-        .doc(id)
-        .collection("questions")
+        .collection("categories")
         .where("category", isEqualTo: category)
-        .get();
+        .get()
+        .then((value) {
+      return FirebaseFirestore.instance
+          .collection("categories")
+          .doc(value.docs.first.id)
+          .collection("questions")
+          .orderBy("order", descending: false)
+          .get();
+    });
 
-    snapshot.docs.map((DocumentSnapshot doc) {
-      return screeningList.add(QuestionModel.fromSnapshot(doc));
+    return snapshot.docs.map((DocumentSnapshot doc) {
+      return QuestionModel.fromSnapshot(doc);
     }).toList();
 
-    screeningList.sort((a, b) => a.order.compareTo(b.order));
+    // screeningList.sort((a, b) => a.order.compareTo(b.order));
 
-    return screeningList;
+    //  return screeningList;
   }
 
   @override
-  Future<List<CategoryModel>> fetchCategories(String id) async {
+  Future<List<SurveyModel>> fetchCategories(String id) async {
     QuerySnapshot snapshot = await FirebaseFirestore.instance
         .collection("surveys")
-        .doc(id)
-        .collection("categories")
-        .orderBy('order', descending: false)
+        .where("title", isEqualTo: id)
+        //   .doc(id)
+        //.collection("categories")
         .get();
 
     return snapshot.docs.map((DocumentSnapshot doc) {
-      return CategoryModel.fromSnapshot(doc);
+      return SurveyModel.fromSnapshot(doc);
     }).toList();
   }
 
   @override
-  Future<List<AnswerModel>> getAnswer(String id) async {
-    List<AnswerModel> _answerList = [];
+  Future<List<AnswerModel>> getAnswer(String category, String id) async {
+    // List<AnswerModel> _answerList = [];
 
     QuerySnapshot snapshot = await FirebaseFirestore.instance
-        .collection("surveys")
-        .doc('Ru3rbllaRSHCGZDIpKvn')
-        .collection("questions")
-        .doc(id)
-        .collection('answers')
-        .orderBy('order', descending: false)
-        .get();
+        .collection("categories")
+        .where("category", isEqualTo: category)
+        .get()
+        .then((value) {
+      return FirebaseFirestore.instance
+          .collection("categories")
+          .doc(value.docs.first.id)
+          .collection("questions")
+          .doc(id)
+          .collection('answers')
+          .orderBy('order', descending: false)
+          .get();
+    });
 
-    snapshot.docs.map((DocumentSnapshot doc) {
-      _answerList.add(AnswerModel.fromSnapshot(doc));
+    return snapshot.docs.map((DocumentSnapshot doc) {
+      return AnswerModel.fromSnapshot(doc);
     }).toList();
 
-    return _answerList;
+    //  return _answerList;
   }
 
   @override
   Stream<QuerySnapshot> streamQuestions(String id) {
     return FirebaseFirestore.instance
-        .collection('surveys')
+        .collection('categories')
         .doc(id)
         .collection('questions')
         .orderBy('order', descending: false)
@@ -97,7 +111,7 @@ class QuestionnaireRepository implements IQuestionnaireRepository {
   @override
   Stream<QuerySnapshot> streamAnswers(String id, String questionId) {
     return FirebaseFirestore.instance
-        .collection('surveys')
+        .collection('categories')
         .doc(id)
         .collection('questions')
         .doc(questionId)
@@ -114,20 +128,26 @@ class QuestionnaireRepository implements IQuestionnaireRepository {
   }
 
   @override
-  Future<void> setQuestion(
-      String parentId, String id, Map data, bool newQuestion) async {
+  Future<void> setQuestion(CategoryModel category, String id, Map data,
+      int totalQuestions, bool newQuestion) async {
     if (newQuestion) {
       await FirebaseFirestore.instance
-          .collection("surveys")
-          .doc(parentId)
+          .collection("categories")
+          .doc(category.id)
           .collection("questions")
           .doc()
           .set(data)
           .catchError((e) {});
+
+//update the amount of questions inside a category
+      await FirebaseFirestore.instance
+          .collection("categories")
+          .doc(category.id)
+          .update({"questionCount": totalQuestions}).catchError((e) {});
     } else {
       await FirebaseFirestore.instance
-          .collection("surveys")
-          .doc(parentId)
+          .collection("categories")
+          .doc(category.id)
           .collection("questions")
           .doc(id)
           .set(data)
@@ -136,16 +156,22 @@ class QuestionnaireRepository implements IQuestionnaireRepository {
   }
 
   @override
-  Future<void> removeQuestion(String surveyId, String questionId) async {
+  Future<void> removeQuestion(
+      CategoryModel category, String questionId, int totalQuestions) async {
     await FirebaseFirestore.instance
-        .collection("surveys")
-        .doc(surveyId)
+        .collection("categories")
+        .doc(category.id)
         .collection('questions')
         .doc(questionId)
         .delete()
         .catchError((e) {
       //    print(e);
     });
+
+    await FirebaseFirestore.instance
+        .collection("categories")
+        .doc(category.id)
+        .update({"questionCount": totalQuestions - 1}).catchError((e) {});
   }
 
   @override
@@ -153,7 +179,7 @@ class QuestionnaireRepository implements IQuestionnaireRepository {
       Map data, bool insertNewAnswer) async {
     if (insertNewAnswer) {
       await FirebaseFirestore.instance
-          .collection("surveys")
+          .collection("categories")
           .doc(surveyId)
           .collection("questions")
           .doc(questionId)
@@ -165,7 +191,7 @@ class QuestionnaireRepository implements IQuestionnaireRepository {
       });
     } else {
       await FirebaseFirestore.instance
-          .collection("surveys")
+          .collection("categories")
           .doc(surveyId)
           .collection("questions")
           .doc(questionId)
@@ -180,10 +206,10 @@ class QuestionnaireRepository implements IQuestionnaireRepository {
 
   @override
   Future<void> removeAnswerFromQuestion(
-      String surveyId, String questionId, String answerId) async {
+      String category, String questionId, String answerId) async {
     await FirebaseFirestore.instance
-        .collection("surveys")
-        .doc(surveyId)
+        .collection("categories")
+        .doc(category)
         .collection('questions')
         .doc(questionId)
         .collection('answers')
@@ -191,6 +217,117 @@ class QuestionnaireRepository implements IQuestionnaireRepository {
         .delete()
         .catchError((e) {
       //    print(e);
+    });
+  }
+
+  @override
+  Future<void> setUserSurveyAnswers(
+    String surveyTitle,
+    AppUser user,
+    String category,
+    int index,
+    Map surveyData,
+    Map data,
+  ) async {
+    //adding data to correct survey
+    await FirebaseFirestore.instance
+        .collection("results")
+        .where("title", isEqualTo: surveyTitle)
+        .get()
+        .then((value) async {
+      List<int> firstInt = [];
+      if (index == 0) {
+        Map<String, dynamic> firstData = {
+          "email": user.email,
+          "index": index,
+          "categories": surveyData['categories'],
+          "category_points": firstInt,
+          "total_points": 0,
+          "total_duration": 0,
+          "finished": false,
+          "date": DateTime.now(),
+        };
+
+        await FirebaseFirestore.instance
+            .collection("results")
+            .doc(value.docs.first.id)
+            .collection('scores')
+            .doc()
+            .set(firstData);
+      }
+      await FirebaseFirestore.instance
+          .collection("results")
+          .doc(value.docs.first.id)
+          .collection('scores')
+          .where("email", isEqualTo: user.email)
+          .get()
+          .then((value2) async {
+        await FirebaseFirestore.instance
+            .collection("results")
+            .doc(value.docs.first.id)
+            .collection('scores')
+            .doc(value2.docs.first.id)
+            .collection(category)
+            .doc()
+            .set(data);
+
+//update data
+        await FirebaseFirestore.instance
+            .collection("results")
+            .doc(value.docs.first.id)
+            .collection('scores')
+            .doc(value2.docs.first.id)
+            .update(surveyData);
+      });
+    });
+  }
+
+  @override
+  Future<List<SurveyResultModel>> checkSurveyResult(
+    String surveyTitle,
+    String email,
+  ) async {
+    List<SurveyResultModel> result = [];
+    QuerySnapshot snapshot = await FirebaseFirestore.instance
+        .collection("results")
+        .where("title", isEqualTo: surveyTitle)
+        .get()
+        .then((value) {
+      return FirebaseFirestore.instance
+          .collection("results")
+          .doc(value.docs.first.id)
+          .collection("scores")
+          .where("email", isEqualTo: email)
+          .get();
+    });
+
+    if (snapshot == null) {
+      return result;
+    } else {
+      snapshot.docs.map((DocumentSnapshot doc) {
+        return result.add(SurveyResultModel.fromSnapshot(doc));
+      }).toList();
+
+      result.sort((a, b) => b.date.compareTo(a.date));
+
+      return result;
+    }
+  }
+
+  @override
+  Future<void> setSurveyToFalse(
+      String surveyTitle, AppUser user, SurveyResultModel surveyResult) async {
+    await FirebaseFirestore.instance
+        .collection("results")
+        .where("title", isEqualTo: surveyTitle)
+        .get()
+        .then((value) {
+      return FirebaseFirestore.instance
+          .collection("results")
+          .doc(value.docs.first.id)
+          .collection("scores")
+          .doc(surveyResult.id)
+          .update({"finished": true});
     });
   }
 }

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-class DashboardOverview extends StatelessWidget {
+class DashboardView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GridView.count(
