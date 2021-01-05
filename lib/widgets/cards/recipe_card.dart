@@ -1,21 +1,25 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:lifestylescreening/controllers/recipe_controller.dart';
+import 'package:lifestylescreening/models/firebase_user.dart';
 import 'package:lifestylescreening/models/recipe_model.dart';
+import 'package:lifestylescreening/widgets/dialog/edit_recipe_dialog.dart';
+import 'package:lifestylescreening/widgets/dialog/remove_recipe.dialog.dart';
 
 class RecipeCard extends StatefulWidget {
   const RecipeCard({
     Key key,
     @required RecipeModel recipe,
-    @required String userId,
+    @required AppUser user,
     this.on_Tap,
+    this.userRecipe,
   })  : _recipe = recipe,
-        _userId = userId,
+        _user = user,
         super(key: key);
 
   final RecipeModel _recipe;
-  final String _userId;
+  final AppUser _user;
   final VoidCallback on_Tap;
+  final bool userRecipe;
 
   @override
   _RecipeCardState createState() => _RecipeCardState();
@@ -24,17 +28,42 @@ class RecipeCard extends StatefulWidget {
 class _RecipeCardState extends State<RecipeCard> {
   RecipeController _recipeController = RecipeController();
   bool alreadySaved = false;
+  String imageUrl;
 
   @override
   void initState() {
+    getImage();
     checkFavoriteRecipes();
     super.initState();
   }
 
   checkFavoriteRecipes() async {
-    alreadySaved = await _recipeController.checkFavoriteMarker(
-        widget._recipe.id, widget._userId);
+    alreadySaved = await _recipeController.checkFavoriteRecipe(
+        widget._recipe.id, widget._user.id);
     setState(() {});
+  }
+
+  void _editRecipeName(RecipeModel recipe, String role) {
+    showDialog(
+        barrierDismissible: false,
+        context: context,
+        builder: (BuildContext context) {
+          return EditRecipe(
+            recipe: recipe,
+            isNewRecipe: false,
+            role: role,
+          );
+        });
+  }
+
+  void _removeRecipe(RecipeModel recipe, String role) {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return RemoveRecipe(recipe: recipe, role: role);
+      },
+    );
   }
 
   @override
@@ -51,82 +80,118 @@ class _RecipeCardState extends State<RecipeCard> {
       clipBehavior: Clip.antiAliasWithSaveLayer,
       elevation: 0,
       margin: EdgeInsets.all(10),
-      child: Column(children: <Widget>[
-        Expanded(
-          flex: 3,
-          child: CachedNetworkImage(
-            placeholder: (context, url) => Center(
-              child: CircularProgressIndicator(),
-            ),
-            imageUrl: widget._recipe.url,
-            fit: BoxFit.cover,
-          ),
-        ),
-        Expanded(
+      child: Column(
+        children: <Widget>[
+          Expanded(
+              flex: 3,
+              child: imageUrl == null
+                  ? FittedBox(
+                      child: CircularProgressIndicator(),
+                      fit: BoxFit.scaleDown,
+                    )
+                  : Image.network(
+                      imageUrl,
+                      fit: BoxFit.fill,
+                    )),
+          Expanded(
             flex: 1,
-            child: Row(children: <Widget>[
-              Expanded(
-                  flex: 3,
-                  child: Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                        FittedBox(
-                          fit: BoxFit.contain,
-                          child: Text(
-                            widget._recipe.title,
-                            style: TextStyle(
-                              color: recipeTitleColor,
-                              fontFamily: 'Sofia Pro Regular Az',
+            child: Row(
+              children: <Widget>[
+                Expanded(
+                    flex: 3,
+                    child: Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                          FittedBox(
+                            fit: BoxFit.contain,
+                            child: Text(
+                              widget._recipe.title,
+                              style: TextStyle(
+                                color: recipeTitleColor,
+                                fontFamily: 'Sofia Pro Regular Az',
+                              ),
                             ),
                           ),
-                        ),
-                        Row(children: <Widget>[
-                          Icon(
-                            Icons.access_time,
-                            size: 15,
-                          ),
-                          Text(
-                            '${widget._recipe.duration.toString()} min',
-                            style: TextStyle(
-                              color: recipeTextColor,
-                              fontFamily: 'Sofia Pro Regular Az',
+                          Row(children: <Widget>[
+                            Icon(
+                              Icons.access_time,
+                              size: 15,
                             ),
+                            Text(
+                              '${widget._recipe.duration.toString()} min',
+                              style: TextStyle(
+                                color: recipeTextColor,
+                                fontFamily: 'Sofia Pro Regular Az',
+                              ),
+                            ),
+                          ]),
+                        ])),
+                widget.userRecipe == false && widget._user.role == "user"
+                    ? Expanded(
+                        flex: 1,
+                        child: IconButton(
+                          icon: Icon(
+                            alreadySaved
+                                ? Icons.favorite
+                                : Icons.favorite_border,
+                            color: alreadySaved ? Colors.red : null,
                           ),
-                        ]),
-                      ])),
-              Expanded(
-                  flex: 1,
-                  child: IconButton(
-                    icon: Icon(
-                      alreadySaved ? Icons.favorite : Icons.favorite_border,
-                      color: alreadySaved ? Colors.red : null,
-                    ),
-                    onPressed: () {
-                      if (alreadySaved) {
-                        _recipeController.removeFavoriteRecipe(
-                            widget._userId, widget._recipe.id);
-                        widget.on_Tap();
-                      } else {
-                        _recipeController.addFavoriteRecipe(
-                            widget._userId, widget._recipe.id);
-                      }
-                      checkFavoriteRecipes();
-                    },
-                  )),
-            ])),
-      ]),
+                          onPressed: () {
+                            checkFavoriteRecipes();
+                            if (alreadySaved) {
+                              _recipeController.removeFavoriteRecipe(
+                                  widget._user.id, widget._recipe.id);
+                              widget.on_Tap();
+                            } else {
+                              _recipeController.addFavoriteRecipe(
+                                  widget._user.id, widget._recipe.id);
+                            }
+                          },
+                        ))
+                    : Row(
+                        children: [
+                          RawMaterialButton(
+                            child: Icon(
+                              Icons.edit,
+                              color: Colors.black,
+                            ),
+                            onPressed: () {
+                              _editRecipeName(
+                                  widget._recipe, widget._user.role);
+                            },
+                            constraints: const BoxConstraints(
+                                minWidth: 30.0, minHeight: 30.0),
+                            elevation: 2.0,
+                            fillColor: Colors.white,
+                            shape: CircleBorder(),
+                          ),
+                          RawMaterialButton(
+                            child: Icon(
+                              Icons.delete,
+                              color: Colors.red,
+                            ),
+                            onPressed: () {
+                              _removeRecipe(widget._recipe, widget._user.role);
+                            },
+                            constraints: const BoxConstraints(
+                                minWidth: 30.0, minHeight: 30.0),
+                            elevation: 2.0,
+                            fillColor: Colors.white,
+                            shape: CircleBorder(),
+                          ),
+                        ],
+                      ),
+              ],
+            ),
+          ),
+        ],
+      ),
     );
   }
-}
 
-// child: Column(
-//     Row(
-//       children: [
-//         Text(_recipe.difficulty),
-//         Text(_recipe.review.toString()),
-//         Text(_recipe.duration.toString()),
-//       ],
-//     )
-//   ],
-// ),
+  getImage() async {
+    imageUrl =
+        (await _recipeController.getImage(widget._recipe.url)).toString();
+  }
+}
