@@ -113,6 +113,7 @@ class RecipeRepository implements IRecipeRepository {
 
   @override
   Future<List<RecipeModel>> getUserFavoriteRecipe(String userId) async {
+    // ignore: deprecated_member_use
     List<RecipeModel> returnList = List<RecipeModel>();
     List<dynamic> favRecipeList = [];
     int recipeId;

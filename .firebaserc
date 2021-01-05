@@ -1,5 +1,6 @@
 {
   "projects": {
-    "stagubg": "lifestyle-screening"
+    "stagubg": "lifestyle-screening",
+    "default": "lifestyle-screening"
   }
 }

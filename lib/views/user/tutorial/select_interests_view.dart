@@ -9,6 +9,7 @@ import 'package:lifestylescreening/widgets/cards/selected_interest_card.dart';
 import 'package:lifestylescreening/widgets/colors/color_theme.dart';
 import 'package:lifestylescreening/widgets/text/h1_text.dart';
 import 'package:lifestylescreening/widgets/transitions/route_transition.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
 
 class SelectInterestsView extends StatefulWidget {
   SelectInterestsView({Key key, this.username, this.bmi}) : super(key: key);
@@ -74,7 +75,7 @@ class _SelectInterestsViewState extends State<SelectInterestsView> {
                 crossAxisCount: 2,
                 crossAxisSpacing: 10.0,
                 mainAxisSpacing: 10.0,
-                childAspectRatio: 1.3,
+                childAspectRatio: kIsWeb ? 4 : 1.3,
               ),
               itemBuilder: (BuildContext context, int index) {
                 InterestModel _interest = _interestList[index];
@@ -122,7 +123,7 @@ class _SelectInterestsViewState extends State<SelectInterestsView> {
           ),
           color: ColorTheme.extraLightGreen,
         ),
-        height: size.height * 0.15,
+        height: size.width < 900 ? size.height * 0.15 : 145,
         child: TutorialButtons(
           canGoBack: true,
           onPressedBack: goBack,

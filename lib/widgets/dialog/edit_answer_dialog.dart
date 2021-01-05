@@ -207,6 +207,9 @@ class _EditAnswerDialogState extends State<EditAnswerDialog> {
           ],
         );
         break;
+      default:
+        return Container();
+        break;
     }
   }
 
@@ -348,6 +351,7 @@ class _EditAnswerDialogState extends State<EditAnswerDialog> {
             flex: 3,
             child: H2Text(
                 text:
+                    // ignore: lines_longer_than_80_chars
                     "Indien de gebruiker heeft geantwoord ga door naar vraag...")),
         Flexible(
           child: CustomTextFormField(

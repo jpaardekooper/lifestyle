@@ -98,6 +98,7 @@ class _SignUpState extends State<SignUp> {
     setState(() {
       isLoading = false;
 
+      // ignore: deprecated_member_use
       _key.currentState.showSnackBar(
         SnackBar(
           backgroundColor: Theme.of(context).accentColor,
