@@ -5,7 +5,6 @@ import 'package:lifestylescreening/views/user/recipe/recipe_tab.dart';
 
 import 'package:lifestylescreening/views/user/screen_overview.dart';
 import 'package:lifestylescreening/views/user/settings/page_settings.dart';
-import 'package:lifestylescreening/views/user/page_two_view.dart';
 import 'package:lifestylescreening/views/user/ask_question_view.dart';
 
 import 'package:lifestylescreening/widgets/logo/bottom_navigation_logo.dart';

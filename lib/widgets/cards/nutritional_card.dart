@@ -5,6 +5,8 @@ import 'package:lifestylescreening/models/nutritional_value_model.dart';
 import 'package:lifestylescreening/widgets/dialog/edit_nutritional_dialog.dart';
 import 'package:lifestylescreening/widgets/inherited/inherited_widget.dart';
 
+import '../text/body_text.dart';
+
 // ignore: must_be_immutable
 class NutrionStream extends StatelessWidget {
   NutrionStream({@required this.recipeId, this.userNewRecipe});
@@ -92,11 +94,10 @@ class NutritionalValueCard extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text(
-            nutritionalValue.name,
-            style: TextStyle(fontWeight: FontWeight.w500),
+          BodyText(
+            text: "- " + nutritionalValue.name,
           ),
-          Text(nutritionalValue.amount + " " + nutritionalValue.unit),
+          BodyText(text: nutritionalValue.amount + " " + nutritionalValue.unit),
           role == 'user' && userNewRecipe == false
               ? Container()
               : Row(

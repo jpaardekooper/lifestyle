@@ -76,7 +76,7 @@ class _ScreeningViewState extends State<ScreeningView> {
     }
   }
 
-  nextQuestion(double progressValue) async {
+  void nextQuestion(double progressValue) async {
     if (_formKey.currentState.validate()) {
       FocusScope.of(context).unfocus();
       screeningDuration = timerService.currentDuration.inSeconds;
@@ -332,13 +332,12 @@ class _ScreeningViewState extends State<ScreeningView> {
           children: [
             Text("Bedankt voor uw deelname"),
             ConfirmOrangeButton(
-              text: "Terug",
-              onTap: () {
-                _questionnaireController.setSurveyToFalse(
-                    widget.surveyTitle, widget.user, surveyResult);
-                Navigator.of(context).pop();
-              },
-            ),
+                text: "Terug",
+                onTap: () {
+                  _questionnaireController.setSurveyToFalse(
+                      widget.surveyTitle, widget.user, surveyResult);
+                  Navigator.of(context).pop();
+                }),
           ],
         ),
       ),
@@ -417,19 +416,6 @@ class _ScreeningViewState extends State<ScreeningView> {
         });
   }
 
-  // Widget showTimerDuration() {
-  //return TimerServiceProvider(
-  //   service: timerService,
-  //   child: AnimatedBuilder(
-  //     animation: timerService, // listen to ChangeNotifier
-  //     builder: (context, child) {
-  //       return Text(
-  //           'Elapsed: ${timerService.currentDuration.inSeconds}');
-  //     },
-  //   ),
-  // ),
-  // }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -445,7 +431,20 @@ class _ScreeningViewState extends State<ScreeningView> {
           child: Form(
             key: _formKey,
             child: Column(
-              children: [getScreeningCategories()],
+              children: [
+                getScreeningCategories()
+                // TimerServiceProvider(
+                //   service: timerService,
+                //   child: AnimatedBuilder(
+                //     animation: timerService, // listen to ChangeNotifier
+                //     builder: (context, child) {
+                //       return Text(
+                //           'Elapsed: 
+                // ${timerService.currentDuration.inSeconds}');
+                //     },
+                //   ),
+                // ),
+              ],
             ),
           ),
         ),

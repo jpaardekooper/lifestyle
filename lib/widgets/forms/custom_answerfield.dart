@@ -96,17 +96,11 @@ class CustomAnswerFormField extends StatelessWidget {
         validator: (val) {
           switch (validator) {
             case 1:
-              if (function != null) {
-                function(answerModel);
-              }
-
+              function(answerModel);
               return val.isEmpty ? errorMessage : null;
               break;
             case 2:
-              if (function != null) {
-                function(answerModel);
-              }
-
+              function(answerModel);
               if (double.tryParse(val) != null) {
                 return null;
               } else {

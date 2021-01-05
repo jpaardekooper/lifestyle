@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/foundation.dart' show kIsWeb;
 
 class ToggleGenderButton extends StatefulWidget {
   ToggleGenderButton({Key key, @required this.onTap}) : super(key: key);
@@ -30,16 +29,14 @@ class _ToggleGenderButtonState extends State<ToggleGenderButton> {
       child: ToggleButtons(
         borderColor: Theme.of(context).primaryColor,
         fillColor: Theme.of(context).primaryColor,
-        borderWidth: 1,
+        borderWidth: 2,
         selectedBorderColor: Theme.of(context).primaryColor,
         selectedColor: Colors.white,
         color: Theme.of(context).primaryColor,
         borderRadius: BorderRadius.circular(8),
         constraints: BoxConstraints(
-            minWidth:
-                kIsWeb ? 200 : (MediaQuery.of(context).size.width - 150) / 2,
-            maxWidth:
-                kIsWeb ? 200 : (MediaQuery.of(context).size.width - 150) / 2,
+            minWidth: (MediaQuery.of(context).size.width - 40) / 2.3,
+            maxWidth: (MediaQuery.of(context).size.width - 40) / 2.3,
             minHeight: 40),
         children: <Widget>[
           Padding(
