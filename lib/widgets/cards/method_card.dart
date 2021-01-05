@@ -7,8 +7,9 @@ import 'package:lifestylescreening/widgets/inherited/inherited_widget.dart';
 
 // ignore: must_be_immutable
 class MethodStream extends StatelessWidget {
-  MethodStream({@required this.recipeId});
+  MethodStream({@required this.recipeId, this.userNewRecipe});
   final String recipeId;
+  final bool userNewRecipe;
   final FoodPreparationController _foodPreparationController =
       FoodPreparationController();
 
@@ -33,6 +34,7 @@ class MethodStream extends StatelessWidget {
               return MethodCard(
                 recipeId: recipeId,
                 method: _metod,
+                userNewRecipe: userNewRecipe,
               );
             },
           );
@@ -44,9 +46,11 @@ class MethodStream extends StatelessWidget {
 
 // ignore: must_be_immutable
 class MethodCard extends StatelessWidget {
-  MethodCard({@required this.recipeId, @required this.method});
+  MethodCard(
+      {@required this.recipeId, @required this.method, this.userNewRecipe});
   final String recipeId;
   final MethodModel method;
+  final bool userNewRecipe;
   final FoodPreparationController _foodPreparationController =
       FoodPreparationController();
 
@@ -91,7 +95,7 @@ class MethodCard extends StatelessWidget {
               softWrap: true,
             ),
           ),
-          role == "user"
+          role == 'user' && userNewRecipe == false
               ? Container()
               : Row(
                   children: [

@@ -55,6 +55,7 @@ class _RecipeFavoritesViewState extends State<RecipeFavoritesView> {
       return RecipeGrid(
           recipeList: _savedRecipes,
           userData: _userData.data,
+          userRecipe: false,
           onTap: () => _updateRecipes());
     }
   }

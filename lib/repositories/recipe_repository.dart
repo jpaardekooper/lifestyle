@@ -1,4 +1,8 @@
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart';
+import 'package:path/path.dart';
 import 'package:lifestylescreening/models/recipe_model.dart';
 import 'package:lifestylescreening/repositories/recipe_repository_interface.dart';
 
@@ -19,14 +23,47 @@ class RecipeRepository implements IRecipeRepository {
   }
 
   @override
-  Future<void> removeRecipe(String recipeId) async {
+  Future<void> removeRecipe(String recipeId, String url) async {
     await FirebaseFirestore.instance
         .collection("recipes")
         .doc(recipeId)
         .delete()
         .catchError((e) {
       //    print(e);
-    });
+    }).then((value) => deleteImage(url));
+  }
+
+  @override
+  Future<void> removeUserRecipe(String recipeId, String url) async {
+    await FirebaseFirestore.instance
+        .collection("createdRecipes")
+        .doc(recipeId)
+        .delete()
+        .catchError((e) {
+      //    print(e);
+    }).then((value) => deleteImage(url));
+  }
+
+  @override
+  Future<void> updateUserRecipe(
+      String recipeId, Map data, bool newRecipe) async {
+    if (newRecipe) {
+      await FirebaseFirestore.instance
+          .collection("createdRecipes")
+          .doc(recipeId)
+          .set(data)
+          .catchError((e) {
+        //    print(e);
+      });
+    } else {
+      await FirebaseFirestore.instance
+          .collection("createdRecipes")
+          .doc(recipeId)
+          .set(data)
+          .catchError((e) {
+        //    print(e);
+      });
+    }
   }
 
   @override
@@ -34,7 +71,7 @@ class RecipeRepository implements IRecipeRepository {
     if (newRecipe) {
       await FirebaseFirestore.instance
           .collection("recipes")
-          .doc()
+          .doc(recipeId)
           .set(data)
           .catchError((e) {
         //    print(e);
@@ -55,6 +92,18 @@ class RecipeRepository implements IRecipeRepository {
     var snapshot = await FirebaseFirestore.instance
         .collection('recipes')
         // .where('published', isEqualTo: 1)
+        .get();
+
+    return snapshot.docs.map((DocumentSnapshot doc) {
+      return RecipeModel.fromSnapshot(doc);
+    }).toList();
+  }
+
+  @override
+  Future<List<RecipeModel>> getUserRecipes(String userId) async {
+    var snapshot = await FirebaseFirestore.instance
+        .collection('createdRecipes')
+        .where("userId", isEqualTo: userId)
         .get();
 
     return snapshot.docs.map((DocumentSnapshot doc) {
@@ -97,7 +146,7 @@ class RecipeRepository implements IRecipeRepository {
   }
 
   @override
-  Future<bool> checkFavoriteMarker(String recipeId, String userId) async {
+  Future<bool> checkFavoriteRecipe(String recipeId, String userId) async {
     List<dynamic> favRecipeList = [];
     var snapshot = await FirebaseFirestore.instance
         .collection('users')
@@ -156,5 +205,29 @@ class RecipeRepository implements IRecipeRepository {
         .get();
 
     return RecipeModel.fromSnapshot(snapshot);
+  }
+
+  Future<void> uploadImage(File img) async {
+    String fileName = basename(img.path);
+    Reference storageRef =
+        FirebaseStorage.instance.ref().child('recipeImages/$fileName');
+    UploadTask uploadTask = storageRef.putFile(img);
+    TaskSnapshot taskSnapshot = await uploadTask;
+    await taskSnapshot.ref.getDownloadURL().then(
+          (value) => print('Done: $value'),
+        );
+  }
+
+  Future<String> getImage(String image) async {
+    String imageUrl = await FirebaseStorage.instance
+        .ref()
+        .child('recipeImages/$image')
+        .getDownloadURL();
+
+    return imageUrl;
+  }
+
+  Future<void> deleteImage(String image) async {
+    await FirebaseStorage.instance.ref().child('recipeImages/$image').delete();
   }
 }

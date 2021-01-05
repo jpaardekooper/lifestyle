@@ -7,9 +7,10 @@ import 'package:lifestylescreening/widgets/inherited/inherited_widget.dart';
 
 // ignore: must_be_immutable
 class NutrionStream extends StatelessWidget {
-  NutrionStream({@required this.recipeId});
+  NutrionStream({@required this.recipeId, this.userNewRecipe});
 
   final String recipeId;
+  final bool userNewRecipe;
   final FoodPreparationController _foodPreparationController =
       FoodPreparationController();
 
@@ -36,6 +37,7 @@ class NutrionStream extends StatelessWidget {
               return NutritionalValueCard(
                 recipeId: recipeId,
                 nutritionalValue: _nutritionalValue,
+                userNewRecipe: userNewRecipe,
               );
             },
           );
@@ -50,8 +52,10 @@ class NutritionalValueCard extends StatelessWidget {
   NutritionalValueCard({
     @required this.recipeId,
     @required this.nutritionalValue,
+    this.userNewRecipe,
   });
   final String recipeId;
+  final bool userNewRecipe;
   final NutritionalValueModel nutritionalValue;
   final FoodPreparationController _foodPreparationController =
       FoodPreparationController();
@@ -93,7 +97,7 @@ class NutritionalValueCard extends StatelessWidget {
             style: TextStyle(fontWeight: FontWeight.w500),
           ),
           Text(nutritionalValue.amount + " " + nutritionalValue.unit),
-          role == 'user'
+          role == 'user' && userNewRecipe == false
               ? Container()
               : Row(
                   mainAxisAlignment: MainAxisAlignment.end,

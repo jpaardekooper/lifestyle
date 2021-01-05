@@ -3,8 +3,9 @@ import 'package:lifestylescreening/controllers/recipe_controller.dart';
 import 'package:lifestylescreening/models/recipe_model.dart';
 
 class RemoveRecipe extends StatelessWidget {
-  RemoveRecipe({this.recipe});
+  RemoveRecipe({this.recipe, this.role});
   final RecipeModel recipe;
+  final String role;
 
   final RecipeController _recipeController = RecipeController();
 
@@ -30,9 +31,15 @@ class RemoveRecipe extends StatelessWidget {
         FlatButton(
           child: Text("verwijderen"),
           onPressed: () {
-            _recipeController
-                .removeRecipe(recipe.id)
-                .then((value) => Navigator.of(context).pop());
+            if (role == "user") {
+              _recipeController
+                  .removeUserRecipe(recipe.id, recipe.url)
+                  .then((value) => Navigator.of(context).pop());
+            } else {
+              _recipeController
+                  .removeRecipe(recipe.id, recipe.url)
+                  .then((value) => Navigator.of(context).pop());
+            }
           },
         ),
       ],

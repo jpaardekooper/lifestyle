@@ -26,7 +26,6 @@ class _HomeState extends State<Home> {
   void initState() {
     _widgetOptions = <Widget>[
       ScreenOverview(),
-      PageTwo(),
       RecipeTab(),
       AskQuestionView(),
       PageSettings(),
@@ -68,40 +67,32 @@ class _HomeState extends State<Home> {
                     BottomNavigationBarItem(
                       icon: BottomNavigationLogo(
                         bottomAppIcon: HealthpointIcons.houseIcon,
-                        bottomAppName: 'overzicht',
+                        bottomAppName: 'Overzicht',
                         visible: counter.value == 0,
                       ),
                       label: 'overzicht',
                     ),
                     BottomNavigationBarItem(
                       icon: BottomNavigationLogo(
-                        bottomAppIcon: HealthpointIcons.checklistIcon,
-                        bottomAppName: 'doelen',
-                        visible: counter.value == 1,
-                      ),
-                      label: 'doelen',
-                    ),
-                    BottomNavigationBarItem(
-                      icon: BottomNavigationLogo(
                         bottomAppIcon: HealthpointIcons.tabIcon,
-                        bottomAppName: 'recepten',
-                        visible: counter.value == 2,
+                        bottomAppName: 'Recepten',
+                        visible: counter.value == 1,
                       ),
                       label: 'recepten',
                     ),
                     BottomNavigationBarItem(
                       icon: BottomNavigationLogo(
                         bottomAppIcon: HealthpointIcons.messageIcon,
-                        bottomAppName: 'stel een vraag',
-                        visible: counter.value == 3,
+                        bottomAppName: 'Stel een vraag',
+                        visible: counter.value == 2,
                       ),
                       label: 'stel een vraag',
                     ),
                     BottomNavigationBarItem(
                       icon: BottomNavigationLogo(
                         bottomAppIcon: HealthpointIcons.settingsIcon,
-                        bottomAppName: 'instellingen',
-                        visible: counter.value == 4,
+                        bottomAppName: 'Instellingen',
+                        visible: counter.value == 3,
                       ),
                       label: 'instellingen',
                     ),

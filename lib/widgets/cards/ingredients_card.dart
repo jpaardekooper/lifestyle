@@ -8,9 +8,10 @@ import 'package:lifestylescreening/widgets/inherited/inherited_widget.dart';
 
 // ignore: must_be_immutable
 class IngredientsStream extends StatelessWidget {
-  IngredientsStream({@required this.recipeId});
+  IngredientsStream({@required this.recipeId, this.userNewRecipe});
 
   final String recipeId;
+  final bool userNewRecipe;
 
   final FoodPreparationController _foodPreparationController =
       FoodPreparationController();
@@ -41,6 +42,7 @@ class IngredientsStream extends StatelessWidget {
                 recipeId: recipeId,
                 ingredient: _ingredient,
                 role: role,
+                userNewRecipe: userNewRecipe,
               );
             },
           );
@@ -54,10 +56,12 @@ class IngredientsCard extends StatelessWidget {
   IngredientsCard(
       {@required this.recipeId,
       @required this.ingredient,
-      @required this.role});
+      @required this.role,
+      this.userNewRecipe});
   final String recipeId;
   final IngredientsModel ingredient;
   final String role;
+  final bool userNewRecipe;
   final FoodPreparationController _foodPreparationController =
       FoodPreparationController();
 
@@ -95,7 +99,7 @@ class IngredientsCard extends StatelessWidget {
               Text(ingredient.product),
             ],
           ),
-          role == "user"
+          role == 'user' && userNewRecipe == false
               ? Container()
               : Row(
                   children: [
