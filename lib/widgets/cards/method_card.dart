@@ -5,6 +5,8 @@ import 'package:lifestylescreening/models/method_model.dart';
 import 'package:lifestylescreening/widgets/dialog/edit_method_dialog.dart';
 import 'package:lifestylescreening/widgets/inherited/inherited_widget.dart';
 
+import '../text/body_text.dart';
+
 // ignore: must_be_immutable
 class MethodStream extends StatelessWidget {
   MethodStream({@required this.recipeId, this.userNewRecipe});
@@ -84,15 +86,16 @@ class MethodCard extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(method.step.toString() + ".",
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600)),
+          BodyText(
+            text: method.step.toString() + ".",
+            // style: TextStyle(fontWeight: FontWeight.bold),
+          ),
           SizedBox(
             width: 5,
           ),
           Expanded(
-            child: Text(
-              method.instruction,
-              softWrap: true,
+            child: BodyText(
+              text: method.instruction,
             ),
           ),
           role == 'user' && userNewRecipe == false

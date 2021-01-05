@@ -6,6 +6,8 @@ import 'package:lifestylescreening/models/ingredients_model.dart';
 import 'package:lifestylescreening/widgets/dialog/edit_ingredient_dialog.dart';
 import 'package:lifestylescreening/widgets/inherited/inherited_widget.dart';
 
+import '../text/body_text.dart';
+
 // ignore: must_be_immutable
 class IngredientsStream extends StatelessWidget {
   IngredientsStream({@required this.recipeId, this.userNewRecipe});
@@ -92,11 +94,12 @@ class IngredientsCard extends StatelessWidget {
         children: [
           Row(
             children: [
-              Text(ingredient.amount.toString()),
-              Text(" "),
-              Text(ingredient.unit),
-              Text(" "),
-              Text(ingredient.product),
+              BodyText(text: "• "),
+              BodyText(text: ingredient.amount.toString()),
+              BodyText(text: " "),
+              BodyText(text: ingredient.unit),
+              BodyText(text: " "),
+              BodyText(text: ingredient.product),
             ],
           ),
           role == 'user' && userNewRecipe == false

@@ -113,7 +113,6 @@ class RecipeRepository implements IRecipeRepository {
 
   @override
   Future<List<RecipeModel>> getUserFavoriteRecipe(String userId) async {
-    // ignore: deprecated_member_use
     List<RecipeModel> returnList = List<RecipeModel>();
     List<dynamic> favRecipeList = [];
     int recipeId;
@@ -213,9 +212,7 @@ class RecipeRepository implements IRecipeRepository {
         FirebaseStorage.instance.ref().child('recipeImages/$fileName');
     UploadTask uploadTask = storageRef.putFile(img);
     TaskSnapshot taskSnapshot = await uploadTask;
-    await taskSnapshot.ref.getDownloadURL().then(
-          (value) => print('Done: $value'),
-        );
+    await taskSnapshot.ref.getDownloadURL();
   }
 
   Future<String> getImage(String image) async {
