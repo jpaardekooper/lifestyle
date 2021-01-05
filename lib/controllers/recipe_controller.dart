@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:lifestylescreening/models/recipe_model.dart';
 import 'package:lifestylescreening/repositories/recipe_repository.dart';
@@ -14,12 +16,24 @@ class RecipeController {
     return _recipeRepository.getRecipeList(snapshot);
   }
 
+  Future<List<RecipeModel>> getUserRecipes(String userId) {
+    return _recipeRepository.getUserRecipes(userId);
+  }
+
+  Future<void> updateUserRecipe(String recipeId, Map data, bool newItem) {
+    return _recipeRepository.updateRecipe(recipeId, data, newItem);
+  }
+
   Future<void> updateRecipe(String recipeId, Map data, bool newItem) {
     return _recipeRepository.updateRecipe(recipeId, data, newItem);
   }
 
-  Future<void> removeRecipe(String recipeId) {
-    return _recipeRepository.removeRecipe(recipeId);
+  Future<void> removeRecipe(String recipeId, String url) {
+    return _recipeRepository.removeRecipe(recipeId, url);
+  }
+
+  Future<void> removeUserRecipe(String recipeId, String url){
+    return _recipeRepository.removeUserRecipe(recipeId, url);
   }
 
   Future<List<RecipeModel>> getRecipeListOnce() {
@@ -30,8 +44,8 @@ class RecipeController {
     return _recipeRepository.getUserFavoriteRecipe(userId);
   }
 
-  Future<bool> checkFavoriteMarker(String markerId, String userId) {
-    return _recipeRepository.checkFavoriteMarker(markerId, userId);
+  Future<bool> checkFavoriteRecipe(String markerId, String userId) {
+    return _recipeRepository.checkFavoriteRecipe(markerId, userId);
   }
 
   Future<void> addFavoriteRecipe(String userId, String recipeId) {
@@ -40,5 +54,13 @@ class RecipeController {
 
   Future<void> removeFavoriteRecipe(String userId, String recipeId) {
     return _recipeRepository.removeFavoriteRecipe(userId, recipeId);
+  }
+
+  Future<void> uploadImage(File img) {
+    return _recipeRepository.uploadImage(img);
+  }
+
+  Future<String> getImage(String image) {
+    return _recipeRepository.getImage(image);
   }
 }

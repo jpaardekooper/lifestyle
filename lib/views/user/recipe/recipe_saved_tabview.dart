@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:lifestylescreening/controllers/recipe_controller.dart';
 import 'package:lifestylescreening/models/recipe_model.dart';
@@ -57,6 +55,7 @@ class _RecipeFavoritesViewState extends State<RecipeFavoritesView> {
       return RecipeGrid(
           recipeList: _savedRecipes,
           userData: _userData.data,
+          userRecipe: false,
           onTap: () => _updateRecipes());
     }
   }

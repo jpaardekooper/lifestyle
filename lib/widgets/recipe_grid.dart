@@ -10,6 +10,7 @@ class RecipeGrid extends StatelessWidget {
     Key key,
     @required List<RecipeModel> recipeList,
     @required AppUser userData,
+    this.userRecipe,
     this.onTap,
   })  : _recipeList = recipeList,
         _userData = userData,
@@ -18,6 +19,7 @@ class RecipeGrid extends StatelessWidget {
   final List<RecipeModel> _recipeList;
   final VoidCallback onTap;
   final AppUser _userData;
+  final bool userRecipe;
 
   @override
   Widget build(BuildContext context) {
@@ -38,12 +40,16 @@ class RecipeGrid extends StatelessWidget {
                 data: _userData,
                 child: FoodPreparationView(
                   recipe: _recipe,
+                  userNewRecipe: userRecipe,
                 ),
               ),
             ),
           ),
           child: RecipeCard(
-              recipe: _recipe, userId: _userData.id, on_Tap: onTap),
+              recipe: _recipe,
+              user: _userData,
+              on_Tap: onTap,
+              userRecipe: userRecipe),
         );
       },
     );

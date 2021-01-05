@@ -114,7 +114,7 @@ class CustomTextFormField extends StatelessWidget {
             case 4:
               return val.isEmpty
                   ? textcontroller.text =
-                      "https://firebasestorage.googleapis.com/v0/b/lifestyle-screening.appspot.com/o/placeholder.png?alt=media&token=53ff4c6b-f415-4f9d-8144-e1895112062f"
+                      "/placeholder.png"
                   : null;
               break;
             case 5:

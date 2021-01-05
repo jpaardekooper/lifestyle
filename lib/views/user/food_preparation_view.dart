@@ -12,8 +12,9 @@ import 'package:lifestylescreening/widgets/dialog/edit_nutritional_dialog.dart';
 import 'package:lifestylescreening/widgets/inherited/inherited_widget.dart';
 
 class FoodPreparationView extends StatefulWidget {
-  FoodPreparationView({@required this.recipe});
+  FoodPreparationView({@required this.recipe, this.userNewRecipe});
   final RecipeModel recipe;
+  final bool userNewRecipe;
 
   @override
   _FoodPreparationViewState createState() => _FoodPreparationViewState();
@@ -78,7 +79,7 @@ class _FoodPreparationViewState extends State<FoodPreparationView> {
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         Text("Ingrediënten"),
-        role == "user"
+        role == "user" && widget.userNewRecipe == false
             ? Container()
             : IconButton(
                 icon: Icon(Icons.add),
@@ -93,7 +94,7 @@ class _FoodPreparationViewState extends State<FoodPreparationView> {
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         Text("Methode"),
-        role == "user"
+        role == "user" && widget.userNewRecipe == false
             ? Container()
             : IconButton(
                 icon: Icon(Icons.add),
@@ -108,7 +109,7 @@ class _FoodPreparationViewState extends State<FoodPreparationView> {
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         Text("Voedingswaarde per portie"),
-        role == "user"
+        role == "user" && widget.userNewRecipe == false
             ? Container()
             : IconButton(
                 icon: Icon(Icons.add),
@@ -139,6 +140,7 @@ class _FoodPreparationViewState extends State<FoodPreparationView> {
                 data: _userData.data,
                 child: IngredientsStream(
                   recipeId: widget.recipe.id,
+                  userNewRecipe: widget.userNewRecipe,
                 ),
               ),
               Divider(),
@@ -147,7 +149,10 @@ class _FoodPreparationViewState extends State<FoodPreparationView> {
 
               InheritedDataProvider(
                 data: _userData.data,
-                child: MethodStream(recipeId: widget.recipe.id),
+                child: MethodStream(
+                  recipeId: widget.recipe.id,
+                  userNewRecipe: widget.userNewRecipe,
+                ),
               ),
               Divider(),
               headerNutritionalValue(),
@@ -157,6 +162,7 @@ class _FoodPreparationViewState extends State<FoodPreparationView> {
                 data: _userData.data,
                 child: NutrionStream(
                   recipeId: widget.recipe.id,
+                  userNewRecipe: widget.userNewRecipe,
                 ),
               )
             ],
