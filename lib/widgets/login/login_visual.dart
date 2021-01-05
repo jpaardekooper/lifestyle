@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:lifestylescreening/views/admin/dashboard.dart';
 import 'package:lifestylescreening/views/user/home_view.dart';
+import 'package:lifestylescreening/views/user/screening/screening_view.dart';
 import 'package:lifestylescreening/widgets/colors/color_theme.dart';
 import 'package:lifestylescreening/widgets/inherited/inherited_widget.dart';
 import 'package:lifestylescreening/widgets/painter/top_large_wave_painter.dart';
@@ -10,6 +11,7 @@ import 'package:lifestylescreening/widgets/text/h1_text.dart';
 import 'package:lifestylescreening/widgets/text/h2_text.dart';
 import 'package:lifestylescreening/widgets/text/h3_grey_text.dart';
 import 'package:lifestylescreening/widgets/transitions/image_transition.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
 
 class LoginVisual extends StatelessWidget {
   LoginVisual({Key key}) : super(key: key);
@@ -41,6 +43,21 @@ class LoginVisual extends StatelessWidget {
     );
   }
 
+  void goToScreening(BuildContext context, var data) {
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(
+        builder: (BuildContext context) => InheritedDataProvider(
+          data: data,
+          child: ScreeningView(
+            user: data,
+            surveyTitle: "Screening test",
+          ),
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final data = InheritedDataProvider.of(context).data;
@@ -51,7 +68,11 @@ class LoginVisual extends StatelessWidget {
       if (data.role == "admin") {
         goToDashBoard(context, data);
       } else {
-        goToWelcomePage(context, data);
+        if (kIsWeb) {
+          goToScreening(context, data);
+        } else {
+          goToWelcomePage(context, data);
+        }
       }
     });
     return WillPopScope(

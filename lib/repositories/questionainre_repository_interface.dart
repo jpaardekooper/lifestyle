@@ -60,4 +60,8 @@ abstract class IQuestionnaireRepository {
 
   Future<List<SurveyResultModel>> checkSurveyResult(
       String surveyTitle, String email);
+
+  Future<String> createDTDid();
+
+  Future<void> setDTDSurveyResults(String id, Map data);
 }

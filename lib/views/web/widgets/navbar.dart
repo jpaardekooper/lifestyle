@@ -5,7 +5,7 @@ import 'package:lifestylescreening/views/web/utils/responsive_layout.dart';
 import 'package:lifestylescreening/widgets/colors/color_theme.dart';
 import 'package:hovering/hovering.dart';
 import 'package:lifestylescreening/widgets/transitions/route_transition.dart';
-import 'package:lifestylescreening/widgets/web/start_survey.dart';
+import 'package:lifestylescreening/widgets/web/web_disclaimer.dart';
 
 class NavBar extends StatelessWidget {
   final navLinks = ["Aanmelden", "Inloggen"];
@@ -90,7 +90,7 @@ class NavBar extends StatelessWidget {
                   onTap: () {
                     Navigator.of(context).push(
                       createRoute(
-                        StartSurvey(),
+                        WebDisclaimer(),
                       ),
                     );
                   },

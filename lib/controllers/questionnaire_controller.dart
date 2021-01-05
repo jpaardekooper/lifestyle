@@ -98,4 +98,12 @@ class QuestionnaireController {
     return _questionnaireRepository.setSurveyToFalse(
         surveyTitle, user, surveyResult);
   }
+
+  Future<String> createDTDid() {
+    return _questionnaireRepository.createDTDid();
+  }
+
+  Future<void> setDTDSurveyResults(String id, Map data) {
+    return _questionnaireRepository.setDTDSurveyResults(id, data);
+  }
 }
