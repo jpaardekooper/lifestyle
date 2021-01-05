@@ -25,7 +25,10 @@ class _CheckBoxSurveyState extends State<CheckBoxSurvey> {
   Widget build(BuildContext context) {
     return CheckboxListTile(
       controlAffinity: ListTileControlAffinity.leading,
-      title: Text(widget.answer.option),
+      title: Text(
+        widget.answer.option,
+        style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+      ),
       value: widget.selected,
       onChanged: (value) {
         setState(() {

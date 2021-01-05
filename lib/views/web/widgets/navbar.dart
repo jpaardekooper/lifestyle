@@ -8,6 +8,9 @@ import 'package:lifestylescreening/widgets/transitions/route_transition.dart';
 import 'package:lifestylescreening/widgets/web/web_disclaimer.dart';
 
 class NavBar extends StatelessWidget {
+  NavBar({@required this.function});
+  final VoidCallback function;
+
   final navLinks = ["Aanmelden", "Inloggen"];
 
   List<Widget> navItem(BuildContext context) {
@@ -86,19 +89,20 @@ class NavBar extends StatelessWidget {
           if (!ResponsiveLayout.isSmallScreen(context))
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: <Widget>[...navItem(context)]..add(InkWell(
-                  onTap: () {
-                    Navigator.of(context).push(
-                      createRoute(
-                        WebDisclaimer(),
-                      ),
-                    );
-                  },
-                  child: Container(
-                    margin: EdgeInsets.only(left: 40),
-                    width: 160,
-                    height: 40,
-                    decoration: BoxDecoration(
+              children: <Widget>[...navItem(context)]..add(
+                  InkWell(
+                    onTap: () {
+                      Navigator.of(context).push(
+                        createRoute(
+                          WebDisclaimer(),
+                        ),
+                      );
+                    },
+                    child: Container(
+                      margin: EdgeInsets.only(left: 40),
+                      width: 160,
+                      height: 40,
+                      decoration: BoxDecoration(
                         gradient: LinearGradient(
                             colors: [
                               ColorTheme.accentOrange,
@@ -112,22 +116,28 @@ class NavBar extends StatelessWidget {
                               color: Color(0xFF6078ea).withOpacity(.3),
                               offset: Offset(0, 8),
                               blurRadius: 8)
-                        ]),
-                    child: Material(
-                      color: Colors.transparent,
-                      child: Center(
-                        child: Text("Doe de test!",
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 20,
-                              letterSpacing: 1,
-                            )),
+                        ],
+                      ),
+                      child: Material(
+                        color: Colors.transparent,
+                        child: Center(
+                          child: Text("Doe de test!",
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 20,
+                                letterSpacing: 1,
+                              )),
+                        ),
                       ),
                     ),
-                  ))),
+                  ),
+                ),
             )
           else
-            Icon(Icons.menu, color: Colors.black, size: 26)
+            IconButton(
+              icon: Icon(Icons.menu),
+              onPressed: () => function(),
+            )
         ],
       ),
     );

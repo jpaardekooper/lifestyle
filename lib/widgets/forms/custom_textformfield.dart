@@ -14,6 +14,7 @@ class CustomTextFormField extends StatelessWidget {
     this.hintText,
     this.function,
     this.answerModel,
+    this.border,
   });
 
   final TextInputType keyboardType;
@@ -26,6 +27,7 @@ class CustomTextFormField extends StatelessWidget {
   final String hintText;
   final Function(AnswerModel) function;
   final AnswerModel answerModel;
+  final bool border;
 
   inputDecoration(BuildContext context) {
     return InputDecoration(
@@ -93,7 +95,9 @@ class CustomTextFormField extends StatelessWidget {
         maxLines: secureText ? 1 : 5,
         minLines: 1,
         autofocus: false,
-        decoration: inputDecoration(context),
+        decoration: (border ?? true)
+            ? inputDecoration(context)
+            : InputDecoration(border: InputBorder.none, hintText: hintText),
         //return value if theres an value otherwise reutrn error
         // mssge
         validator: (val) {
@@ -104,7 +108,9 @@ class CustomTextFormField extends StatelessWidget {
               return val.isEmpty ? errorMessage : null;
               break;
             case 2:
-              return validateEmail(val) ? null : "Enter correct email";
+              return validateEmail(val)
+                  ? null
+                  : errorMessage ?? "gebruik een geldige email";
               break;
             case 3:
               return val != passwordChecker
@@ -113,8 +119,7 @@ class CustomTextFormField extends StatelessWidget {
               break;
             case 4:
               return val.isEmpty
-                  ? textcontroller.text =
-                      "/placeholder.png"
+                  ? textcontroller.text = "/placeholder.png"
                   : null;
               break;
             case 5:

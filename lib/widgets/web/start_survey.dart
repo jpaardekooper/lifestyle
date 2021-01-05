@@ -241,7 +241,12 @@ class _StartSurveyState extends State<StartSurvey> {
         child: nextQuestionInQue != 0 && nextQuestionInQue != 8
             ? TutorialButtons(
                 canGoBack: true,
-                onPressedBack: () => Navigator.pop(context),
+                onPressedBack: () => Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(
+                    builder: (BuildContext context) => LandingPageApp(),
+                  ),
+                ),
                 onPressedNext: () => nextQuestion(),
               )
             : Center(
@@ -251,7 +256,8 @@ class _StartSurveyState extends State<StartSurvey> {
                     onTap: () => Navigator.pushReplacement(
                       context,
                       MaterialPageRoute(
-                          builder: (BuildContext context) => LandingPageApp()),
+                        builder: (BuildContext context) => LandingPageApp(),
+                      ),
                     ),
                     text: "Bedankt voor uw deelname",
                   ),
