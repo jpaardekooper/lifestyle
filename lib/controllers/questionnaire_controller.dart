@@ -32,6 +32,11 @@ class QuestionnaireController {
     return _questionnaireRepository.getAnswer(category, questionId);
   }
 
+  //fetch an answer for the question
+  Future<List<AnswerModel>> fetchDTDAnswer(String questionId) {
+    return _questionnaireRepository.getDTDAnswer(questionId);
+  }
+
   Stream<QuerySnapshot> streamQuestion(String id) {
     return _questionnaireRepository.streamQuestions(id);
   }

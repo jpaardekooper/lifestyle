@@ -1,6 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:lifestylescreening/models/category_model.dart';
 
 //setting data when a dropdown menu item is selected
 typedef void StringCallback(String val);

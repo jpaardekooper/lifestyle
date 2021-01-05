@@ -21,8 +21,6 @@ class _EditCategoryDialogState extends State<EditCategoryDialog> {
 
   final _formKey = GlobalKey<FormState>();
 
-  String _selectedCategory;
-
   void initState() {
     super.initState();
     _catController.text = widget.categoryModel.category ?? "";

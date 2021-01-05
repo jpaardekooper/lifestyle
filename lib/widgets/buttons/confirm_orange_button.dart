@@ -16,7 +16,6 @@ class ConfirmOrangeButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final size = MediaQuery.of(context).size;
     return RaisedButton(
       onPressed: onTap,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),

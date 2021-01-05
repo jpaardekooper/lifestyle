@@ -10,6 +10,7 @@ import 'package:lifestylescreening/widgets/login/login_visual.dart';
 import 'package:lifestylescreening/widgets/logo/lifestyle_logo.dart';
 import 'package:lifestylescreening/widgets/painter/top_small_wave_painter.dart';
 import 'package:lifestylescreening/widgets/text/h2_text.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
 
 class SignIn extends StatefulWidget {
   @override
@@ -73,7 +74,8 @@ class _SignInState extends State<SignIn> {
                 child: Align(
                   alignment: Alignment.topCenter,
                   child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 40.0),
+                    padding:
+                        EdgeInsets.symmetric(horizontal: kIsWeb ? 80 : 40.0),
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: [
@@ -224,6 +226,7 @@ class _SignInState extends State<SignIn> {
   void resetSignInPage() {
     setState(() {
       _isLoading = false;
+      // ignore: deprecated_member_use
       _key.currentState.showSnackBar(
         SnackBar(
           duration: const Duration(seconds: 1),

@@ -1,5 +1,4 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:lifestylescreening/controllers/recipe_controller.dart';
 import 'package:lifestylescreening/models/recipe_model.dart';
 import 'package:lifestylescreening/repositories/recipe_repository_interface.dart';
 
@@ -65,6 +64,7 @@ class RecipeRepository implements IRecipeRepository {
 
   @override
   Future<List<RecipeModel>> getUserFavoriteRecipe(String userId) async {
+    // ignore: deprecated_member_use
     List<RecipeModel> returnList = List<RecipeModel>();
     List<dynamic> favRecipeList = [];
     int recipeId;

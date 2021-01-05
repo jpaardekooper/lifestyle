@@ -129,21 +129,20 @@ class _BMIViewState extends State<BMIView> {
                       suffixText: "kg",
                       hintText: "Vul hier uw gewicht in in kilo's",
                     ),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 30),
+                      child: Hero(
+                        tag: 'intro-text',
+                        child: Material(
+                          color: Colors.transparent,
+                          child: H3GreyText(
+                              text:
+                                  // ignore: lines_longer_than_80_chars
+                                  "We gebruiken uw BMI-index om de ervaring van de app te personaliseren."),
+                        ),
+                      ),
+                    ),
                   ],
-                ),
-              ),
-              Padding(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 30.0, vertical: 30),
-                child: Hero(
-                  tag: 'intro-text',
-                  child: Material(
-                    color: Colors.transparent,
-                    child: H3GreyText(
-                        text:
-                            // ignore: lines_longer_than_80_chars
-                            "We gebruiken uw BMI-index om de ervaring van de app te personaliseren."),
-                  ),
                 ),
               ),
               TutorialButtons(
