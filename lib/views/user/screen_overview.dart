@@ -4,7 +4,6 @@ import 'package:lifestylescreening/controllers/auth_controller.dart';
 import 'package:lifestylescreening/healthpoint_icons.dart';
 import 'package:lifestylescreening/models/firebase_user.dart';
 import 'package:lifestylescreening/views/user/screening/screening_view.dart';
-import 'package:lifestylescreening/views/user/overview/show_goals_tab.dart';
 import 'package:lifestylescreening/views/user/overview/show_recent_recipes_tab.dart';
 import 'package:lifestylescreening/widgets/buttons/confirm_orange_button.dart';
 import 'package:lifestylescreening/widgets/colors/color_theme.dart';
@@ -19,19 +18,19 @@ class ScreenOverview extends StatelessWidget {
   final AuthController _authController = AuthController();
 
   void updatecounterToSettings() {
-    tabscreen.counter.value = 4;
-  }
-
-  void updatecounterToExperts() {
     tabscreen.counter.value = 3;
   }
 
-  void updatecounterToRecipes() {
+  void updatecounterToExperts() {
     tabscreen.counter.value = 2;
   }
 
-  void updatecounterToGoals() {
+  void updatecounterToRecipes() {
     tabscreen.counter.value = 1;
+  }
+
+  void updatecounterToGoals() {
+    tabscreen.counter.value = 0;
   }
 
   void startScreeningTest(BuildContext ctx, AppUser user) {
@@ -166,11 +165,11 @@ class ScreenOverview extends StatelessWidget {
                     SizedBox(
                       height: size.height * 0.1,
                     ),
-                    ShowGoalsTab(onTap: updatecounterToGoals),
+                    // ShowGoalsTab(onTap: updatecounterToGoals),
 
-                    SizedBox(
-                      height: size.height * 0.1,
-                    ),
+                    // SizedBox(
+                    //   height: size.height * 0.1,
+                    // ),
 
                     ShowRecentRecipesTab(onTap: updatecounterToRecipes),
 

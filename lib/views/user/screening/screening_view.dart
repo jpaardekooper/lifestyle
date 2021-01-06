@@ -29,7 +29,7 @@ class _ScreeningViewState extends State<ScreeningView> {
   final QuestionnaireController _questionnaireController =
       QuestionnaireController();
 
-  final _formKey = GlobalKey<FormState>();
+  var _formKey;
 
   double progressIndicatorValue;
   int categoryIndex;
@@ -45,6 +45,7 @@ class _ScreeningViewState extends State<ScreeningView> {
   // bool lastSurveyCategory;
   @override
   void initState() {
+    _formKey = GlobalKey<FormState>();
     category = "";
     categoryIndex = 0;
     progressIndicatorValue = 0;
@@ -59,11 +60,27 @@ class _ScreeningViewState extends State<ScreeningView> {
     super.initState();
   }
 
-  @override
-  void dispose() {
+  deleteControllers() async {
+    for (int i = 0; i < _controllerList.length; i++) {
+      _controllerList[i].dispose();
+    }
     timerService.stop();
 
     timerService.dispose();
+    _controllerList.clear();
+    _userAnswers.clear();
+
+    _surveyResult.clear();
+    _surveyList.clear();
+    _questions.clear();
+    category = "";
+    categoryIndex = 0;
+  }
+
+  @override
+  void dispose() {
+    deleteControllers();
+
     super.dispose();
   }
 
@@ -89,20 +106,30 @@ class _ScreeningViewState extends State<ScreeningView> {
       int scorecalc = 0;
       for (int i = 0; i < _userAnswers.length; i++) {
         //different score calculation for category bewegen
+        print(_userAnswers[i].id);
+        print(_userAnswers[i].lastAnswer);
+        print(_userAnswers[i].next);
+        print(_userAnswers[i].option);
+        print(_userAnswers[i].optionTypeIsNumber);
+        print(_userAnswers[i].pointsCalculator);
+
         if (category == "Bewegen") {
           switch (_userAnswers[i].pointsCalculator) {
             case 0:
               userCategoryScore += _userAnswers[i].points;
               break;
             case 1:
-              scorecalc +=
-                  (double.parse(_controllerList[i].text) * 0.5).round();
+              int score = (int.tryParse(_controllerList[i].text) * 0.5).round();
+              scorecalc += score;
+
               break;
             case 2:
-              scorecalc += (double.parse(_controllerList[i].text) * 1).round();
+              int score = (int.tryParse(_controllerList[i].text) * 1).round();
+              scorecalc += score;
               break;
             case 3:
-              scorecalc += (double.parse(_controllerList[i].text) * 2).round();
+              int score = (int.tryParse(_controllerList[i].text) * 2).round();
+              scorecalc += score;
               break;
             case 4:
               if (_userAnswers[i].lastAnswer == _controllerList[i].text)
@@ -115,16 +142,17 @@ class _ScreeningViewState extends State<ScreeningView> {
               userCategoryScore += _userAnswers[i].points;
               break;
             case 1:
-              userCategoryScore +=
-                  (int.parse(_controllerList[i].text) * 0.5).round();
+              int score = (int.tryParse(_controllerList[i].text) * 0.5).round();
+              userCategoryScore += score;
+
               break;
             case 2:
-              userCategoryScore +=
-                  (int.parse(_controllerList[i].text) * 1).round();
+              int score = (int.tryParse(_controllerList[i].text) * 1).round();
+              userCategoryScore += score;
               break;
             case 3:
-              userCategoryScore +=
-                  (int.parse(_controllerList[i].text) * 2).round();
+              int score = (int.tryParse(_controllerList[i].text) * 2).round();
+              userCategoryScore += score;
               break;
             case 4:
               if (_userAnswers[i].lastAnswer == _controllerList[i].text)
@@ -170,9 +198,15 @@ class _ScreeningViewState extends State<ScreeningView> {
         }
       }
 
+      int nextIndexQuestion = 0;
+
+      if (categoryIndex < categoriesList.length) {
+        nextIndexQuestion += categoryIndex + 1;
+      }
+
       Map<String, dynamic> surveyData = {
         "email": widget.user.email,
-        "index": categoryIndex + 1,
+        "index": nextIndexQuestion,
         "categories": FieldValue.arrayUnion(categoriesList),
         "category_points": FieldValue.arrayUnion(scorevalues),
         "total_points": totalScorevalue,
@@ -181,23 +215,25 @@ class _ScreeningViewState extends State<ScreeningView> {
         "date": DateTime.now(),
       };
 
-      //user cat score
-
       await _questionnaireController.setUserSurveyAnswer(widget.surveyTitle,
           widget.user, category, categoryIndex, surveyData, data, false);
 
-      timerService.reset();
-      setState(() {
-        //starting timer again
-        timerService.start();
-        _controllerList.clear();
-        _userAnswers.clear();
-        _ansersToFirebaseList.clear();
-        _surveyResult.clear();
-        _surveyList.clear();
-        _questions.clear();
-        category = "";
-      });
+      // timerService.reset();
+      //starting timer again
+
+      _ansersToFirebaseList.clear();
+      deleteControllers();
+
+      Route route = MaterialPageRoute(
+          builder: (context) => ScreeningView(
+                user: widget.user,
+                surveyTitle: widget.surveyTitle,
+              ));
+      await Navigator.pushReplacement(context, route);
+
+      // setState(() {
+      //   timerService.start();
+      // });
     }
   }
 
@@ -228,65 +264,63 @@ class _ScreeningViewState extends State<ScreeningView> {
 
   Widget getScreeningQuestion(String category) {
     return FutureBuilder<List<QuestionModel>>(
-        future: _questionnaireController.fetchScreeningQuestion(category),
-        builder: (context, snapshot) {
-          final List<QuestionModel> _questionList = snapshot.data;
-          if (snapshot.connectionState != ConnectionState.done)
-            return Center(
-              child: CircularProgressIndicator(),
-            );
-          if (!snapshot.hasData) {
-            return Center(
-              child: CircularProgressIndicator(),
-            );
-          } else {
-            //looping through questions list
-            return ListView.builder(
-              physics: NeverScrollableScrollPhysics(),
-              shrinkWrap: true,
-              itemCount: _questionList.length,
-              itemBuilder: (BuildContext context, index) {
-                final QuestionModel question = _questionList[index];
-                _controllerList.add(TextEditingController());
-                _questions.add(question.question);
-                return Padding(
-                  padding: const EdgeInsets.all(20.0),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      //show question number and question
-                      Row(
-                        children: [
-                          Flexible(
-                            child: H2Text(
-                              text: "${question.order}.\t${question.question} ",
-                            ),
+      future: _questionnaireController.fetchScreeningQuestion(category),
+      builder: (context, snapshot) {
+        final List<QuestionModel> _questionList = snapshot.data;
+
+        if (!snapshot.hasData) {
+          return Center(
+            child: CircularProgressIndicator(),
+          );
+        } else {
+          //looping through questions list
+          return ListView.builder(
+            physics: NeverScrollableScrollPhysics(),
+            shrinkWrap: true,
+            itemCount: _questionList.length,
+            itemBuilder: (BuildContext context, index) {
+              final QuestionModel question = _questionList[index];
+              _controllerList.add(TextEditingController());
+              _questions.add(question.question);
+              return Padding(
+                padding: const EdgeInsets.all(20.0),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    //show question number and question
+                    Row(
+                      children: [
+                        Flexible(
+                          child: H2Text(
+                            text: "${question.order}.\t${question.question} ",
                           ),
-                        ],
-                      ),
-                      //check if question url exist and not equal to 0
-                      question.url.contains("https://") && question.url != 0
-                          ? CachedNetworkImage(
-                              imageUrl: question.url,
-                              progressIndicatorBuilder:
-                                  (context, url, downloadProgress) =>
-                                      CircularProgressIndicator(
-                                          value: downloadProgress.progress),
-                              errorWidget: (context, url, error) =>
-                                  Icon(Icons.error),
-                            )
-                          : Container(),
-                      //show answers for the question
-                      //adding category question and index of iteration
-                      showAnsers(category, question, index),
-                    ],
-                  ),
-                );
-              },
-            );
-          }
-        });
+                        ),
+                      ],
+                    ),
+                    //check if question url exist and not equal to 0
+                    question.url.contains("https://") && question.url != 0
+                        ? CachedNetworkImage(
+                            imageUrl: question.url,
+                            progressIndicatorBuilder:
+                                (context, url, downloadProgress) =>
+                                    CircularProgressIndicator(
+                                        value: downloadProgress.progress),
+                            errorWidget: (context, url, error) =>
+                                Icon(Icons.error),
+                          )
+                        : Container(),
+                    //show answers for the question
+                    //adding category question and index of iteration
+                    showAnsers(category, question, index),
+                  ],
+                ),
+              );
+            },
+          );
+        }
+      },
+    );
   }
 
   Widget showFirstTimeSurvey(double _progressValue, String category) {
@@ -353,10 +387,6 @@ class _ScreeningViewState extends State<ScreeningView> {
         builder: (context, snapshot) {
           _surveyResult = snapshot.data;
           //while loading
-          if (snapshot.connectionState != ConnectionState.done)
-            return Center(
-              child: CircularProgressIndicator(),
-            );
           //no data found or doesnt exist
           //doing quiz for the first time
           if (!snapshot.hasData || _surveyResult.isEmpty) {
@@ -382,7 +412,7 @@ class _ScreeningViewState extends State<ScreeningView> {
 
                   progressIndicatorValue = _progressValue * categoryIndex;
 
-                  if (categoryIndex >= _surveyList.first.category.length - 1) {
+                  if (categoryIndex == _surveyList.first.category.length) {
                     return surveyIsFinished(_surveyResult.first);
                   }
                   //showing the actual survey data
@@ -397,20 +427,21 @@ class _ScreeningViewState extends State<ScreeningView> {
             final _progressValue =
                 1.0 / _surveyResult.first.categories.length.toDouble();
 
-            categoryIndex = _surveyResult.first.index;
-
             if (_surveyResult.first.finished) {
               categoryIndex = 0;
+            } else {
+              categoryIndex = _surveyResult.first.index;
             }
 
             progressIndicatorValue = _progressValue * categoryIndex;
+            print(
+                "$categoryIndex + ${_surveyResult.first.categories.length} ${_surveyResult.first.finished}");
 
-            category = _surveyResult.first.categories[categoryIndex];
-
-            if (categoryIndex >= _surveyResult.first.categories.length - 1 &&
+            if (categoryIndex == _surveyResult.first.categories.length &&
                 _surveyResult.first.finished == false) {
               return surveyIsFinished(_surveyResult.first);
             } else {
+              category = _surveyResult.first.categories[categoryIndex];
               return showFirstTimeSurvey(_progressValue, category);
             }
           }

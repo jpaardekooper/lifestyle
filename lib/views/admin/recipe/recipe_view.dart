@@ -3,12 +3,10 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:lifestylescreening/controllers/recipe_controller.dart';
 import 'package:lifestylescreening/models/recipe_model.dart';
-import 'package:lifestylescreening/models/recipe_model.dart';
 import 'package:lifestylescreening/views/user/food_preparation_view.dart';
 import 'package:lifestylescreening/widgets/cards/recipe_card.dart';
 import 'package:lifestylescreening/widgets/dialog/edit_recipe_dialog.dart';
 import 'package:lifestylescreening/widgets/inherited/inherited_widget.dart';
-import 'package:lifestylescreening/widgets/recipe_grid.dart';
 
 class RecipeView extends StatefulWidget {
   @override
@@ -19,7 +17,6 @@ class _RecipeViewState extends State<RecipeView> {
   final RecipeController _recipeController = RecipeController();
 
   StreamSubscription<QuerySnapshot> _currentSubscription;
-  bool _isLoading = true;
   List<RecipeModel> _recipes = <RecipeModel>[];
 
   @override
@@ -38,7 +35,6 @@ class _RecipeViewState extends State<RecipeView> {
 
   void _updateSurveyList(QuerySnapshot snapshot) {
     setState(() {
-      _isLoading = false;
       _recipes = _recipeController.getRecipeList(snapshot);
     });
   }

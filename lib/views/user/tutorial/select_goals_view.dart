@@ -116,6 +116,7 @@ class _SelectGoalsViewState extends State<SelectGoalsView> {
           ),
           color: ColorTheme.extraLightGreen,
         ),
+        height: MediaQuery.of(context).size.height * 0.15,
         child: TutorialButtons(
           canGoBack: true,
           onPressedBack: goBack,
