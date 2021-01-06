@@ -253,7 +253,7 @@ class QuestionnaireRepository implements IQuestionnaireRepository {
         .get()
         .then((value) async {
       List<int> firstInt = [];
-      if (index == 0) {
+      if (category == "Bewegen") {
         Map<String, dynamic> firstData = {
           "email": user.email,
           "index": index,

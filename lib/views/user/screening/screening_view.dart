@@ -62,11 +62,12 @@ class _ScreeningViewState extends State<ScreeningView> {
 
   deleteControllers() async {
     for (int i = 0; i < _controllerList.length; i++) {
-      _controllerList[i].dispose();
+      //   _controllerList[i].dispose();
+      _controllerList.remove(i);
     }
     timerService.stop();
 
-    timerService.dispose();
+    //  timerService.dispose();
     _controllerList.clear();
     _userAnswers.clear();
 
@@ -106,12 +107,6 @@ class _ScreeningViewState extends State<ScreeningView> {
       int scorecalc = 0;
       for (int i = 0; i < _userAnswers.length; i++) {
         //different score calculation for category bewegen
-        print(_userAnswers[i].id);
-        print(_userAnswers[i].lastAnswer);
-        print(_userAnswers[i].next);
-        print(_userAnswers[i].option);
-        print(_userAnswers[i].optionTypeIsNumber);
-        print(_userAnswers[i].pointsCalculator);
 
         if (category == "Bewegen") {
           switch (_userAnswers[i].pointsCalculator) {
@@ -172,7 +167,7 @@ class _ScreeningViewState extends State<ScreeningView> {
         "question": FieldValue.arrayUnion(_questions),
         "answer": FieldValue.arrayUnion(_ansersToFirebaseList),
         "points": userCategoryScore,
-        "duration": screeningDuration,
+        "duration": _surveyResult.first.total_duration ?? 0 + screeningDuration,
         "date": DateTime.now()
       };
 
@@ -266,7 +261,7 @@ class _ScreeningViewState extends State<ScreeningView> {
     return FutureBuilder<List<QuestionModel>>(
       future: _questionnaireController.fetchScreeningQuestion(category),
       builder: (context, snapshot) {
-        final List<QuestionModel> _questionList = snapshot.data;
+        List<QuestionModel> _questionList = snapshot.data;
 
         if (!snapshot.hasData) {
           return Center(
@@ -279,7 +274,7 @@ class _ScreeningViewState extends State<ScreeningView> {
             shrinkWrap: true,
             itemCount: _questionList.length,
             itemBuilder: (BuildContext context, index) {
-              final QuestionModel question = _questionList[index];
+              QuestionModel question = _questionList[index];
               _controllerList.add(TextEditingController());
               _questions.add(question.question);
               return Padding(
