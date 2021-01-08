@@ -5,6 +5,7 @@ import 'package:lifestylescreening/views/admin/categories/categories_view.dart';
 import 'package:lifestylescreening/views/admin/dashboard_view.dart';
 import 'package:lifestylescreening/views/admin/messages/messages_overview.dart';
 import 'package:lifestylescreening/views/admin/recipe/recipe_view.dart';
+import 'package:lifestylescreening/views/admin/results/result_view.dart';
 import 'package:lifestylescreening/views/admin/survey/survey_view.dart';
 import 'package:lifestylescreening/widgets/inherited/inherited_widget.dart';
 
@@ -24,7 +25,7 @@ class _DashboardState extends State<Dashboard>
   @override
   void initState() {
     super.initState();
-    tabController = TabController(vsync: this, length: 5, initialIndex: 0)
+    tabController = TabController(vsync: this, length: 6, initialIndex: 0)
       ..addListener(() {
         setState(() {
           active = tabController.index;
@@ -88,7 +89,8 @@ class _DashboardState extends State<Dashboard>
                       ),
                       RecipeView(),
                       CategoriesView(),
-                      SurveyView()
+                      SurveyView(),
+                      ResultView(),
                     ],
                   ),
                 ),
@@ -244,6 +246,36 @@ class _DashboardState extends State<Dashboard>
                   ),
                   Text(
                     "Survey",
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontFamily: 'HelveticaNeue',
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+        FlatButton(
+          color: tabController.index == 5 ? Colors.grey[100] : Colors.white,
+          onPressed: () {
+            tabController.animateTo(5);
+            if (drawerStatus) {
+              Navigator.pop(context);
+            }
+          },
+          child: Align(
+            alignment: Alignment.centerLeft,
+            child: Container(
+              padding: EdgeInsets.only(top: 22, bottom: 22, right: 22),
+              child: Row(
+                children: [
+                  Icon(Icons.fact_check),
+                  SizedBox(
+                    width: 8,
+                  ),
+                  Text(
+                    "Resultaten",
                     style: TextStyle(
                       fontSize: 18,
                       fontFamily: 'HelveticaNeue',

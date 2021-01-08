@@ -221,7 +221,7 @@ class _RecipeExploreViewState extends State<RecipeExploreView> {
 
       _recipeController.uploadImage(_imageFile).then((value) =>
           _recipeController
-              .updateRecipe(recipe.id, data, true)
+              .updateUserRecipe(recipe.id, data, true)
               .then((value) => Navigator.of(context).pop()));
     }
   }
