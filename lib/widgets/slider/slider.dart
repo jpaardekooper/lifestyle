@@ -16,6 +16,11 @@ class SliderWidget extends StatefulWidget {
 }
 
 class _SliderWidgetState extends State<SliderWidget> {
+  @override
+  void dispose() {
+    super.dispose();
+  }
+
   int value = 1;
   @override
   Widget build(BuildContext context) {

@@ -45,6 +45,7 @@ class _ScreeningViewState extends State<ScreeningView> {
   // bool lastSurveyCategory;
   @override
   void initState() {
+    print("KOM IK HIER DAN");
     _formKey = GlobalKey<FormState>();
     category = "";
     categoryIndex = 0;
@@ -63,10 +64,12 @@ class _ScreeningViewState extends State<ScreeningView> {
   deleteControllers() async {
     for (int i = 0; i < _controllerList.length; i++) {
       //   _controllerList[i].dispose();
-      _controllerList.remove(i);
+      _controllerList[i].clear();
+      _controllerList[i].dispose();
     }
+    print(_controllerList.length);
     timerService.stop();
-
+    controllersints.clear();
     //  timerService.dispose();
     _controllerList.clear();
     _userAnswers.clear();
@@ -105,6 +108,9 @@ class _ScreeningViewState extends State<ScreeningView> {
 
       // only for category bewegen
       int scorecalc = 0;
+
+      print(_userAnswers.length);
+      print(_controllerList.length.toString() + "halo");
       for (int i = 0; i < _userAnswers.length; i++) {
         //different score calculation for category bewegen
 
@@ -236,7 +242,7 @@ class _ScreeningViewState extends State<ScreeningView> {
     return FutureBuilder<List<AnswerModel>>(
       //fetching data from the corresponding questionId
       future: _questionnaireController.fetchAnswer(category, question.id),
-      builder: (context, snapshot) {
+      builder: (ctxt, snapshot) {
         List<AnswerModel> _answerList = snapshot.data;
         if (snapshot.connectionState != ConnectionState.done)
           return Center(
@@ -257,6 +263,8 @@ class _ScreeningViewState extends State<ScreeningView> {
     );
   }
 
+  List<int> controllersints = [];
+
   Widget getScreeningQuestion(String category) {
     return FutureBuilder<List<QuestionModel>>(
       future: _questionnaireController.fetchScreeningQuestion(category),
@@ -273,10 +281,15 @@ class _ScreeningViewState extends State<ScreeningView> {
             physics: NeverScrollableScrollPhysics(),
             shrinkWrap: true,
             itemCount: _questionList.length,
-            itemBuilder: (BuildContext context, index) {
+            itemBuilder: (BuildContext ctx, index) {
               QuestionModel question = _questionList[index];
-              _controllerList.add(TextEditingController());
-              _questions.add(question.question);
+
+              if (!controllersints.contains(index)) {
+                controllersints.add(index);
+                _controllerList.add(TextEditingController());
+                _questions.add(question.question);
+              }
+
               return Padding(
                 padding: const EdgeInsets.all(20.0),
                 child: Column(
@@ -298,7 +311,7 @@ class _ScreeningViewState extends State<ScreeningView> {
                         ? CachedNetworkImage(
                             imageUrl: question.url,
                             progressIndicatorBuilder:
-                                (context, url, downloadProgress) =>
+                                (ctx, url, downloadProgress) =>
                                     CircularProgressIndicator(
                                         value: downloadProgress.progress),
                             errorWidget: (context, url, error) =>
