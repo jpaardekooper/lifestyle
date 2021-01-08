@@ -175,4 +175,9 @@ class AuthRepository extends IAuthRepository {
       return null;
     }
   }
+
+  @override
+  Future<void> subscribeToLifestyle(Map data) async {
+    await FirebaseFirestore.instance.collection("subscribers").doc().set(data);
+  }
 }

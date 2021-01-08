@@ -23,6 +23,11 @@ class _SelectedAnswerCardState extends State<SelectedAnswerCard> {
   bool isChecked = false;
   String selectedAnswer = "";
 
+  @override
+  void dispose() {
+    super.dispose();
+  }
+
   Widget showClosedTile(AnswerModel answer, int index) {
     return Column(
       children: [

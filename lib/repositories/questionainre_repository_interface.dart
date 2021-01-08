@@ -21,6 +21,8 @@ abstract class IQuestionnaireRepository {
   //get options for question
   Future<List<AnswerModel>> getAnswer(String category, String questionId);
 
+  Future<List<AnswerModel>> getDTDAnswer(String questionId);
+
   //admin functions
   Stream<QuerySnapshot> streamQuestions(String id);
 
@@ -58,4 +60,8 @@ abstract class IQuestionnaireRepository {
 
   Future<List<SurveyResultModel>> checkSurveyResult(
       String surveyTitle, String email);
+
+  Future<String> createDTDid();
+
+  Future<void> setDTDSurveyResults(String id, Map data);
 }

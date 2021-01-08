@@ -22,4 +22,6 @@ abstract class IAuthRepository {
   saveUserDetailsOnLogin(AppUser user, String password, bool rememberMe);
 
   Future resetPass(String email);
+
+  Future<void> subscribeToLifestyle(Map data);
 }
