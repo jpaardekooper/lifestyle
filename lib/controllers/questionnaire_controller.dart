@@ -77,16 +77,10 @@ class QuestionnaireController {
         parentId, questionDoc, answerDoc);
   }
 
-  Future<void> setUserSurveyAnswer(
-      String surveyTitle,
-      AppUser user,
-      String category,
-      int index,
-      Map surveyData,
-      Map data,
-      bool lastSurveyCategory) {
+  Future<void> setUserSurveyAnswer(String surveyTitle, AppUser user,
+      String category, int index, Map surveyData, Map data, String id) {
     return _questionnaireRepository.setUserSurveyAnswers(
-        surveyTitle, user, category, index, surveyData, data);
+        surveyTitle, user, category, index, surveyData, data, id);
   }
 
   Future<void> checkSurveyResult(String surveyTitle, String email) {

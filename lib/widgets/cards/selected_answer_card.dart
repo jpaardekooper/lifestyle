@@ -8,23 +8,31 @@ class SelectedAnswerCard extends StatefulWidget {
   SelectedAnswerCard(
       {Key key,
       @required this.answerList,
-      @required this.controller,
+      //    @required this.controller,
       @required this.function})
       : super(key: key);
   final List<AnswerModel> answerList;
-  final TextEditingController controller;
-  final Function(AnswerModel) function;
+
+  final Function(AnswerModel, String) function;
 
   @override
   _SelectedAnswerCardState createState() => _SelectedAnswerCardState();
 }
 
 class _SelectedAnswerCardState extends State<SelectedAnswerCard> {
+  TextEditingController controller;
   bool isChecked = false;
   String selectedAnswer = "";
 
   @override
+  void initState() {
+    controller = TextEditingController();
+    super.initState();
+  }
+
+  @override
   void dispose() {
+    controller.dispose();
     super.dispose();
   }
 
@@ -34,7 +42,7 @@ class _SelectedAnswerCardState extends State<SelectedAnswerCard> {
         index == 0
             ? CustomAnswerFormField(
                 keyboardType: TextInputType.text,
-                textcontroller: widget.controller,
+                textcontroller: controller,
                 errorMessage: "Vergeten in te vullen",
                 validator: 1, //checking if its a number
                 answerModel: answer,
@@ -50,7 +58,7 @@ class _SelectedAnswerCardState extends State<SelectedAnswerCard> {
           onChanged: (value) {
             setState(() {
               selectedAnswer = value;
-              widget.controller.text = value;
+              controller.text = value;
             });
           },
           selected: selectedAnswer == answer.option,
@@ -64,26 +72,36 @@ class _SelectedAnswerCardState extends State<SelectedAnswerCard> {
       return Column(
         children: [
           CustomAnswerFormField(
-            keyboardType: TextInputType.number,
-            textcontroller: widget.controller,
+            keyboardType: TextInputType.text,
+            textcontroller: controller,
             errorMessage: "Vergeten in te vullen",
-            validator: 2, //checking if its a number
+            validator: 1, //checking if its a number
             answerModel: answer,
             function: widget.function,
           ),
           SliderWidget(
-            controller: widget.controller,
+            controller: controller,
           ),
         ],
       );
+    } else if (answer.option == "tekst") {
+      return CustomTextFormField(
+        keyboardType: TextInputType.text,
+        textcontroller: controller,
+        errorMessage: "Vergeten in te vullen",
+        validator: 8, //checking if its a number
+        secureText: false,
+        hintText: "Antwoord in ${answer.option}",
+        suffixText: answer.option,
+        function: widget.function,
+        answerModel: answer,
+      );
     } else {
       return CustomTextFormField(
-        keyboardType: answer.optionTypeIsNumber
-            ? TextInputType.number
-            : TextInputType.text,
-        textcontroller: widget.controller,
+        keyboardType: TextInputType.number,
+        textcontroller: controller,
         errorMessage: "Geen geldig getal",
-        validator: answer.optionTypeIsNumber ? 7 : 8, //checking if its a number
+        validator: 7, //checking if its a number
         secureText: false,
         hintText: "Antwoord in ${answer.option}",
         suffixText: answer.option,
@@ -114,6 +132,22 @@ class _SelectedAnswerCardState extends State<SelectedAnswerCard> {
     );
   }
 
+  Widget defineAnswerType(AnswerModel _answerModel, int index) {
+    switch (_answerModel.type) {
+      case "AnswerType.closed":
+        return showClosedTile(_answerModel, index);
+        break;
+      case "AnswerType.open":
+        return showOpenTile(_answerModel);
+        break;
+      case "AnswerType.multipleChoice":
+        return showMultipleTile(_answerModel);
+        break;
+      default:
+        return Container();
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return ListView.builder(
@@ -121,21 +155,9 @@ class _SelectedAnswerCardState extends State<SelectedAnswerCard> {
       shrinkWrap: true,
       itemCount: widget.answerList.length,
       itemBuilder: (context, index) {
-        AnswerModel _answerModel = widget.answerList[index];
+        final AnswerModel _answerModel = widget.answerList[index];
 
-        switch (_answerModel.type) {
-          case "AnswerType.closed":
-            return showClosedTile(_answerModel, index);
-            break;
-          case "AnswerType.open":
-            return showOpenTile(_answerModel);
-            break;
-          case "AnswerType.multipleChoice":
-            return showMultipleTile(_answerModel);
-            break;
-          default:
-            return CircularProgressIndicator();
-        }
+        return defineAnswerType(_answerModel, index);
       },
     );
   }
