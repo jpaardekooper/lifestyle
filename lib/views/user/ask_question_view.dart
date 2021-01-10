@@ -1,7 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:lifestylescreening/controllers/chat_controller.dart';
+import 'package:lifestylescreening/controllers/questionnaire_controller.dart';
+import 'package:lifestylescreening/controllers/survey_controller.dart';
 import 'package:lifestylescreening/models/admin_model.dart';
+import 'package:lifestylescreening/models/firebase_user.dart';
+import 'package:lifestylescreening/models/survey_result_model.dart';
 import 'package:lifestylescreening/views/user/chat/chat_tab.dart';
 import 'package:lifestylescreening/views/user/screening/screening_view.dart';
 import 'package:lifestylescreening/widgets/buttons/confirm_orange_button.dart';
@@ -12,6 +16,7 @@ import 'package:lifestylescreening/widgets/inherited/inherited_widget.dart';
 import 'package:lifestylescreening/widgets/painter/top_small_wave_painter.dart';
 import 'package:lifestylescreening/widgets/text/body_text.dart';
 import 'package:lifestylescreening/widgets/text/h1_text.dart';
+import 'package:lifestylescreening/widgets/text/h2_text.dart';
 import 'package:lifestylescreening/widgets/text/intro_grey_text.dart';
 import 'package:lifestylescreening/widgets/text/intro_light_grey_text.dart';
 import 'package:lifestylescreening/widgets/transitions/route_transition.dart';
@@ -25,10 +30,72 @@ class AskQuestionView extends StatefulWidget {
 
 class _AskQuestionViewState extends State<AskQuestionView> {
   final ChatController _chatController = ChatController();
+  String email;
+
+  Widget showLastSurveyResult() {
+    return FutureBuilder<List<SurveyResultModel>>(
+      //fetching data from the corresponding questionId
+      future: SurveyController().getLastSurveyResult(email),
+      builder: (context, snapshot) {
+        if (!snapshot.hasData) {
+          return Text("geen data gevonden");
+        } else {
+          final List<SurveyResultModel> _survey = snapshot.data;
+
+          return Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              H1Text(text: "Hoe goed zorg je voor jezelf?"),
+              SizedBox(
+                height: 10,
+              ),
+              SizedBox(
+                height: 10,
+              ),
+              Text(
+                  "In dit deel van het onderzoek laten we je zien hoe goed je voor jezelf zorgt. We geven dit aan met een puntenaantal per onderdeel (bewegen, roken, alcohol, voeding en ontspanning). Het einddoel is om zo min mogelijk punten te behalen. Hoe meer punten, hoe meer ruimte voor verbetering."),
+              SizedBox(
+                height: 10,
+              ),
+              Text("Uw scores zijn:"),
+              SizedBox(
+                height: 10,
+              ),
+              ListView.builder(
+                physics: NeverScrollableScrollPhysics(),
+                shrinkWrap: true,
+                itemCount: _survey.first.categories.length,
+                itemBuilder: (BuildContext ctx, index) {
+                  return Row(
+                    // mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      SizedBox(
+                        width: 200,
+                        height: 20,
+                        child: BodyText(text: _survey.first.categories[index]),
+                      ),
+                      Text("${_survey.first.points_per_category[index]}")
+                    ],
+                  );
+                },
+              ),
+              SizedBox(
+                height: 10,
+              ),
+              BodyText(
+                  text: "Totaal aantal punten \t ${_survey.first.total_points}")
+            ],
+          );
+        }
+      },
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
     final _userData = InheritedDataProvider.of(context);
+    email = _userData.data.email;
     Size size = MediaQuery.of(context).size;
     return SingleChildScrollView(
       child: Stack(
@@ -55,7 +122,7 @@ class _AskQuestionViewState extends State<AskQuestionView> {
                   IntroLightGreyText(
                       text:
                           // ignore: lines_longer_than_80_chars
-                          "Contact opnemen met een expert heeft verschillende voordelen. Als je onzeker bent over een gezondheidsrisico of als je nieuwschierig bent over hoe het advies van een expert je verder kan helpen, kan dat hier worden gedaan"),
+                          "Contact opnemen met een expert heeft verschillende voordelen. Als je onzeker bent over een gezondheidsrisico of als je nieuwsgierig bent over hoe het advies van een expert je verder kan helpen, kan dat hier worden gedaan"),
                   SizedBox(height: 40),
                   ClipRRect(
                     borderRadius: BorderRadius.circular(40),
@@ -67,13 +134,10 @@ class _AskQuestionViewState extends State<AskQuestionView> {
                     ),
                   ),
                   SizedBox(height: 40),
+                  showLastSurveyResult(),
+                  SizedBox(height: 40),
                   H1Text(text: "Een gepersonaliseerde health scan"),
                   SizedBox(height: 10),
-                  IntroLightGreyText(
-                      text:
-                          // ignore: lines_longer_than_80_chars
-                          "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse finibus condimentum purus, eget pharetra sem ultricies sed. "),
-                  SizedBox(height: 20),
                   SizedBox(
                     width: MediaQuery.of(context).size.width * 0.35,
                     child: ConfirmOrangeButton(

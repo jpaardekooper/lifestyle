@@ -11,10 +11,12 @@ import 'package:lifestylescreening/models/question_model.dart';
 import 'package:lifestylescreening/models/survey_model.dart';
 import 'package:lifestylescreening/models/survey_result_model.dart';
 import 'package:lifestylescreening/views/user/screening/screening_calc.dart';
+import 'package:lifestylescreening/views/user/screening/survey_complete.dart';
 
 import 'package:lifestylescreening/widgets/buttons/confirm_orange_button.dart';
 import 'package:lifestylescreening/widgets/cards/selected_answer_card.dart';
 import 'package:lifestylescreening/widgets/inherited/inherited_timer_service.dart';
+
 import 'package:lifestylescreening/widgets/text/h1_text.dart';
 import 'package:lifestylescreening/widgets/text/h2_text.dart';
 
@@ -38,15 +40,13 @@ class _ScreeningViewState extends State<ScreeningView> {
   TimerService timerService;
   ScreeningCalc sc; //calculator for screening
 
-  // List<TextEditingController> _controllerList;
-  // List<QuestionModel> _questionList;
   List<SurveyResultModel> _surveyResult;
   List<SurveyModel> _surveyList;
   List<AnswerModel> _userAnswers;
   List<String> _questions;
   String category;
   List<String> _questionAnswer = [];
-  // bool lastSurveyCategory;
+
   @override
   void initState() {
     _formKey = GlobalKey<FormState>();
@@ -56,13 +56,11 @@ class _ScreeningViewState extends State<ScreeningView> {
     categoryIndex = 0;
     progressIndicatorValue = 0;
     timerService.start();
-    //   _controllerList = [];
-//    _questionList = [];
     _surveyResult = [];
     _surveyList = [];
     _userAnswers = [];
     _questions = [];
-    //   lastSurveyCategory = false;
+
     super.initState();
   }
 
@@ -302,25 +300,10 @@ class _ScreeningViewState extends State<ScreeningView> {
   }
 
   Widget surveyIsFinished(SurveyResultModel surveyResult) {
-    return Center(
-      child: Padding(
-        padding: const EdgeInsets.all(20.0),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Text("Bedankt voor uw deelname"),
-            ConfirmOrangeButton(
-              text: "Terug",
-              onTap: () {
-                _questionnaireController.setSurveyToFalse(
-                    widget.surveyTitle, widget.user, surveyResult);
-                Navigator.of(context).pop();
-              },
-            ),
-          ],
-        ),
-      ),
+    return SurveyComplete(
+      surveyResult: surveyResult,
+      surveyTitle: widget.surveyTitle,
+      user: widget.user,
     );
   }
 
@@ -370,16 +353,14 @@ class _ScreeningViewState extends State<ScreeningView> {
             );
           } else {
             final _progressValue =
-                sc.calculateProgress(_surveyList.first.category.length);
+                sc.calculateProgress(_surveyResult.first.categories.length);
 
             if (_surveyResult.first.finished) {
               categoryIndex = 0;
             } else {
               categoryIndex = _surveyResult.first.index;
             }
-            for (int i = 0; i < _surveyResult.length; i++) {
-              print(_surveyResult[i].id);
-            }
+
             progressIndicatorValue = _progressValue * categoryIndex;
 
             if (categoryIndex == _surveyResult.first.categories.length &&

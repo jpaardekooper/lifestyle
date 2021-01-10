@@ -37,10 +37,11 @@ class ScreenOverview extends StatelessWidget {
     Navigator.push(
       ctx,
       MaterialPageRoute(
-          builder: (context) => ScreeningView(
-                user: user,
-                surveyTitle: "Screening test",
-              )),
+        builder: (context) => ScreeningView(
+          user: user,
+          surveyTitle: "Screening test",
+        ),
+      ),
     );
   }
 
@@ -299,7 +300,7 @@ class ScreenOverview extends StatelessWidget {
                                 ),
                                 Text(
                                   """
-Lorem Ipsum is simply dummy text of the printing and typesetting industry. when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries,""",
+Een goede leefstijl verkleint het risico op overgewicht en ziekten zoals hart- en vaatziekten, kanker, enzovoort. Een goede leefstijl houdt in: voldoende bewegen, niet roken, geen of weinig alcohol, goede eetgewoontes en voldoende slaap of ontspanning.""",
                                   style:
                                       TextStyle(fontSize: size.height * 0.025),
                                 ),

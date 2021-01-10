@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:lifestylescreening/models/answer_model.dart';
-
 import 'package:lifestylescreening/widgets/colors/color_theme.dart';
 import 'package:lifestylescreening/widgets/text/h2_text.dart';
 

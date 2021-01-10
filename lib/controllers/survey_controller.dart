@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:lifestylescreening/models/survey_model.dart';
+import 'package:lifestylescreening/models/survey_result_model.dart';
 import 'package:lifestylescreening/repositories/survey_repository.dart';
 import 'package:lifestylescreening/repositories/survey_repository_interface.dart';
 
@@ -24,5 +25,9 @@ class SurveyController {
 
   Future<void> removeCategory(String id, String data) {
     return _surveyRepository.removeCategory(id, data);
+  }
+
+  Future<List<SurveyResultModel>> getLastSurveyResult(String email) {
+    return _surveyRepository.getLastSurveyResult(email);
   }
 }
