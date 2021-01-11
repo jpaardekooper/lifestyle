@@ -37,6 +37,7 @@ class SurveyComplete extends StatelessWidget {
             height: 10,
           ),
           Text(
+              // ignore: lines_longer_than_80_chars
               "In dit deel van het onderzoek laten we je zien hoe goed je voor jezelf zorgt. We geven dit aan met een puntenaantal per onderdeel (bewegen, roken, alcohol, voeding en ontspanning). Het einddoel is om zo min mogelijk punten te behalen. Hoe meer punten, hoe meer ruimte voor verbetering."),
           SizedBox(
             height: 10,
@@ -78,6 +79,7 @@ class SurveyComplete extends StatelessWidget {
             height: 10,
           ),
           Text(
+            // ignore: lines_longer_than_80_chars
             "Een goede leefstijl verkleint het risico op overgewicht en ziekten zoals hart- en vaatziekten, kanker, enzovoort. Een goede leefstijl houdt in: voldoende bewegen, niet roken, geen of weinig alcohol, goede eetgewoontes en voldoende slaap of ontspanning.",
             style: TextStyle(fontStyle: FontStyle.italic),
           ),

@@ -1,10 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:lifestylescreening/controllers/chat_controller.dart';
-import 'package:lifestylescreening/controllers/questionnaire_controller.dart';
 import 'package:lifestylescreening/controllers/survey_controller.dart';
 import 'package:lifestylescreening/models/admin_model.dart';
-import 'package:lifestylescreening/models/firebase_user.dart';
 import 'package:lifestylescreening/models/survey_result_model.dart';
 import 'package:lifestylescreening/views/user/chat/chat_tab.dart';
 import 'package:lifestylescreening/views/user/screening/screening_view.dart';
@@ -16,7 +14,6 @@ import 'package:lifestylescreening/widgets/inherited/inherited_widget.dart';
 import 'package:lifestylescreening/widgets/painter/top_small_wave_painter.dart';
 import 'package:lifestylescreening/widgets/text/body_text.dart';
 import 'package:lifestylescreening/widgets/text/h1_text.dart';
-import 'package:lifestylescreening/widgets/text/h2_text.dart';
 import 'package:lifestylescreening/widgets/text/intro_grey_text.dart';
 import 'package:lifestylescreening/widgets/text/intro_light_grey_text.dart';
 import 'package:lifestylescreening/widgets/transitions/route_transition.dart';
@@ -54,6 +51,7 @@ class _AskQuestionViewState extends State<AskQuestionView> {
                 height: 10,
               ),
               Text(
+                  // ignore: lines_longer_than_80_chars
                   "In dit deel van het onderzoek laten we je zien hoe goed je voor jezelf zorgt. We geven dit aan met een puntenaantal per onderdeel (bewegen, roken, alcohol, voeding en ontspanning). Het einddoel is om zo min mogelijk punten te behalen. Hoe meer punten, hoe meer ruimte voor verbetering."),
               SizedBox(
                 height: 10,

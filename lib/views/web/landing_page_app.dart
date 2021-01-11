@@ -10,7 +10,7 @@ import 'package:lifestylescreening/widgets/transitions/route_transition.dart';
 import 'package:lifestylescreening/widgets/web/web_disclaimer.dart';
 
 class LandingPageApp extends StatelessWidget {
-  GlobalKey<ScaffoldState> _drawerKey = GlobalKey();
+  final GlobalKey<ScaffoldState> _drawerKey = GlobalKey();
 
   void openDrawer() {
     _drawerKey.currentState.openDrawer();
