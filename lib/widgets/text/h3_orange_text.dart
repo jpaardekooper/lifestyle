@@ -8,11 +8,11 @@ class H3OrangeText extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Text(
-      text.toUpperCase(),
+      text,
       style: TextStyle(
         color: const Color(0xFFFCC88B),
         fontFamily: 'Sofia',
-        fontSize: 15,
+        fontSize: MediaQuery.of(context).size.height * 0.025,
         fontWeight: FontWeight.bold,
       ),
     );

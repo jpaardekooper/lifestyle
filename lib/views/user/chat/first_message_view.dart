@@ -98,11 +98,11 @@ class _FirstMessageScreen extends State<FirstMessageScreen> {
                   ? H3GreenBlueText(
                       text:
                           // ignore: lines_longer_than_80_chars
-                          "Lorem ipsum dolor sit amet, consectetur adipiscing elit. In neque lorem, pulvinar ac nulla eget, porta ultrices erat.")
+                          "Schrijf in het tekstvak hieronder uw vraag die u wilt stellen aan ${widget.model.name}. Wij doen ons best om zo snel mogelijk te reageren!")
                   : H3OrangeText(
                       text:
                           // ignore: lines_longer_than_80_chars
-                          "Lorem ipsum dolor sit amet, consectetur adipiscing elit. In neque lorem, pulvinar ac nulla eget, porta ultrices erat."),
+                          "Schrijf in het tekstvak hieronder uw vraag die u wilt stellen aan ${widget.model.name}. Wij doen ons best om zo snel mogelijk te reageren!"),
               SizedBox(
                 height: 30,
               ),

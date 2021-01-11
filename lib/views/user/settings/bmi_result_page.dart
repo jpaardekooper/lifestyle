@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:lifestylescreening/healthpoint_icons.dart';
 import 'package:lifestylescreening/widgets/buttons/confirm_orange_button.dart';
 import 'package:lifestylescreening/widgets/text/h1_text.dart';
+import 'package:lifestylescreening/widgets/text/lifestyle_text.dart';
 
 class ResultsPage extends StatelessWidget {
   final String bmiResult;
@@ -46,19 +47,22 @@ class ResultsPage extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: <Widget>[
-                    Text(
-                      resultText.toUpperCase(),
-                      style: TextStyle(
-                        fontSize: 22.0,
-                        fontWeight: FontWeight.bold,
+                    LifestyleText(
+                      text: resultText.toUpperCase(),
+                      // style: TextStyle(
+                      //   fontSize: 22.0,
+                      //   fontWeight: FontWeight.bold,
+                      // ),
+                    ),
+                    LifestyleText(
+                      text: bmiResult,
+                    ),
+                    Container(
+                      padding: EdgeInsets.only(left: 20, right: 20),
+                      child: LifestyleText(
+                        text: interpretation,
+                        // textAlign: TextAlign.center,
                       ),
-                    ),
-                    Text(
-                      bmiResult,
-                    ),
-                    Text(
-                      interpretation,
-                      textAlign: TextAlign.center,
                     )
                   ],
                 ),

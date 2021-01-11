@@ -120,7 +120,7 @@ class _AskQuestionViewState extends State<AskQuestionView> {
                   H1Text(text: "Kom in contact met "),
                   H1Text(text: "Specialisten"),
                   SizedBox(height: 10),
-                  IntroLightGreyText(
+                  LifestyleText(
                       text:
                           // ignore: lines_longer_than_80_chars
                           "Contact opnemen met een expert heeft verschillende voordelen. Als je onzeker bent over een gezondheidsrisico of als je nieuwsgierig bent over hoe het advies van een expert je verder kan helpen, kan dat hier worden gedaan"),

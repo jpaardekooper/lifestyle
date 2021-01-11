@@ -148,7 +148,7 @@ class ScreenOverview extends StatelessWidget {
                             children: [
                               Text(
                                 // ignore: lines_longer_than_80_chars
-                                "Om de app nog meer te personaliseren vragen wij u om de screening test af te nemen. Dit is een test dat ongeveer 10minuten duurt",
+                                "Om de app nog meer te personaliseren vragen wij u om de screening test af te nemen. Dit is een test dat ongeveer 10 minuten duurt",
                                 style: TextStyle(
                                   fontSize: size.height * 0.025,
                                 ),

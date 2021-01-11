@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:lifestylescreening/controllers/recipe_controller.dart';
 import 'package:lifestylescreening/models/recipe_model.dart';
+import 'package:lifestylescreening/widgets/buttons/confirm_orange_button.dart';
 import 'package:lifestylescreening/widgets/forms/custom_textformfield.dart';
 import 'package:lifestylescreening/widgets/text/body_text.dart';
 import 'package:image_picker/image_picker.dart';
@@ -194,9 +195,9 @@ class _RecipeExploreViewState extends State<RecipeExploreView> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
-                      RaisedButton(
-                        child: Text('Opslaan'),
-                        onPressed: () => saveRecipeChanges(context),
+                      ConfirmOrangeButton(
+                        text: 'Opslaan',
+                        onTap: () => saveRecipeChanges(context),
                       ),
                     ],
                   ),
