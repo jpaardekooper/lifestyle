@@ -160,7 +160,9 @@ class _FoodPreparationViewState extends State<FoodPreparationView> {
                 flexibleSpace: FlexibleSpaceBar(
                   centerTitle: true,
                   title: Container(
-                    padding: EdgeInsets.symmetric(horizontal: 8,),
+                    padding: EdgeInsets.symmetric(
+                      horizontal: 8,
+                    ),
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(8.0),
                       color: ColorTheme.extraLightGreen,

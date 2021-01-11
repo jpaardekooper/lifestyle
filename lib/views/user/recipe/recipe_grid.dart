@@ -4,6 +4,7 @@ import 'package:lifestylescreening/models/recipe_model.dart';
 import 'package:lifestylescreening/views/user/food_preparation_view.dart';
 import 'package:lifestylescreening/widgets/cards/recipe_card.dart';
 import 'package:lifestylescreening/widgets/inherited/inherited_widget.dart';
+import 'package:lifestylescreening/widgets/transitions/fade_transition.dart';
 
 class RecipeGrid extends StatelessWidget {
   const RecipeGrid({
@@ -31,25 +32,27 @@ class RecipeGrid extends StatelessWidget {
       gridDelegate:
           SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2),
       itemBuilder: (BuildContext context, int index) {
-        RecipeModel _recipe = _recipeList[index];
-        return GestureDetector(
-          onTap: () => Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => InheritedDataProvider(
-                data: _userData,
-                child: FoodPreparationView(
-                  recipe: _recipe,
-                  userNewRecipe: userRecipe,
+        final RecipeModel _recipe = _recipeList[index];
+        return FadeInTransition(
+          child: GestureDetector(
+            onTap: () => Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => InheritedDataProvider(
+                  data: _userData,
+                  child: FoodPreparationView(
+                    recipe: _recipe,
+                    userNewRecipe: userRecipe,
+                  ),
                 ),
               ),
             ),
+            child: RecipeCard(
+                recipe: _recipe,
+                user: _userData,
+                on_Tap: onTap,
+                userRecipe: userRecipe),
           ),
-          child: RecipeCard(
-              recipe: _recipe,
-              user: _userData,
-              on_Tap: onTap,
-              userRecipe: userRecipe),
         );
       },
     );

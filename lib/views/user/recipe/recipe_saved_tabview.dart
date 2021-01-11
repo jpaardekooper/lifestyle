@@ -16,12 +16,10 @@ class RecipeFavoritesView extends StatefulWidget {
 
 class _RecipeFavoritesViewState extends State<RecipeFavoritesView> {
   final RecipeController _recipeController = RecipeController();
-  List<RecipeModel> _savedRecipes = <RecipeModel>[];
-  bool _isLoading = true;
+  List<RecipeModel> _savedRecipes = [];
 
   @override
   void initState() {
-    _updateRecipes();
     super.initState();
   }
 
@@ -32,9 +30,6 @@ class _RecipeFavoritesViewState extends State<RecipeFavoritesView> {
   }
 
   _updateRecipes() async {
-    _savedRecipes =
-        await _recipeController.getUserFavoriteRecipe(widget.userId);
-    _isLoading = false;
     setState(() {});
   }
 
@@ -42,21 +37,24 @@ class _RecipeFavoritesViewState extends State<RecipeFavoritesView> {
   Widget build(BuildContext context) {
     final _userData = InheritedDataProvider.of(context);
 
-    if (_savedRecipes == null || _savedRecipes.isEmpty || _isLoading) {
-      if (_savedRecipes.isEmpty) {
-        return Center(
-          child: BodyText(
-            text: "Nog geen favoriete recepten toegevoegd",
-          ),
-        );
-      }
-      return Center(child: CircularProgressIndicator());
-    } else {
-      return RecipeGrid(
-          recipeList: _savedRecipes,
-          userData: _userData.data,
-          userRecipe: false,
-          onTap: () => _updateRecipes());
-    }
+    return FutureBuilder<List<RecipeModel>>(
+      future: _recipeController.getUserFavoriteRecipe(widget.userId),
+      builder: (context, snapshot) {
+        if (!snapshot.hasData) {
+          return Center(
+            child: BodyText(
+              text: "Nog geen favoriete recepten toegevoegd",
+            ),
+          );
+        } else {
+          _savedRecipes = snapshot.data;
+          return RecipeGrid(
+              recipeList: _savedRecipes,
+              userData: _userData.data,
+              userRecipe: false,
+              onTap: _updateRecipes);
+        }
+      },
+    );
   }
 }

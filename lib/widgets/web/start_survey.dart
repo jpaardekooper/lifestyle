@@ -55,6 +55,7 @@ class _StartSurveyState extends State<StartSurvey> {
       Map<String, dynamic> surveyData = {
         "question": currentQuestion,
         "answer": controller.text,
+        "order": nextQuestionInQue,
       };
 
       await _questionnaireController.setDTDSurveyResults(
