@@ -21,7 +21,7 @@ class RecipeController {
   }
 
   Future<void> updateUserRecipe(String recipeId, Map data, bool newItem) {
-    return _recipeRepository.updateRecipe(recipeId, data, newItem);
+    return _recipeRepository.updateUserRecipe(recipeId, data, newItem);
   }
 
   Future<void> updateRecipe(String recipeId, Map data, bool newItem) {
