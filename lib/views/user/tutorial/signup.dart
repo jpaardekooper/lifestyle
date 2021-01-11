@@ -98,12 +98,13 @@ class _SignUpState extends State<SignUp> {
     setState(() {
       isLoading = false;
 
-      _key.currentState.showSnackBar(
+      ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
+          duration: const Duration(seconds: 1),
           backgroundColor: Theme.of(context).accentColor,
           content: Text(
-            "Er is iets misgegaan",
-            style: TextStyle(color: Colors.white, fontSize: 14),
+            "Uw email en wachtwoord komen niet overeen",
+            style: TextStyle(color: Colors.white, fontSize: 18),
           ),
         ),
       );

@@ -20,6 +20,7 @@ class _RecipeTabState extends State<RecipeTab>
 
   @override
   void initState() {
+    active = 0;
     _tabController = TabController(length: 3, vsync: this)
       ..addListener(() {
         setState(() {

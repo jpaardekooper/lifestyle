@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:lifestylescreening/controllers/recipe_controller.dart';
 import 'package:lifestylescreening/models/firebase_user.dart';
@@ -32,7 +33,6 @@ class _RecipeCardState extends State<RecipeCard> {
 
   @override
   void initState() {
-    getImage();
     checkFavoriteRecipes();
     super.initState();
   }
@@ -40,7 +40,21 @@ class _RecipeCardState extends State<RecipeCard> {
   checkFavoriteRecipes() async {
     alreadySaved = await _recipeController.checkFavoriteRecipe(
         widget._recipe.id, widget._user.id);
-    setState(() {});
+
+    if (alreadySaved) {
+      await _recipeController.removeFavoriteRecipe(
+          widget._user.id, widget._recipe.id);
+
+      if (widget.on_Tap != null) {
+        widget.on_Tap();
+      }
+    } else {
+      await _recipeController.addFavoriteRecipe(
+          widget._user.id, widget._recipe.id);
+    }
+    if (mounted) {
+      setState(() {});
+    }
   }
 
   void _editRecipeName(RecipeModel recipe, String role) {
@@ -82,17 +96,35 @@ class _RecipeCardState extends State<RecipeCard> {
       margin: EdgeInsets.all(10),
       child: Column(
         children: <Widget>[
+          Text(widget._recipe.url),
           Expanded(
-              flex: 3,
-              child: imageUrl == null
-                  ? FittedBox(
-                      child: CircularProgressIndicator(),
-                      fit: BoxFit.scaleDown,
-                    )
-                  : Image.network(
-                      imageUrl,
-                      fit: BoxFit.fill,
-                    )),
+            flex: 3,
+            child: FutureBuilder<String>(
+                future: _recipeController.getImage(widget._recipe.url),
+                builder: (context, snapshot) {
+                  if (!snapshot.hasData) {
+                    return SizedBox(
+                      width: 50,
+                      height: 50,
+                      child: Center(child: CircularProgressIndicator()),
+                    );
+                  } else {
+                    return CachedNetworkImage(
+                      imageUrl: snapshot.data,
+                      progressIndicatorBuilder: (ctx, url, downloadProgress) =>
+                          SizedBox(
+                        width: 50,
+                        height: 50,
+                        child: Center(
+                          child: CircularProgressIndicator(
+                              value: downloadProgress.progress),
+                        ),
+                      ),
+                      errorWidget: (context, url, error) => Icon(Icons.error),
+                    );
+                  }
+                }),
+          ),
           Expanded(
             flex: 1,
             child: Row(
@@ -137,16 +169,8 @@ class _RecipeCardState extends State<RecipeCard> {
                                 : Icons.favorite_border,
                             color: alreadySaved ? Colors.red : null,
                           ),
-                          onPressed: () {
-                            checkFavoriteRecipes();
-                            if (alreadySaved) {
-                              _recipeController.removeFavoriteRecipe(
-                                  widget._user.id, widget._recipe.id);
-                              widget.on_Tap();
-                            } else {
-                              _recipeController.addFavoriteRecipe(
-                                  widget._user.id, widget._recipe.id);
-                            }
+                          onPressed: () async {
+                            await checkFavoriteRecipes();
                           },
                         ))
                     : Row(
@@ -188,10 +212,5 @@ class _RecipeCardState extends State<RecipeCard> {
         ],
       ),
     );
-  }
-
-  getImage() async {
-    imageUrl =
-        (await _recipeController.getImage(widget._recipe.url)).toString();
   }
 }

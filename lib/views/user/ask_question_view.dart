@@ -17,6 +17,7 @@ import 'package:lifestylescreening/widgets/text/h1_text.dart';
 import 'package:lifestylescreening/widgets/text/intro_grey_text.dart';
 import 'package:lifestylescreening/widgets/text/intro_light_grey_text.dart';
 import 'package:lifestylescreening/widgets/transitions/route_transition.dart';
+import 'package:lifestylescreening/widgets/text/lifestyle_text.dart';
 
 class AskQuestionView extends StatefulWidget {
   AskQuestionView({Key key}) : super(key: key);
@@ -50,13 +51,14 @@ class _AskQuestionViewState extends State<AskQuestionView> {
               SizedBox(
                 height: 10,
               ),
-              Text(
-                  // ignore: lines_longer_than_80_chars
-                  "In dit deel van het onderzoek laten we je zien hoe goed je voor jezelf zorgt. We geven dit aan met een puntenaantal per onderdeel (bewegen, roken, alcohol, voeding en ontspanning). Het einddoel is om zo min mogelijk punten te behalen. Hoe meer punten, hoe meer ruimte voor verbetering."),
+              LifestyleText(
+                  text:
+                      // ignore: lines_longer_than_80_chars
+                      "In dit deel van het onderzoek laten we je zien hoe goed je voor jezelf zorgt. We geven dit aan met een puntenaantal per onderdeel (bewegen, roken, alcohol, voeding en ontspanning). Het einddoel is om zo min mogelijk punten te behalen. Hoe meer punten, hoe meer ruimte voor verbetering."),
               SizedBox(
                 height: 10,
               ),
-              Text("Uw scores zijn:"),
+              LifestyleText(text: "Uw scores zijn:"),
               SizedBox(
                 height: 10,
               ),
@@ -73,7 +75,8 @@ class _AskQuestionViewState extends State<AskQuestionView> {
                         height: 20,
                         child: BodyText(text: _survey.first.categories[index]),
                       ),
-                      Text("${_survey.first.points_per_category[index]}")
+                      LifestyleText(
+                          text: "${_survey.first.points_per_category[index]}")
                     ],
                   );
                 },

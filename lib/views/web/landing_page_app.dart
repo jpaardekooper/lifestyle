@@ -16,10 +16,10 @@ class LandingPageApp extends StatelessWidget {
     _drawerKey.currentState.openDrawer();
   }
 
-  final snackBar = SnackBar(content: Text('Bedankt voor het aboneren!'));
+  final snackBar = SnackBar(content: Text('Bedankt voor het abonneren!'));
 
   void subscribe(BuildContext context) {
-    Scaffold.of(context).showSnackBar(snackBar);
+    ScaffoldMessenger.of(context).showSnackBar(snackBar);
   }
 
   @override

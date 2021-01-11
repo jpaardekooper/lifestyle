@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:lifestylescreening/controllers/recipe_controller.dart';
 import 'package:lifestylescreening/models/recipe_model.dart';
 import 'package:lifestylescreening/widgets/inherited/inherited_widget.dart';
-import 'package:lifestylescreening/widgets/recipe_grid.dart';
+import 'package:lifestylescreening/views/user/recipe/recipe_grid.dart';
 import 'package:lifestylescreening/widgets/text/body_text.dart';
 
 class RecipeFavoritesView extends StatefulWidget {

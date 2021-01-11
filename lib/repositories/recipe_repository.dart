@@ -113,7 +113,7 @@ class RecipeRepository implements IRecipeRepository {
 
   @override
   Future<List<RecipeModel>> getUserFavoriteRecipe(String userId) async {
-    List<RecipeModel> returnList = List<RecipeModel>();
+    List<RecipeModel> returnList = [];
     List<dynamic> favRecipeList = [];
     int recipeId;
 

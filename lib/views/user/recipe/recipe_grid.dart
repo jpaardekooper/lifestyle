@@ -25,7 +25,7 @@ class RecipeGrid extends StatelessWidget {
   Widget build(BuildContext context) {
     return GridView.builder(
       padding: EdgeInsets.all(20.0),
-      physics: AlwaysScrollableScrollPhysics(),
+      //  physics: AlwaysScrollableScrollPhysics(),
       shrinkWrap: true,
       itemCount: _recipeList.length,
       gridDelegate:
