@@ -40,10 +40,10 @@ class _RecipeFavoritesViewState extends State<RecipeFavoritesView> {
     return FutureBuilder<List<RecipeModel>>(
       future: _recipeController.getUserFavoriteRecipe(widget.userId),
       builder: (context, snapshot) {
-        if (!snapshot.hasData) {
+        if (!snapshot.hasData || _savedRecipes.isEmpty) {
           return Center(
             child: BodyText(
-              text: "Nog geen recepten toegevoegd",
+              text: "Nog geen recepten als favoriete ingesteld",
             ),
           );
         } else {

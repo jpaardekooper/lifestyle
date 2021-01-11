@@ -83,6 +83,7 @@ class ScreenOverview extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
+                    SizedBox(height: 75),
                     Center(child: H1Text(text: "Overzicht")),
                     SizedBox(
                       height: size.height * 0.06,
