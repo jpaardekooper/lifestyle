@@ -15,7 +15,6 @@ import 'package:lifestylescreening/views/user/home_view.dart' as tabscreen;
 
 class ScreenOverview extends StatelessWidget {
   ScreenOverview({Key key}) : super(key: key);
-  final AuthController _authController = AuthController();
 
   void updatecounterToSettings() {
     tabscreen.counter.value = 3;
@@ -85,18 +84,6 @@ class ScreenOverview extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      crossAxisAlignment: CrossAxisAlignment.end,
-                      children: [
-                        IconButton(
-                          onPressed: () async {
-                            await _authController.signOut(context);
-                          },
-                          icon: Icon(Icons.exit_to_app, size: 26.0),
-                        ),
-                      ],
-                    ),
                     Center(child: H1Text(text: "Overzicht")),
                     SizedBox(
                       height: size.height * 0.06,

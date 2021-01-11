@@ -67,6 +67,8 @@ class AuthRepository extends IAuthRepository {
       var _appUser = await _auth.createUserWithEmailAndPassword(
           email: email, password: password);
 
+      List<String> recept = [];
+
       Map<String, dynamic> userInfo = {
         "userName": username,
         "email": email,
@@ -76,6 +78,7 @@ class AuthRepository extends IAuthRepository {
         "height": bmi.height,
         "weight": bmi.weight,
         "gender": bmi.gender,
+        "favorite_recipes": recept
       };
 
       await FirebaseFirestore.instance

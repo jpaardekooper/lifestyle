@@ -9,7 +9,8 @@ class AppUser {
       this.gender,
       this.age,
       this.height,
-      this.weight})
+      this.weight,
+      this.favorite_recipes})
       : reference = null;
 
   final String id;
@@ -20,6 +21,7 @@ class AppUser {
   final int age;
   final int height;
   final int weight;
+  final List<String> favorite_recipes;
 
   final DocumentReference reference;
 
@@ -33,5 +35,6 @@ class AppUser {
         age = snapshot.data()['age'] ?? 0,
         height = snapshot.data()['height'] ?? 0,
         weight = snapshot.data()['weight'] ?? 0,
+        favorite_recipes = List.from(snapshot.data()['favorite_recipes'] ?? []),
         reference = snapshot.reference;
 }
