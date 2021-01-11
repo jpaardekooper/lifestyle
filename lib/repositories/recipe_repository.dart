@@ -9,9 +9,7 @@ import 'package:lifestylescreening/repositories/recipe_repository_interface.dart
 class RecipeRepository implements IRecipeRepository {
   @override
   Stream<QuerySnapshot> streamAllRecipes() {
-    return FirebaseFirestore.instance
-        .collection('recipes')
-        .snapshots();
+    return FirebaseFirestore.instance.collection('recipes').snapshots();
   }
 
   @override
@@ -167,6 +165,7 @@ class RecipeRepository implements IRecipeRepository {
     return false;
   }
 
+  @override
   Future<void> addFavoriteRecipe(String userId, String recipeId) async {
     // var snapshot = FirebaseFirestore.instance
     //     .collection('users')
@@ -185,6 +184,7 @@ class RecipeRepository implements IRecipeRepository {
     });
   }
 
+  @override
   Future<void> removeFavoriteRecipe(String userId, String recipeId) async {
     await FirebaseFirestore.instance
         .collection('users')
@@ -205,6 +205,7 @@ class RecipeRepository implements IRecipeRepository {
     return RecipeModel.fromSnapshot(snapshot);
   }
 
+  @override
   Future<void> uploadImage(File img) async {
     String fileName = basename(img.path);
     Reference storageRef =
@@ -214,6 +215,7 @@ class RecipeRepository implements IRecipeRepository {
     await taskSnapshot.ref.getDownloadURL();
   }
 
+  @override
   Future<String> getImage(String image) async {
     String imageUrl = await FirebaseStorage.instance
         .ref()

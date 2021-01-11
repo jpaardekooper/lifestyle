@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:lifestylescreening/models/answer_model.dart';
 import 'package:lifestylescreening/models/firebase_user.dart';
 import 'package:lifestylescreening/models/recipe_model.dart';
 import 'package:lifestylescreening/views/user/food_preparation_view.dart';
@@ -7,13 +8,14 @@ import 'package:lifestylescreening/widgets/inherited/inherited_widget.dart';
 import 'package:lifestylescreening/widgets/transitions/fade_transition.dart';
 
 class RecipeGrid extends StatelessWidget {
-  const RecipeGrid({
-    Key key,
-    @required List<RecipeModel> recipeList,
-    @required AppUser userData,
-    this.userRecipe,
-    this.onTap,
-  })  : _recipeList = recipeList,
+  const RecipeGrid(
+      {Key key,
+      @required List<RecipeModel> recipeList,
+      @required AppUser userData,
+      this.userRecipe,
+      this.onTap,
+      this.function})
+      : _recipeList = recipeList,
         _userData = userData,
         super(key: key);
 
@@ -21,6 +23,7 @@ class RecipeGrid extends StatelessWidget {
   final VoidCallback onTap;
   final AppUser _userData;
   final bool userRecipe;
+  final Function(RecipeModel) function;
 
   @override
   Widget build(BuildContext context) {
@@ -51,7 +54,8 @@ class RecipeGrid extends StatelessWidget {
                 recipe: _recipe,
                 user: _userData,
                 on_Tap: onTap,
-                userRecipe: userRecipe),
+                userRecipe: userRecipe,
+                function: function),
           ),
         );
       },
