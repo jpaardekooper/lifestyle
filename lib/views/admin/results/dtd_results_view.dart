@@ -6,6 +6,7 @@ import 'package:lifestylescreening/models/dtd_screening_model.dart';
 import 'package:lifestylescreening/widgets/text/body_text.dart';
 import 'package:lifestylescreening/widgets/text/h1_text.dart';
 import 'package:intl/intl.dart';
+import 'package:lifestylescreening/widgets/text/lifestyle_text.dart';
 
 class DtdResultView extends StatefulWidget {
   DtdResultView({@required this.result});
@@ -44,18 +45,34 @@ class _DtdResultViewState extends State<DtdResultView> {
             } else {
               final List<DtdAwnserModel> _dtdList = snapshot.data;
 
-              return ListView.builder(
-                physics: NeverScrollableScrollPhysics(),
-                shrinkWrap: true,
-                itemCount: _dtdList.length,
-                itemBuilder: (BuildContext ctx, index) {
-                  return ListTile(
-                    title: BodyText(text: _dtdList[index].question),
-                    subtitle: BodyText(
-                      text: _dtdList[index].answer,
-                    ),
-                  );
-                },
+              return Container(
+                padding: EdgeInsets.all(20),
+                child: ListView.builder(
+                  physics: NeverScrollableScrollPhysics(),
+                  shrinkWrap: true,
+                  itemCount: _dtdList.length,
+                  itemBuilder: (BuildContext ctx, index) {
+                    return Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        BodyText(
+                            text:
+                                // ignore: lines_longer_than_80_chars
+                                "${index + 1}.  \t ${_dtdList[index].question} "),
+                        SizedBox(
+                          height: 10,
+                        ),
+                        LifestyleText(
+                          text:
+                              (_dtdList[index].answer).replaceAll(',', ', '),
+                        ),
+                        SizedBox(
+                          height: 20,
+                        ),
+                      ],
+                    );
+                  },
+                ),
               );
             }
           },
