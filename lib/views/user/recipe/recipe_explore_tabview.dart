@@ -27,6 +27,7 @@ class _RecipeExploreViewState extends State<RecipeExploreView> {
   TextEditingController _urlController = TextEditingController();
   TextEditingController _durationController = TextEditingController();
   TextEditingController _difficultyController = TextEditingController();
+  final _key = GlobalKey<ScaffoldState>();
 
   File _imageFile;
 
@@ -35,6 +36,8 @@ class _RecipeExploreViewState extends State<RecipeExploreView> {
   RecipeModel recipe = RecipeModel();
 
   final _formKey = GlobalKey<FormState>();
+
+  bool loading = false;
 
   List<String> _locations = ['Moeilijk', 'Middel', 'Makkelijk']; // Option 2
   String _selectedLocation;
@@ -194,6 +197,7 @@ class _RecipeExploreViewState extends State<RecipeExploreView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+        key: _key,
         appBar: AppBar(title: Text("Nieuw recept toevoegen")),
         body: SingleChildScrollView(
           child: Container(
@@ -229,6 +233,10 @@ class _RecipeExploreViewState extends State<RecipeExploreView> {
 
   saveRecipeChanges(context) {
     if (_formKey.currentState.validate()) {
+      setState(() {
+        loading = true;
+      });
+      FocusScope.of(context).unfocus();
       Map<String, dynamic> data = {
         "title": _recipenameController.text,
         "url": basename(_imageFile.path),
@@ -240,9 +248,28 @@ class _RecipeExploreViewState extends State<RecipeExploreView> {
       };
 
       _recipeController.uploadImage(_imageFile).then((value) =>
-          _recipeController
-              .updateUserRecipe(recipe.id, data, true)
-              .then((value) => Navigator.of(context).pop()));
+          _recipeController.updateUserRecipe(recipe.id, data, true).then(
+            (value) {
+              _key.currentState.showSnackBar(
+                SnackBar(
+                  duration: const Duration(seconds: 1),
+                  backgroundColor: Theme.of(context).accentColor,
+                  content: Text(
+                    "Uw recept is toegevoegd",
+                    style: TextStyle(color: Colors.white, fontSize: 18),
+                  ),
+                ),
+              );
+
+              Future.delayed(Duration(milliseconds: 1500), () {
+                Navigator.pop(context);
+              });
+            },
+          ));
+    } else {
+      setState(() {
+        loading = false;
+      });
     }
   }
 }
