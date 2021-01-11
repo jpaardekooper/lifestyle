@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:lifestylescreening/controllers/recipe_controller.dart';
 import 'package:lifestylescreening/models/recipe_model.dart';
+import 'package:lifestylescreening/widgets/colors/color_theme.dart';
+import 'package:lifestylescreening/widgets/forms/custom_answerfield.dart';
 import 'package:lifestylescreening/widgets/forms/custom_textformfield.dart';
 import 'package:lifestylescreening/widgets/text/body_text.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -27,6 +29,9 @@ class _EditRecipeState extends State<EditRecipe> {
   TextEditingController _durationController = TextEditingController();
   TextEditingController _difficultyController = TextEditingController();
   bool _published;
+
+  List<String> _locations = ['Moeilijk', 'Middel', 'Makkelijk']; // Option 2
+  String _selectedLocation;
 
   final _formKey = GlobalKey<FormState>();
 
@@ -141,13 +146,33 @@ class _EditRecipeState extends State<EditRecipe> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        BodyText(text: "Moeilijkheidsgraad"),
-        CustomTextFormField(
+        CustomAnswerFormField(
           keyboardType: TextInputType.name,
           textcontroller: _difficultyController,
-          hintText: "Moeilijk, Middel, Makkelijk",
-          validator: 1,
-          secureText: false,
+        ),
+        Container(
+          decoration: BoxDecoration(
+            color: Colors.white,
+            border: Border.all(color: Theme.of(context).primaryColor, width: 2),
+            borderRadius: BorderRadius.circular(15),
+          ),
+          child: DropdownButton(
+            dropdownColor: ColorTheme.extraLightGreen,
+            hint: BodyText(text: 'Selecteer de moeilijkheidsgraad'),
+            value: _selectedLocation,
+            onChanged: (newValue) {
+              setState(() {
+                _selectedLocation = newValue;
+                _difficultyController.text = newValue;
+              });
+            },
+            items: _locations.map((location) {
+              return DropdownMenuItem(
+                child: Text(location),
+                value: location,
+              );
+            }).toList(),
+          ),
         ),
       ],
     );
