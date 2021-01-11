@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:lifestylescreening/controllers/result_controller.dart';
 import 'package:lifestylescreening/healthpoint_icons.dart';
-import 'package:lifestylescreening/models/dtd_awnser_model.dart';
+import 'package:lifestylescreening/models/dtd_answer_model.dart';
 import 'package:lifestylescreening/models/dtd_screening_model.dart';
 import 'package:lifestylescreening/widgets/text/body_text.dart';
 import 'package:lifestylescreening/widgets/text/h1_text.dart';
@@ -38,10 +38,10 @@ class _DtdResultViewState extends State<DtdResultView> {
           ),
         ),
         body: FutureBuilder<List<DtdAwnserModel>>(
-          future: ResultController().getDtdAwnsers(widget.result.id),
+          future: ResultController().getDtdAnswers(widget.result.id),
           builder: (context, snapshot) {
             if (!snapshot.hasData) {
-              return Text("Geen data gevonden");
+              return Center(child: Text("Geen data gevonden"));
             } else {
               final List<DtdAwnserModel> _dtdList = snapshot.data;
 
@@ -63,8 +63,7 @@ class _DtdResultViewState extends State<DtdResultView> {
                           height: 10,
                         ),
                         LifestyleText(
-                          text:
-                              (_dtdList[index].answer).replaceAll(',', ', '),
+                          text: (_dtdList[index].answer).replaceAll(',', ', '),
                         ),
                         SizedBox(
                           height: 20,

@@ -1,7 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:lifestylescreening/models/dtd_awnser_model.dart';
+import 'package:lifestylescreening/models/dtd_answer_model.dart';
 import 'package:lifestylescreening/models/dtd_screening_model.dart';
 import 'package:lifestylescreening/models/result_model.dart';
+import 'package:lifestylescreening/models/survery_answer_model.dart';
 import 'package:lifestylescreening/models/survey_result_model.dart';
 
 import 'result_repository_interface.dart';
@@ -43,7 +44,7 @@ class ResultRepository implements IResultRepository {
   }
 
   @override
-  Future<List<DtdAwnserModel>> getDtdAwnsers(String dtdId) async {
+  Future<List<DtdAwnserModel>> getDtdAnswers(String dtdId) async {
     List<DtdAwnserModel> _list = [];
 
     var snapshot = await FirebaseFirestore.instance
@@ -59,6 +60,26 @@ class ResultRepository implements IResultRepository {
     }).toList();
 
     _list.sort((a, b) => a.order.compareTo(b.order));
+
+    return _list;
+  }
+
+  @override
+  Future<List<SurveyAnswerModel>> getSurveyAnswers(
+      String surveyId, String category) async {
+    List<SurveyAnswerModel> _list = [];
+
+    var snapshot = await FirebaseFirestore.instance
+        .collection('results')
+        .doc('j4HGRmdE62VTRbtqYsvM')
+        .collection('scores')
+        .doc(surveyId)
+        .collection(category)
+        .get();
+
+    snapshot.docs.map((DocumentSnapshot doc) {
+      return _list.add(SurveyAnswerModel.fromSnapshot(doc));
+    }).toList();
 
     return _list;
   }

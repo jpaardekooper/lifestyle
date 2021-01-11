@@ -2,7 +2,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:lifestylescreening/controllers/auth_controller.dart';
 import 'package:lifestylescreening/views/admin/categories/categories_view.dart';
-import 'package:lifestylescreening/views/admin/dashboard_view.dart';
 import 'package:lifestylescreening/views/admin/messages/messages_overview.dart';
 import 'package:lifestylescreening/views/admin/recipe/recipe_view.dart';
 import 'package:lifestylescreening/views/admin/results/result_view.dart';
@@ -25,7 +24,7 @@ class _DashboardState extends State<Dashboard>
   @override
   void initState() {
     super.initState();
-    tabController = TabController(vsync: this, length: 6, initialIndex: 0)
+    tabController = TabController(vsync: this, length: 5, initialIndex: 0)
       ..addListener(() {
         setState(() {
           active = tabController.index;
@@ -83,14 +82,13 @@ class _DashboardState extends State<Dashboard>
                     physics: NeverScrollableScrollPhysics(),
                     controller: tabController,
                     children: [
-                      DashboardView(),
+                      ResultView(),
                       MessageOverView(
                         userEmail: _userData.data.email,
                       ),
                       RecipeView(),
                       CategoriesView(),
                       SurveyView(),
-                      ResultView(),
                     ],
                   ),
                 ),
@@ -111,9 +109,8 @@ class _DashboardState extends State<Dashboard>
       children: <Widget>[
         FlatButton(
           color: tabController.index == 0 ? Colors.grey[100] : Colors.white,
-          //color: Colors.grey[100],
           onPressed: () {
-            tabController.animateTo(0);
+            tabController.animateTo(5);
             if (drawerStatus) {
               Navigator.pop(context);
             }
@@ -122,19 +119,21 @@ class _DashboardState extends State<Dashboard>
             alignment: Alignment.centerLeft,
             child: Container(
               padding: EdgeInsets.only(top: 22, bottom: 22, right: 22),
-              child: Row(children: [
-                Icon(Icons.dashboard),
-                SizedBox(
-                  width: 8,
-                ),
-                Text(
-                  "Dashboard",
-                  style: TextStyle(
-                    fontSize: 18,
-                    fontFamily: 'HelveticaNeue',
+              child: Row(
+                children: [
+                  Icon(Icons.fact_check),
+                  SizedBox(
+                    width: 8,
                   ),
-                ),
-              ]),
+                  Text(
+                    "Resultaten",
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontFamily: 'HelveticaNeue',
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
         ),
@@ -246,36 +245,6 @@ class _DashboardState extends State<Dashboard>
                   ),
                   Text(
                     "Survey",
-                    style: TextStyle(
-                      fontSize: 18,
-                      fontFamily: 'HelveticaNeue',
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
-        ),
-        FlatButton(
-          color: tabController.index == 5 ? Colors.grey[100] : Colors.white,
-          onPressed: () {
-            tabController.animateTo(5);
-            if (drawerStatus) {
-              Navigator.pop(context);
-            }
-          },
-          child: Align(
-            alignment: Alignment.centerLeft,
-            child: Container(
-              padding: EdgeInsets.only(top: 22, bottom: 22, right: 22),
-              child: Row(
-                children: [
-                  Icon(Icons.fact_check),
-                  SizedBox(
-                    width: 8,
-                  ),
-                  Text(
-                    "Resultaten",
                     style: TextStyle(
                       fontSize: 18,
                       fontFamily: 'HelveticaNeue',

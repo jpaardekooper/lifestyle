@@ -1,7 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:lifestylescreening/models/dtd_awnser_model.dart';
+import 'package:lifestylescreening/models/dtd_answer_model.dart';
 import 'package:lifestylescreening/models/dtd_screening_model.dart';
 import 'package:lifestylescreening/models/result_model.dart';
+import 'package:lifestylescreening/models/survery_answer_model.dart';
 import 'package:lifestylescreening/models/survey_result_model.dart';
 import 'package:lifestylescreening/repositories/result_repository.dart';
 import 'package:lifestylescreening/repositories/result_repository_interface.dart';
@@ -29,7 +30,12 @@ class ResultController {
     return _resultRepository.getSurveyUserList(snapshot);
   }
 
-  Future<List<DtdAwnserModel>> getDtdAwnsers(String dtdId) {
-    return _resultRepository.getDtdAwnsers(dtdId);
+  Future<List<DtdAwnserModel>> getDtdAnswers(String dtdId) {
+    return _resultRepository.getDtdAnswers(dtdId);
+  }
+
+  Future<List<SurveyAnswerModel>> getSurveyAnswers(
+      String surveyId, String category) {
+    return _resultRepository.getSurveyAnswers(surveyId, category);
   }
 }

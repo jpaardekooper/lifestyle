@@ -1,7 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:lifestylescreening/models/dtd_awnser_model.dart';
+import 'package:lifestylescreening/models/dtd_answer_model.dart';
 import 'package:lifestylescreening/models/dtd_screening_model.dart';
 import 'package:lifestylescreening/models/result_model.dart';
+import 'package:lifestylescreening/models/survery_answer_model.dart';
 import 'package:lifestylescreening/models/survey_result_model.dart';
 
 abstract class IResultRepository {
@@ -15,5 +16,8 @@ abstract class IResultRepository {
 
   List<SurveyResultModel> getSurveyUserList(QuerySnapshot snapshot);
 
-  Future<List<DtdAwnserModel>> getDtdAwnsers(String dtdId);
+  Future<List<DtdAwnserModel>> getDtdAnswers(String dtdId);
+
+  Future<List<SurveyAnswerModel>> getSurveyAnswers(
+      String surveyId, String category);
 }

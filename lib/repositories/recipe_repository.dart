@@ -11,7 +11,6 @@ class RecipeRepository implements IRecipeRepository {
   Stream<QuerySnapshot> streamAllRecipes() {
     return FirebaseFirestore.instance
         .collection('recipes')
-        // .where('published', isEqualTo: 1)
         .snapshots();
   }
 

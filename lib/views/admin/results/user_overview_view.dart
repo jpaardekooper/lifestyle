@@ -7,8 +7,8 @@ import 'package:lifestylescreening/models/dtd_screening_model.dart';
 import 'package:lifestylescreening/models/result_model.dart';
 import 'package:lifestylescreening/models/survey_result_model.dart';
 import 'package:lifestylescreening/views/admin/results/dtd_results_view.dart';
+import 'package:lifestylescreening/views/admin/results/survey_category_overview.dart';
 import 'package:lifestylescreening/widgets/colors/color_theme.dart';
-import 'package:lifestylescreening/widgets/text/body_text.dart';
 import 'package:lifestylescreening/widgets/text/h1_text.dart';
 import 'package:lifestylescreening/widgets/text/h2_text.dart';
 import 'package:intl/intl.dart';
@@ -103,53 +103,74 @@ class _UserResultsOverviewState extends State<UserResultsOverview> {
   Widget showSurveyResults() {
     return _isLoading
         ? CircularProgressIndicator()
-        : ListView.builder(
-            itemCount: _surveyResults.length,
+        : GridView.builder(
             shrinkWrap: true,
-            itemBuilder: (BuildContext ctxt, int idx) {
-              SurveyResultModel result = _surveyResults[idx];
+            itemCount: _surveyResults.length,
+            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: MediaQuery.of(context).size.width > 1000 ? 3 : 2,
+              //  childAspectRatio: (itemWidth / itemHeight),
+            ),
+            itemBuilder: (BuildContext ctxt, int index) {
+              SurveyResultModel _result = _surveyResults[index];
 
               return Padding(
-                padding: const EdgeInsets.all(10.0),
-                child: Card(
+                padding: const EdgeInsets.all(8.0),
+                child: Material(
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(18.0),
+                  ),
                   color: ColorTheme.extraLightOrange,
-                  elevation: 8,
-                  child: Padding(
-                    padding: const EdgeInsets.all(10),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        H2Text(text: result.email),
-                        SizedBox(
-                          height: 10,
-                        ),
-                        ListView.builder(
-                          shrinkWrap: true,
-                          physics: NeverScrollableScrollPhysics(),
-                          itemCount: result.categories.length,
-                          itemBuilder: (context, index) {
-                            return Row(
-                              children: [
-                                SizedBox(
-                                  width: 200,
-                                  child: LifestyleText(
-                                      text: "${result.categories[index]}"),
-                                ),
-                                LifestyleText(
-                                    text: result.points_per_category[index]
-                                        .toString())
-                              ],
-                            );
-                          },
-                        ),
-                        SizedBox(
-                          height: 10,
-                        ),
-                        BodyText(
-                            text:
-                                "Totaal aantal punten \t ${result.total_points}"),
-                      ],
+                  elevation: 5,
+                  child: InkWell(
+                    borderRadius: BorderRadius.circular(18),
+                    onTap: () => Navigator.of(context).push(
+                      MaterialPageRoute(
+                          builder: (_) => SurveyCategoryOverview(
+                                result: _result,
+                              )),
+                    ),
+                    child: Padding(
+                      padding: EdgeInsets.all(10),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          H2Text(
+                            text: DateFormat('yyy-MM-dd').format(
+                              _result.date.toDate(),
+                            ),
+                          ),
+                          LifestyleText(
+                            text: _result.email,
+                          ),
+                          SizedBox(
+                            height: 10,
+                          ),
+                          ListView.builder(
+                            shrinkWrap: true,
+                            physics: NeverScrollableScrollPhysics(),
+                            itemCount: _result.categories.length,
+                            itemBuilder: (context, index) {
+                              return Row(
+                                children: [
+                                  SizedBox(
+                                    width: 150,
+                                    child: Text("${_result.categories[index]}"),
+                                  ),
+                                  Text(_result.points_per_category[index]
+                                      .toString())
+                                ],
+                              );
+                            },
+                          ),
+                          SizedBox(
+                            height: 10,
+                          ),
+                          LifestyleText(text: "Totaal aantal punten:"),
+                          SizedBox(height: 5),
+                          LifestyleText(text: _result.total_points.toString())
+                        ],
+                      ),
                     ),
                   ),
                 ),
