@@ -3,9 +3,12 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:lifestylescreening/controllers/recipe_controller.dart';
 import 'package:lifestylescreening/models/recipe_model.dart';
+import 'package:lifestylescreening/widgets/colors/color_theme.dart';
+import 'package:lifestylescreening/widgets/forms/custom_answerfield.dart';
 import 'package:lifestylescreening/widgets/forms/custom_textformfield.dart';
 import 'package:lifestylescreening/widgets/text/body_text.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:lifestylescreening/widgets/text/lifestyle_text.dart';
 import 'package:path/path.dart';
 import 'package:permission_handler/permission_handler.dart';
 
@@ -32,6 +35,9 @@ class _RecipeExploreViewState extends State<RecipeExploreView> {
   RecipeModel recipe = RecipeModel();
 
   final _formKey = GlobalKey<FormState>();
+
+  List<String> _locations = ['Moeilijk', 'Middel', 'Makkelijk']; // Option 2
+  String _selectedLocation;
 
   Future checkCameraPermission() async {
     if (!(await Permission.storage.status.isGranted))
@@ -144,12 +150,26 @@ class _RecipeExploreViewState extends State<RecipeExploreView> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         BodyText(text: "Moeilijkheidsgraad"),
-        CustomTextFormField(
+        CustomAnswerFormField(
           keyboardType: TextInputType.name,
           textcontroller: _difficultyController,
-          hintText: "Moeilijk, Middel, Makkelijk",
-          validator: 1,
-          secureText: false,
+        ),
+        DropdownButton(
+          dropdownColor: ColorTheme.extraLightGreen,
+          hint: LifestyleText(text: 'Selecteer de moeilijkheidsgraad'),
+          value: _selectedLocation,
+          onChanged: (newValue) {
+            setState(() {
+              _selectedLocation = newValue;
+              _difficultyController.text = newValue;
+            });
+          },
+          items: _locations.map((location) {
+            return DropdownMenuItem(
+              child: Text(location),
+              value: location,
+            );
+          }).toList(),
         ),
       ],
     );
