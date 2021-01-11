@@ -87,7 +87,6 @@ class _ResultViewState extends State<ResultView> {
                   ? showResults(context)
                   : Center(
                       child: Text('Geen Results gevonden'),
-                      //onPressed: _onAddRandomRecipesPressed,
                     ),
         ),
       ),

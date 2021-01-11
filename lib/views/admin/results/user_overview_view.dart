@@ -8,9 +8,11 @@ import 'package:lifestylescreening/models/result_model.dart';
 import 'package:lifestylescreening/models/survey_result_model.dart';
 import 'package:lifestylescreening/views/admin/results/dtd_results_view.dart';
 import 'package:lifestylescreening/widgets/colors/color_theme.dart';
+import 'package:lifestylescreening/widgets/text/body_text.dart';
 import 'package:lifestylescreening/widgets/text/h1_text.dart';
 import 'package:lifestylescreening/widgets/text/h2_text.dart';
 import 'package:intl/intl.dart';
+import 'package:lifestylescreening/widgets/text/lifestyle_text.dart';
 
 import '../../../healthpoint_icons.dart';
 
@@ -27,8 +29,8 @@ class _UserResultsOverviewState extends State<UserResultsOverview> {
 
   StreamSubscription<QuerySnapshot> _currentSubscription;
   bool _isLoading = true;
-  List<DtdModel> _dtdResults = <DtdModel>[];
-  List<SurveyResultModel> _surveyResults = <SurveyResultModel>[];
+  List<DtdModel> _dtdResults = [];
+  List<SurveyResultModel> _surveyResults = [];
 
   @override
   void initState() {
@@ -99,31 +101,61 @@ class _UserResultsOverviewState extends State<UserResultsOverview> {
   }
 
   Widget showSurveyResults() {
-    return ListView.builder(
-      itemCount: _surveyResults.length,
-      itemBuilder: (BuildContext ctxt, int index) {
-        SurveyResultModel result = _surveyResults[index];
+    return _isLoading
+        ? CircularProgressIndicator()
+        : ListView.builder(
+            itemCount: _surveyResults.length,
+            shrinkWrap: true,
+            itemBuilder: (BuildContext ctxt, int idx) {
+              SurveyResultModel result = _surveyResults[idx];
 
-        return Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Material(
-            elevation: 8,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                Expanded(
-                  child: ListTile(
-                    tileColor: ColorTheme.extraLightOrange,
-                    title: H2Text(text: result.email),
-                    onTap: null,
+              return Padding(
+                padding: const EdgeInsets.all(10.0),
+                child: Card(
+                  color: ColorTheme.extraLightOrange,
+                  elevation: 8,
+                  child: Padding(
+                    padding: const EdgeInsets.all(10),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        H2Text(text: result.email),
+                        SizedBox(
+                          height: 10,
+                        ),
+                        ListView.builder(
+                          shrinkWrap: true,
+                          physics: NeverScrollableScrollPhysics(),
+                          itemCount: result.categories.length,
+                          itemBuilder: (context, index) {
+                            return Row(
+                              children: [
+                                SizedBox(
+                                  width: 200,
+                                  child: LifestyleText(
+                                      text: "${result.categories[index]}"),
+                                ),
+                                LifestyleText(
+                                    text: result.points_per_category[index]
+                                        .toString())
+                              ],
+                            );
+                          },
+                        ),
+                        SizedBox(
+                          height: 10,
+                        ),
+                        BodyText(
+                            text:
+                                "Totaal aantal punten \t ${result.total_points}"),
+                      ],
+                    ),
                   ),
                 ),
-              ],
-            ),
-          ),
-        );
-      },
-    );
+              );
+            },
+          );
   }
 
   @override
