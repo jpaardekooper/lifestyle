@@ -153,27 +153,33 @@ class _RecipeExploreViewState extends State<RecipeExploreView> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        BodyText(text: "Moeilijkheidsgraad"),
         CustomAnswerFormField(
           keyboardType: TextInputType.name,
           textcontroller: _difficultyController,
         ),
-        DropdownButton(
-          dropdownColor: ColorTheme.extraLightGreen,
-          hint: LifestyleText(text: 'Selecteer de moeilijkheidsgraad'),
-          value: _selectedLocation,
-          onChanged: (newValue) {
-            setState(() {
-              _selectedLocation = newValue;
-              _difficultyController.text = newValue;
-            });
-          },
-          items: _locations.map((location) {
-            return DropdownMenuItem(
-              child: Text(location),
-              value: location,
-            );
-          }).toList(),
+        Container(
+          decoration: BoxDecoration(
+            color: Colors.white,
+            border: Border.all(color: Theme.of(context).primaryColor, width: 2),
+            borderRadius: BorderRadius.circular(15),
+          ),
+          child: DropdownButton(
+            dropdownColor: ColorTheme.extraLightGreen,
+            hint: BodyText(text: 'Selecteer de moeilijkheidsgraad'),
+            value: _selectedLocation,
+            onChanged: (newValue) {
+              setState(() {
+                _selectedLocation = newValue;
+                _difficultyController.text = newValue;
+              });
+            },
+            items: _locations.map((location) {
+              return DropdownMenuItem(
+                child: Text(location),
+                value: location,
+              );
+            }).toList(),
+          ),
         ),
       ],
     );
