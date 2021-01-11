@@ -46,4 +46,8 @@ class AuthController {
   Future resetPass(String email) {
     return _authRepository.resetPass(email);
   }
+
+  Future<void> subscribeToLifestyle(Map data) {
+    return _authRepository.subscribeToLifestyle(data);
+  }
 }

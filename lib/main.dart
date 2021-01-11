@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:lifestylescreening/controllers/auth_controller.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:lifestylescreening/views/user/tutorial/startup.dart';
-import 'package:lifestylescreening/views/web/landing_page_view.dart';
+import 'package:lifestylescreening/views/web/landing_page_app.dart';
 import 'package:lifestylescreening/widgets/inherited/inherited_widget.dart';
 import 'package:lifestylescreening/widgets/login/login_visual.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
@@ -82,11 +82,11 @@ class _MyAppState extends State<MyApp> {
         fontFamily: 'Sofia',
       ),
       routes: {
-        '/landing-page': (context) => LandingPageView(),
+        '/home': (context) => LandingPageApp(),
         '/start': (context) => StartUp()
       },
       home: kIsWeb
-          ? LandingPageView()
+          ? LandingPageApp()
           : (_isLoggedin ?? false)
               //if the vallue is null (not found) change value to false
 

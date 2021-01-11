@@ -7,13 +7,14 @@ import 'package:lifestylescreening/models/question_model.dart';
 import 'package:lifestylescreening/models/survey_model.dart';
 import 'package:lifestylescreening/models/survey_result_model.dart';
 import 'package:lifestylescreening/repositories/questionainre_repository_interface.dart';
+import 'package:uuid/uuid.dart';
 
 class QuestionnaireRepository implements IQuestionnaireRepository {
   @override
   Future<List<QuestionModel>> getDTDQuestion() async {
     QuerySnapshot snapshot = await FirebaseFirestore.instance
-        .collection("surveys")
-        .doc('UjU63gtyZX8PlajmzHhX')
+        .collection("categories")
+        .doc('6rkGdqflHFzlbrPvDXCu')
         .collection("questions")
         .orderBy('order', descending: false)
         //    .where('order', isEqualTo: questionOrder)
@@ -89,6 +90,22 @@ class QuestionnaireRepository implements IQuestionnaireRepository {
     }).toList();
 
     //  return _answerList;
+  }
+
+  @override
+  Future<List<AnswerModel>> getDTDAnswer(String id) async {
+    QuerySnapshot snapshot = await FirebaseFirestore.instance
+        .collection("categories")
+        .doc('6rkGdqflHFzlbrPvDXCu')
+        .collection("questions")
+        .doc(id)
+        .collection('answers')
+        .orderBy('order', descending: false)
+        .get();
+
+    return snapshot.docs.map((DocumentSnapshot doc) {
+      return AnswerModel.fromSnapshot(doc);
+    }).toList();
   }
 
   @override
@@ -228,6 +245,7 @@ class QuestionnaireRepository implements IQuestionnaireRepository {
     int index,
     Map surveyData,
     Map data,
+    String id,
   ) async {
     //adding data to correct survey
     await FirebaseFirestore.instance
@@ -235,50 +253,84 @@ class QuestionnaireRepository implements IQuestionnaireRepository {
         .where("title", isEqualTo: surveyTitle)
         .get()
         .then((value) async {
-      List<int> firstInt = [];
-      if (index == 0) {
-        Map<String, dynamic> firstData = {
-          "email": user.email,
-          "index": index,
-          "categories": surveyData['categories'],
-          "category_points": firstInt,
-          "total_points": 0,
-          "total_duration": 0,
-          "finished": false,
-          "date": DateTime.now(),
-        };
+      //first time uploading survey
+      if (category == "Bewegen" || id == "") {
+        // List<int> firstInt = [];
+        // var dateTime = DateTime.now();
+        // Map<String, dynamic> firstData = {
+        //   "email": user.email,
+        //   "index": index,
+        //   "categories": surveyData['categories'],
+        //   "category_points": firstInt,
+        //   "total_points": 0,
+        //   "total_duration": 0,
+        //   "finished": false,
+        //   "date": dateTime,
+        // };
+
+        // print(surveyData['date']);
 
         await FirebaseFirestore.instance
             .collection("results")
             .doc(value.docs.first.id)
             .collection('scores')
             .doc()
-            .set(firstData);
-      }
-      await FirebaseFirestore.instance
-          .collection("results")
-          .doc(value.docs.first.id)
-          .collection('scores')
-          .where("email", isEqualTo: user.email)
-          .get()
-          .then((value2) async {
+            .set(surveyData);
+
         await FirebaseFirestore.instance
             .collection("results")
             .doc(value.docs.first.id)
             .collection('scores')
-            .doc(value2.docs.first.id)
+            .where("date", isEqualTo: surveyData['date'])
+            .get()
+            .then((value2) async {
+          await FirebaseFirestore.instance
+              .collection("results")
+              .doc(value.docs.first.id)
+              .collection('scores')
+              .doc(value2.docs.first.id)
+              .collection(category)
+              .doc()
+              .set(data);
+
+//update data
+          // await FirebaseFirestore.instance
+          //     .collection("results")
+          //     .doc(value.docs.first.id)
+          //     .collection('scores')
+          //     .doc(value2.docs.first.id)
+          //     .update(surveyData);
+        });
+      }
+      //second time uploading survey
+      else {
+        await FirebaseFirestore.instance
+            .collection("results")
+            .doc(value.docs.first.id)
+            .collection('scores')
+            .doc(id)
             .collection(category)
             .doc()
             .set(data);
+        //   .get()
+        //   .then((value2) async {
+        // await FirebaseFirestore.instance
+        //     .collection("results")
+        //     .doc(value.docs.first.id)
+        //     .collection('scores')
+        //     .doc(value2.docs.first.id)
+        //     .collection(category)
+        //     .doc()
+        //     .set(data);
 
 //update data
         await FirebaseFirestore.instance
             .collection("results")
             .doc(value.docs.first.id)
             .collection('scores')
-            .doc(value2.docs.first.id)
+            .doc(id)
             .update(surveyData);
-      });
+      }
     });
   }
 
@@ -329,5 +381,49 @@ class QuestionnaireRepository implements IQuestionnaireRepository {
           .doc(surveyResult.id)
           .update({"finished": true});
     });
+  }
+
+  @override
+  Future<String> createDTDid() async {
+    var uuid = Uuid();
+
+    final String id = uuid.v1();
+    String docId;
+
+    Map<String, dynamic> firstData = {
+      "id": id,
+      "date": DateTime.now(),
+    };
+
+    await FirebaseFirestore.instance
+        .collection("results")
+        .doc("hddx5cnwvjLeSqQK5vDQ")
+        .collection("scores")
+        .doc()
+        .set(firstData);
+
+    await FirebaseFirestore.instance
+        .collection("results")
+        .doc("hddx5cnwvjLeSqQK5vDQ")
+        .collection("scores")
+        .where("id", isEqualTo: id)
+        .get()
+        .then((value) {
+      docId = value.docs.first.id.toString();
+    });
+
+    return docId;
+  }
+
+  @override
+  Future<void> setDTDSurveyResults(String id, Map data) async {
+    await FirebaseFirestore.instance
+        .collection("results")
+        .doc("hddx5cnwvjLeSqQK5vDQ")
+        .collection("scores")
+        .doc(id)
+        .collection("DTD")
+        .doc()
+        .set(data);
   }
 }

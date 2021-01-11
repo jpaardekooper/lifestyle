@@ -1,8 +1,16 @@
 import 'package:flutter/material.dart';
-
-import 'package:lifestylescreening/views/web/widgets/send_button.dart';
+import 'package:lifestylescreening/controllers/auth_controller.dart';
+import 'package:lifestylescreening/views/web/utils/responsive_layout.dart';
+import 'package:lifestylescreening/widgets/colors/color_theme.dart';
+import 'package:lifestylescreening/widgets/forms/custom_textformfield.dart';
 
 class Search extends StatelessWidget {
+  Search({@required this.function});
+  final Function(BuildContext) function;
+
+  final _formKey = GlobalKey<FormState>();
+  TextEditingController controller = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -27,15 +35,91 @@ class Search extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
               Expanded(
-                  flex: 8,
-                  child: TextField(
-                    decoration: InputDecoration(
-                        border: InputBorder.none,
-                        hintText: 'Your Email Address'),
-                  )),
+                flex: 6,
+                child: Form(
+                  key: _formKey,
+                  child: CustomTextFormField(
+                      keyboardType: TextInputType.emailAddress,
+                      textcontroller: controller,
+                      errorMessage: "Gebruik een geldige e-mail adres",
+                      validator: 2,
+                      secureText: false,
+                      border: false,
+                      hintText: 'Vul uw email adres in voor de nieuwsbrief'),
+                ),
+              ),
               Expanded(
                 flex: 2,
-                child: SendBtn(),
+                child: InkWell(
+                  child: Container(
+                    height: 40,
+                    decoration: BoxDecoration(
+                        gradient: LinearGradient(
+                            colors: [
+                              ColorTheme.accentOrange,
+                              ColorTheme.orange
+                            ],
+                            begin: Alignment.topLeft,
+                            end: Alignment.bottomRight),
+                        borderRadius: BorderRadius.circular(20.0),
+                        boxShadow: [
+                          BoxShadow(
+                              color: Color(0xFF6078ea).withOpacity(.3),
+                              offset: Offset(0.0, 8.0),
+                              blurRadius: 8.0)
+                        ]),
+                    child: Material(
+                      color: Colors.transparent,
+                      child: InkWell(
+                        onTap: () async {
+                          if (_formKey.currentState.validate()) {
+                            Map<String, dynamic> data = {
+                              "email": controller.text,
+                              "date": DateTime.now(),
+                            };
+
+                            await AuthController()
+                                .subscribeToLifestyle(data)
+                                .then((value) {
+                              function(context);
+                              controller.text = "";
+                            });
+                          }
+                        },
+                        child: Center(
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: <Widget>[
+                              ResponsiveLayout.isSmallScreen(context)
+                                  ? Icon(
+                                      Icons.mail,
+                                      color: Colors.white,
+                                    )
+                                  : Row(
+                                      children: [
+                                        Text(
+                                          "Aboneren",
+                                          style: TextStyle(
+                                            color: Colors.white,
+                                            fontSize: 16,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                              SizedBox(width: 5),
+                              ResponsiveLayout.isSmallScreen(context)
+                                  ? Container()
+                                  : Icon(
+                                      Icons.mail,
+                                      color: Colors.white,
+                                    )
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
               )
             ],
           ),

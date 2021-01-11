@@ -32,6 +32,11 @@ class QuestionnaireController {
     return _questionnaireRepository.getAnswer(category, questionId);
   }
 
+  //fetch an answer for the question
+  Future<List<AnswerModel>> fetchDTDAnswer(String questionId) {
+    return _questionnaireRepository.getDTDAnswer(questionId);
+  }
+
   Stream<QuerySnapshot> streamQuestion(String id) {
     return _questionnaireRepository.streamQuestions(id);
   }
@@ -72,16 +77,10 @@ class QuestionnaireController {
         parentId, questionDoc, answerDoc);
   }
 
-  Future<void> setUserSurveyAnswer(
-      String surveyTitle,
-      AppUser user,
-      String category,
-      int index,
-      Map surveyData,
-      Map data,
-      bool lastSurveyCategory) {
+  Future<void> setUserSurveyAnswer(String surveyTitle, AppUser user,
+      String category, int index, Map surveyData, Map data, String id) {
     return _questionnaireRepository.setUserSurveyAnswers(
-        surveyTitle, user, category, index, surveyData, data);
+        surveyTitle, user, category, index, surveyData, data, id);
   }
 
   Future<void> checkSurveyResult(String surveyTitle, String email) {
@@ -92,5 +91,13 @@ class QuestionnaireController {
       String surveyTitle, AppUser user, SurveyResultModel surveyResult) {
     return _questionnaireRepository.setSurveyToFalse(
         surveyTitle, user, surveyResult);
+  }
+
+  Future<String> createDTDid() {
+    return _questionnaireRepository.createDTDid();
+  }
+
+  Future<void> setDTDSurveyResults(String id, Map data) {
+    return _questionnaireRepository.setDTDSurveyResults(id, data);
   }
 }

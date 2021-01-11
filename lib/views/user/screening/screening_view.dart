@@ -10,10 +10,13 @@ import 'package:lifestylescreening/models/question_model.dart';
 
 import 'package:lifestylescreening/models/survey_model.dart';
 import 'package:lifestylescreening/models/survey_result_model.dart';
+import 'package:lifestylescreening/views/user/screening/screening_calc.dart';
+import 'package:lifestylescreening/views/user/screening/survey_complete.dart';
 
 import 'package:lifestylescreening/widgets/buttons/confirm_orange_button.dart';
 import 'package:lifestylescreening/widgets/cards/selected_answer_card.dart';
 import 'package:lifestylescreening/widgets/inherited/inherited_timer_service.dart';
+
 import 'package:lifestylescreening/widgets/text/h1_text.dart';
 import 'package:lifestylescreening/widgets/text/h2_text.dart';
 
@@ -29,183 +32,152 @@ class _ScreeningViewState extends State<ScreeningView> {
   final QuestionnaireController _questionnaireController =
       QuestionnaireController();
 
-  final _formKey = GlobalKey<FormState>();
+  var _formKey;
 
   double progressIndicatorValue;
   int categoryIndex;
   int screeningDuration;
-  final timerService = TimerService();
-  List<TextEditingController> _controllerList;
-  // List<QuestionModel> _questionList;
+  TimerService timerService;
+  ScreeningCalc sc; //calculator for screening
+
   List<SurveyResultModel> _surveyResult;
   List<SurveyModel> _surveyList;
   List<AnswerModel> _userAnswers;
   List<String> _questions;
   String category;
-  // bool lastSurveyCategory;
+  List<String> _questionAnswer = [];
+
   @override
   void initState() {
+    _formKey = GlobalKey<FormState>();
+    timerService = TimerService();
+    sc = ScreeningCalc();
     category = "";
     categoryIndex = 0;
     progressIndicatorValue = 0;
     timerService.start();
-    _controllerList = [];
-//    _questionList = [];
     _surveyResult = [];
     _surveyList = [];
     _userAnswers = [];
     _questions = [];
-    //   lastSurveyCategory = false;
+
     super.initState();
+  }
+
+  deleteControllers() async {
+    timerService.stop();
+    _userAnswers.clear();
+    _surveyResult.clear();
+    _surveyList.clear();
+    _questions.clear();
+    category = "";
+    categoryIndex = 0;
   }
 
   @override
   void dispose() {
-    timerService.stop();
-
-    timerService.dispose();
     super.dispose();
   }
 
-  void addAnswerToList(AnswerModel answer) {
+  void addAnswerToList(AnswerModel answer, String value) {
     if (!_userAnswers.contains(answer)) {
       _userAnswers.add(answer);
-    } else {
-      _userAnswers.remove(answer);
-      _userAnswers.add(answer);
+      _questionAnswer.add(value);
     }
   }
 
-  void nextQuestion(double progressValue) async {
+  nextQuestion(double progressValue) async {
+    _userAnswers.clear();
+    _questionAnswer.clear();
+
     if (_formKey.currentState.validate()) {
       FocusScope.of(context).unfocus();
       screeningDuration = timerService.currentDuration.inSeconds;
-      List<String> _ansersToFirebaseList = [];
+
+      List<int> scorevalues = [];
       List<String> categoriesList = [];
       //total score for a category
       int userCategoryScore = 0;
+      int totalScorevalue = 0;
+      int nextIndexQuestion = 0;
+      userCategoryScore =
+          await sc.calculatePoints(category, _userAnswers, _questionAnswer);
 
-      // only for category bewegen
-      int scorecalc = 0;
-      for (int i = 0; i < _userAnswers.length; i++) {
-        //different score calculation for category bewegen
-        if (category == "Bewegen") {
-          switch (_userAnswers[i].pointsCalculator) {
-            case 0:
-              userCategoryScore += _userAnswers[i].points;
-              break;
-            case 1:
-              scorecalc +=
-                  (double.parse(_controllerList[i].text) * 0.5).round();
-              break;
-            case 2:
-              scorecalc += (double.parse(_controllerList[i].text) * 1).round();
-              break;
-            case 3:
-              scorecalc += (double.parse(_controllerList[i].text) * 2).round();
-              break;
-            case 4:
-              if (_userAnswers[i].lastAnswer == _controllerList[i].text)
-                userCategoryScore += _userAnswers[i].points;
-              break;
-          }
-        } else {
-          switch (_userAnswers[i].pointsCalculator) {
-            case 0:
-              userCategoryScore += _userAnswers[i].points;
-              break;
-            case 1:
-              userCategoryScore +=
-                  (int.parse(_controllerList[i].text) * 0.5).round();
-              break;
-            case 2:
-              userCategoryScore +=
-                  (int.parse(_controllerList[i].text) * 1).round();
-              break;
-            case 3:
-              userCategoryScore +=
-                  (int.parse(_controllerList[i].text) * 2).round();
-              break;
-            case 4:
-              if (_userAnswers[i].lastAnswer == _controllerList[i].text)
-                userCategoryScore += _userAnswers[i].points;
-              break;
-          }
-        }
-
-        _ansersToFirebaseList.add(_controllerList[i].text);
-      }
-
-      if (scorecalc < 30) {
-        userCategoryScore += 1;
-      }
+      int totalDurationValue = 0;
 
       Map<String, dynamic> data = {
         "question": FieldValue.arrayUnion(_questions),
-        "answer": FieldValue.arrayUnion(_ansersToFirebaseList),
+        "answer": _questionAnswer,
         "points": userCategoryScore,
         "duration": screeningDuration,
         "date": DateTime.now()
       };
 
-      int totalScorevalue = 0;
-      List<int> scorevalues = [];
-
-      if (_surveyList.isNotEmpty) {
+      if (_surveyList != null && _surveyList.isNotEmpty) {
         categoriesList = _surveyList.first.category;
 
         scorevalues.add(userCategoryScore);
       }
-      if (_surveyResult.isNotEmpty) {
+      if (_surveyResult != null && _surveyResult.isNotEmpty) {
         categoriesList = _surveyResult.first.categories;
 
-        scorevalues = _surveyResult.first.points_per_category;
-        scorevalues.add(userCategoryScore);
+        //first time doing survey
+        if (category == "Bewegen") {
+          totalScorevalue = userCategoryScore;
+        } else {
+          scorevalues = _surveyResult.first.points_per_category;
 
-        totalScorevalue = _surveyResult.first.total_points;
-        for (int i = 0;
-            i < _surveyResult.first.points_per_category.length;
-            i++) {
-          totalScorevalue += _surveyResult.first.points_per_category[i];
+          scorevalues.add(userCategoryScore);
+          //adding total score from fetch data + userCategory score
+          totalScorevalue =
+              _surveyResult.first.total_points + userCategoryScore;
+          //adding duration from fetched data + screening duration
+          totalDurationValue =
+              _surveyResult.first.total_duration + screeningDuration;
         }
+      }
+
+      if (categoryIndex < categoriesList.length) {
+        nextIndexQuestion += categoryIndex + 1;
       }
 
       Map<String, dynamic> surveyData = {
         "email": widget.user.email,
-        "index": categoryIndex + 1,
+        "index": nextIndexQuestion,
         "categories": FieldValue.arrayUnion(categoriesList),
-        "category_points": FieldValue.arrayUnion(scorevalues),
+        "points_per_category": scorevalues,
         "total_points": totalScorevalue,
-        "total_duration": screeningDuration,
+        "total_duration": totalDurationValue,
         "finished": false,
         "date": DateTime.now(),
       };
 
-      //user cat score
+      await _questionnaireController.setUserSurveyAnswer(
+          widget.surveyTitle,
+          widget.user,
+          category,
+          categoryIndex,
+          surveyData,
+          data,
+          category == "Bewegen" ? "" : _surveyResult.first.id);
 
-      await _questionnaireController.setUserSurveyAnswer(widget.surveyTitle,
-          widget.user, category, categoryIndex, surveyData, data, false);
+      await deleteControllers();
 
-      timerService.reset();
-      setState(() {
-        //starting timer again
-        timerService.start();
-        _controllerList.clear();
-        _userAnswers.clear();
-        _ansersToFirebaseList.clear();
-        _surveyResult.clear();
-        _surveyList.clear();
-        _questions.clear();
-        category = "";
-      });
+      final Route route = MaterialPageRoute(
+        builder: (context) => ScreeningView(
+          user: widget.user,
+          surveyTitle: widget.surveyTitle,
+        ),
+      );
+      await Navigator.pushReplacement(context, route);
     }
   }
 
-  Widget showAnsers(String category, QuestionModel question, int index) {
+  Widget showAnsers(String category, QuestionModel question, int nr) {
     return FutureBuilder<List<AnswerModel>>(
       //fetching data from the corresponding questionId
       future: _questionnaireController.fetchAnswer(category, question.id),
-      builder: (context, snapshot) {
+      builder: (ctxt, snapshot) {
         List<AnswerModel> _answerList = snapshot.data;
         if (snapshot.connectionState != ConnectionState.done)
           return Center(
@@ -218,7 +190,7 @@ class _ScreeningViewState extends State<ScreeningView> {
         } else {
           return SelectedAnswerCard(
             answerList: _answerList,
-            controller: _controllerList[index],
+            //      controller: _controllerList[nr],
             function: addAnswerToList,
           );
         }
@@ -226,67 +198,70 @@ class _ScreeningViewState extends State<ScreeningView> {
     );
   }
 
+//  List<int> controllersints = [];
+
   Widget getScreeningQuestion(String category) {
     return FutureBuilder<List<QuestionModel>>(
-        future: _questionnaireController.fetchScreeningQuestion(category),
-        builder: (context, snapshot) {
-          final List<QuestionModel> _questionList = snapshot.data;
-          if (snapshot.connectionState != ConnectionState.done)
-            return Center(
-              child: CircularProgressIndicator(),
-            );
-          if (!snapshot.hasData) {
-            return Center(
-              child: CircularProgressIndicator(),
-            );
-          } else {
-            //looping through questions list
-            return ListView.builder(
-              physics: NeverScrollableScrollPhysics(),
-              shrinkWrap: true,
-              itemCount: _questionList.length,
-              itemBuilder: (BuildContext context, index) {
-                final QuestionModel question = _questionList[index];
-                _controllerList.add(TextEditingController());
+      future: _questionnaireController.fetchScreeningQuestion(category),
+      builder: (context, snapshot) {
+        List<QuestionModel> _questionList = snapshot.data;
+
+        if (!snapshot.hasData) {
+          return Center(
+            child: CircularProgressIndicator(),
+          );
+        } else {
+          //looping through questions list
+          return ListView.builder(
+            physics: NeverScrollableScrollPhysics(),
+            shrinkWrap: true,
+            itemCount: _questionList.length,
+            itemBuilder: (BuildContext ctx, index) {
+              final QuestionModel question = _questionList[index];
+
+              if (!_questions.contains(question)) {
                 _questions.add(question.question);
-                return Padding(
-                  padding: const EdgeInsets.all(20.0),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      //show question number and question
-                      Row(
-                        children: [
-                          Flexible(
-                            child: H2Text(
-                              text: "${question.order}.\t${question.question} ",
-                            ),
+              }
+
+              return Padding(
+                padding: const EdgeInsets.all(20.0),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    //show question number and question
+                    Row(
+                      children: [
+                        Flexible(
+                          child: H2Text(
+                            text: "${question.order}.\t${question.question} ",
                           ),
-                        ],
-                      ),
-                      //check if question url exist and not equal to 0
-                      question.url.contains("https://") && question.url != 0
-                          ? CachedNetworkImage(
-                              imageUrl: question.url,
-                              progressIndicatorBuilder:
-                                  (context, url, downloadProgress) =>
-                                      CircularProgressIndicator(
-                                          value: downloadProgress.progress),
-                              errorWidget: (context, url, error) =>
-                                  Icon(Icons.error),
-                            )
-                          : Container(),
-                      //show answers for the question
-                      //adding category question and index of iteration
-                      showAnsers(category, question, index),
-                    ],
-                  ),
-                );
-              },
-            );
-          }
-        });
+                        ),
+                      ],
+                    ),
+                    //check if question url exist and not equal to 0
+                    question.url.contains("https://") && question.url != 0
+                        ? CachedNetworkImage(
+                            imageUrl: question.url,
+                            progressIndicatorBuilder:
+                                (ctx, url, downloadProgress) =>
+                                    CircularProgressIndicator(
+                                        value: downloadProgress.progress),
+                            errorWidget: (context, url, error) =>
+                                Icon(Icons.error),
+                          )
+                        : Container(),
+                    //show answers for the question
+                    //adding category question and index of iteration
+                    showAnsers(category, question, index),
+                  ],
+                ),
+              );
+            },
+          );
+        }
+      },
+    );
   }
 
   Widget showFirstTimeSurvey(double _progressValue, String category) {
@@ -303,12 +278,14 @@ class _ScreeningViewState extends State<ScreeningView> {
               AlwaysStoppedAnimation<Color>(Theme.of(context).accentColor),
           minHeight: 5,
         ),
-
+        //showing category
         Padding(
           padding: const EdgeInsets.all(20.0),
           child: H1Text(text: "Vragen over $category"),
         ),
+        //show questions
         getScreeningQuestion(category),
+        // show next button
         Padding(
           padding: const EdgeInsets.all(20.0),
           child: ConfirmOrangeButton(
@@ -323,24 +300,10 @@ class _ScreeningViewState extends State<ScreeningView> {
   }
 
   Widget surveyIsFinished(SurveyResultModel surveyResult) {
-    return Center(
-      child: Padding(
-        padding: const EdgeInsets.all(20.0),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Text("Bedankt voor uw deelname"),
-            ConfirmOrangeButton(
-                text: "Terug",
-                onTap: () {
-                  _questionnaireController.setSurveyToFalse(
-                      widget.surveyTitle, widget.user, surveyResult);
-                  Navigator.of(context).pop();
-                }),
-          ],
-        ),
-      ),
+    return SurveyComplete(
+      surveyResult: surveyResult,
+      surveyTitle: widget.surveyTitle,
+      user: widget.user,
     );
   }
 
@@ -352,10 +315,6 @@ class _ScreeningViewState extends State<ScreeningView> {
         builder: (context, snapshot) {
           _surveyResult = snapshot.data;
           //while loading
-          if (snapshot.connectionState != ConnectionState.done)
-            return Center(
-              child: CircularProgressIndicator(),
-            );
           //no data found or doesnt exist
           //doing quiz for the first time
           if (!snapshot.hasData || _surveyResult.isEmpty) {
@@ -377,11 +336,11 @@ class _ScreeningViewState extends State<ScreeningView> {
                   _surveyList = snapshot.data;
                   category = _surveyList.first.category[categoryIndex];
                   final _progressValue =
-                      1.0 / _surveyList.first.category.length.toDouble();
+                      sc.calculateProgress(_surveyList.first.category.length);
 
                   progressIndicatorValue = _progressValue * categoryIndex;
 
-                  if (categoryIndex >= _surveyList.first.category.length - 1) {
+                  if (categoryIndex == _surveyList.first.category.length) {
                     return surveyIsFinished(_surveyResult.first);
                   }
                   //showing the actual survey data
@@ -394,27 +353,39 @@ class _ScreeningViewState extends State<ScreeningView> {
             );
           } else {
             final _progressValue =
-                1.0 / _surveyResult.first.categories.length.toDouble();
-
-            categoryIndex = _surveyResult.first.index;
+                sc.calculateProgress(_surveyResult.first.categories.length);
 
             if (_surveyResult.first.finished) {
               categoryIndex = 0;
+            } else {
+              categoryIndex = _surveyResult.first.index;
             }
 
             progressIndicatorValue = _progressValue * categoryIndex;
 
-            category = _surveyResult.first.categories[categoryIndex];
-
-            if (categoryIndex >= _surveyResult.first.categories.length - 1 &&
+            if (categoryIndex == _surveyResult.first.categories.length &&
                 _surveyResult.first.finished == false) {
               return surveyIsFinished(_surveyResult.first);
             } else {
+              category = _surveyResult.first.categories[categoryIndex];
               return showFirstTimeSurvey(_progressValue, category);
             }
           }
         });
   }
+
+  // Widget showTimerDuration() {
+  //return TimerServiceProvider(
+  //   service: timerService,
+  //   child: AnimatedBuilder(
+  //     animation: timerService, // listen to ChangeNotifier
+  //     builder: (context, child) {
+  //       return Text(
+  //           'Elapsed: ${timerService.currentDuration.inSeconds}');
+  //     },
+  //   ),
+  // ),
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -425,27 +396,16 @@ class _ScreeningViewState extends State<ScreeningView> {
         ),
         centerTitle: true,
       ),
-      body: TimerServiceProvider(
-        service: timerService,
-        child: SingleChildScrollView(
-          child: Form(
-            key: _formKey,
-            child: Column(
-              children: [
-                getScreeningCategories()
-                // TimerServiceProvider(
-                //   service: timerService,
-                //   child: AnimatedBuilder(
-                //     animation: timerService, // listen to ChangeNotifier
-                //     builder: (context, child) {
-                //       return Text(
-                //           'Elapsed: 
-                // ${timerService.currentDuration.inSeconds}');
-                //     },
-                //   ),
-                // ),
-              ],
-            ),
+      body: SingleChildScrollView(
+        child: Form(
+          key: _formKey,
+          child: Column(
+            children: [
+              TimerServiceProvider(
+                service: timerService,
+                child: getScreeningCategories(),
+              ),
+            ],
           ),
         ),
       ),

@@ -14,7 +14,7 @@ import 'package:lifestylescreening/widgets/text/intro_grey_text.dart';
 import 'package:lifestylescreening/widgets/text/intro_light_grey_text.dart';
 
 class PageSettings extends StatelessWidget {
-  Widget SettingsUserInfoField(String text, String value, String format) {
+  Widget settingsUserInfoField(String text, String value, String format) {
     return Container(
       padding: EdgeInsets.only(bottom: 15, top: 30.0),
       decoration: BoxDecoration(
@@ -47,7 +47,7 @@ class PageSettings extends StatelessWidget {
         centerTitle: true,
         actions: [
           TextButton(
-            child: H3OrangeText(text: "Edit"),
+            child: H3OrangeText(text: "Wijzigen"),
             onPressed: () => Navigator.of(context).push(
               MaterialPageRoute(
                 builder: (context) => EditSettingsView(user: _userData.data),
@@ -107,29 +107,30 @@ class PageSettings extends StatelessWidget {
                         horizontal: 40.0, vertical: 40),
                     child: Center(
                       child: ConfirmGreyButton(
-                          text: "Bereken BMI waarde",
-                          onTap: () {
-                            CalculatorBMI calc = CalculatorBMI(
-                                height: _userData.data.height,
-                                weight: _userData.data.weight);
-                            Navigator.of(context).push(
-                              MaterialPageRoute(
-                                  builder: (_) => ResultsPage(
-                                        bmiResult: calc.getBMI(),
-                                        resultText: calc.getResult(),
-                                        interpretation:
-                                            calc.getInterpretation(),
-                                      )),
-                            );
-                          }),
+                        text: "Bereken BMI waarde",
+                        onTap: () {
+                          CalculatorBMI calc = CalculatorBMI(
+                              height: _userData.data.height,
+                              weight: _userData.data.weight);
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (_) => ResultsPage(
+                                bmiResult: calc.getBMI(),
+                                resultText: calc.getResult(),
+                                interpretation: calc.getInterpretation(),
+                              ),
+                            ),
+                          );
+                        },
+                      ),
                     ),
                   ),
 
-                  SettingsUserInfoField(
+                  settingsUserInfoField(
                       "Gewicht", _userData.data.weight.toString(), "KG"),
-                  SettingsUserInfoField(
+                  settingsUserInfoField(
                       "Lengte", _userData.data.height.toString(), "CM"),
-                  SettingsUserInfoField(
+                  settingsUserInfoField(
                       "Geslacht", "", _userData.data.gender.toString()),
                 ],
               ),

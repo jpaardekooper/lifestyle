@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-
 import 'package:lifestylescreening/widgets/colors/color_theme.dart';
 import 'package:lifestylescreening/widgets/text/h2_text.dart';
 
@@ -7,16 +6,19 @@ class SliderWidget extends StatefulWidget {
   SliderWidget({
     Key key,
     @required this.controller,
+    //@required this.function,
   }) : super(key: key);
 
   final TextEditingController controller;
+  // final Function(AnswerModel, String) function;
 
   @override
   _SliderWidgetState createState() => _SliderWidgetState();
 }
 
 class _SliderWidgetState extends State<SliderWidget> {
-  int value = 1;
+  double value = 1;
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -31,7 +33,7 @@ class _SliderWidgetState extends State<SliderWidget> {
           textBaseline: TextBaseline.alphabetic,
           children: <Widget>[
             H2Text(
-              text: '$value',
+              text: '${value.round()}',
             ),
           ],
         ),
@@ -52,7 +54,7 @@ class _SliderWidgetState extends State<SliderWidget> {
             },
             onChanged: (newValue) {
               setState(() {
-                value = newValue.round();
+                value = newValue;
               });
             },
           ),

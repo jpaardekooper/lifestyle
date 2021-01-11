@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:lifestylescreening/models/survey_model.dart';
+import 'package:lifestylescreening/models/survey_result_model.dart';
 import 'survey_repository_interface.dart';
 
 class SurveyRepository implements ISurveyRepository {
@@ -52,5 +53,25 @@ class SurveyRepository implements ISurveyRepository {
     await FirebaseFirestore.instance.collection("surveys").doc(id).update({
       "category": FieldValue.arrayRemove([data])
     }).catchError((e) {});
+  }
+
+  @override
+  Future<List<SurveyResultModel>> getLastSurveyResult(String email) async {
+    List<SurveyResultModel> _list = [];
+
+    var snapshot = await FirebaseFirestore.instance
+        .collection("results")
+        .doc("j4HGRmdE62VTRbtqYsvM")
+        .collection("scores")
+        .where("email", isEqualTo: email)
+        .get();
+
+    snapshot.docs.map((DocumentSnapshot doc) {
+      return _list.add(SurveyResultModel.fromSnapshot(doc));
+    }).toList();
+
+    _list.sort((a, b) => b.date.compareTo(a.date));
+
+    return _list;
   }
 }
