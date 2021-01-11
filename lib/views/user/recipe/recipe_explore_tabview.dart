@@ -221,16 +221,18 @@ class _RecipeExploreViewState extends State<RecipeExploreView> {
                   showRecipeDuration(context),
                   SizedBox(height: 25),
                   showRecipeDifficulty(context),
-                  SizedBox(height: 25),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      ConfirmOrangeButton(
-                        text: 'Opslaan',
-                        onTap: () => saveRecipeChanges(context),
-                      ),
-                    ],
-                  ),
+                  SizedBox(height: 75),
+                  loading
+                      ? Center(child: LinearProgressIndicator())
+                      : Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            ConfirmOrangeButton(
+                              text: 'Opslaan',
+                              onTap: () => saveRecipeChanges(context),
+                            ),
+                          ],
+                        ),
                 ],
               ),
             ),
