@@ -4,6 +4,7 @@ import 'package:lifestylescreening/views/web/utils/responsive_layout.dart';
 import 'package:lifestylescreening/widgets/colors/color_theme.dart';
 import 'package:lifestylescreening/widgets/forms/custom_textformfield.dart';
 
+// ignore: must_be_immutable
 class Search extends StatelessWidget {
   Search({@required this.function});
   final Function(BuildContext) function;

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:lifestylescreening/models/answer_model.dart';
 
+// ignore: must_be_immutable
 class CheckBoxSurvey extends StatefulWidget {
   CheckBoxSurvey(
       {Key key,

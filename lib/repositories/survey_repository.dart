@@ -64,6 +64,7 @@ class SurveyRepository implements ISurveyRepository {
         .doc("j4HGRmdE62VTRbtqYsvM")
         .collection("scores")
         .where("email", isEqualTo: email)
+        .where("finished", isEqualTo: true)
         .get();
 
     snapshot.docs.map((DocumentSnapshot doc) {

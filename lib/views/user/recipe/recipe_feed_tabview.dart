@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:lifestylescreening/models/recipe_model.dart';
 import 'package:lifestylescreening/widgets/inherited/inherited_widget.dart';
 import 'package:lifestylescreening/controllers/recipe_controller.dart';
-import 'package:lifestylescreening/widgets/recipe_grid.dart';
+import 'package:lifestylescreening/views/user/recipe/recipe_grid.dart';
 
 class RecipeFeedView extends StatefulWidget {
   @override
@@ -14,7 +14,7 @@ class _RecipeFeedViewState extends State<RecipeFeedView> {
 
   Future<void> _refreshData() async {
     setState(() {
-      return _recipeController.getRecipeListOnce();
+      // return _recipeController.getRecipeListOnce();
     });
   }
 
@@ -28,14 +28,15 @@ class _RecipeFeedViewState extends State<RecipeFeedView> {
         child: FutureBuilder<List<RecipeModel>>(
           future: _recipeController.getRecipeListOnce(),
           builder: (context, snapshot) {
-            List<RecipeModel> _recipeList = snapshot.data;
-            if (_recipeList == null || _recipeList.isEmpty) {
+            final List<RecipeModel> _recipeList = snapshot.data;
+            if (!snapshot.hasData) {
               return CircularProgressIndicator();
             } else {
               return RecipeGrid(
                 recipeList: _recipeList,
                 userData: _userData.data,
                 userRecipe: false,
+                onTap: null,
               );
             }
           },

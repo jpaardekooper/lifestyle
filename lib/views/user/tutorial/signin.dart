@@ -224,12 +224,13 @@ class _SignInState extends State<SignIn> {
   void resetSignInPage() {
     setState(() {
       _isLoading = false;
-      _key.currentState.showSnackBar(
+
+      ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           duration: const Duration(seconds: 1),
           backgroundColor: Theme.of(context).accentColor,
           content: Text(
-            "Er is iets mis gegaan probeer het nog eens",
+            "Uw email en wachtwoord komen niet overeen",
             style: TextStyle(color: Colors.white, fontSize: 18),
           ),
         ),

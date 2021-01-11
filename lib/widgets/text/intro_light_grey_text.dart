@@ -12,7 +12,7 @@ class IntroLightGreyText extends StatelessWidget {
       style: TextStyle(
         color: const Color(0xFFA2A4A3),
         fontFamily: 'Sofia',
-        fontSize: 20,
+        fontSize: MediaQuery.of(context).size.height * 0.025,
         fontWeight: FontWeight.bold,
       ),
     );
