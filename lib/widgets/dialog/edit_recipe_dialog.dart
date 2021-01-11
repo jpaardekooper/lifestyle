@@ -30,7 +30,12 @@ class _EditRecipeState extends State<EditRecipe> {
   TextEditingController _difficultyController = TextEditingController();
   bool _published;
 
-  List<String> _locations = ['Moeilijk', 'Middel', 'Makkelijk']; // Option 2
+  List<String> _locations = [
+    'Selecteer de moeilijkheidsgraad',
+    'Moeilijk',
+    'Middel',
+    'Makkelijk'
+  ]; // Option 2
   String _selectedLocation;
 
   final _formKey = GlobalKey<FormState>();
@@ -43,6 +48,9 @@ class _EditRecipeState extends State<EditRecipe> {
     _durationController.text = (widget.recipe.duration ?? "0").toString();
     _difficultyController.text = widget.recipe.difficulty ?? "";
     _published = widget.recipe.published ?? false;
+    _selectedLocation = _difficultyController.text.isEmpty
+        ? _locations[0]
+        : _difficultyController.text;
 
     super.initState();
   }
@@ -161,8 +169,13 @@ class _EditRecipeState extends State<EditRecipe> {
             value: _selectedLocation,
             onChanged: (newValue) {
               setState(() {
-                _selectedLocation = newValue;
-                _difficultyController.text = newValue;
+                if (newValue == _locations[0]) {
+                  _selectedLocation = _locations[1];
+                } else {
+                  _selectedLocation = newValue;
+                }
+
+                _difficultyController.text = _selectedLocation;
               });
             },
             items: _locations.map((location) {

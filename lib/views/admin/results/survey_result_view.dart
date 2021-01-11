@@ -41,7 +41,7 @@ class _SurveyResultViewState extends State<SurveyResultView> {
                     BodyText(
                       text:
                           // ignore: lines_longer_than_80_chars
-                          "${index + 1}.  \t ${_answerList.first.question[index]} ",
+                          "Vraag: ${index + 1}.  \t ${_answerList.first.question[index]}",
                     ),
                     SizedBox(height: 10),
                     LifestyleText(

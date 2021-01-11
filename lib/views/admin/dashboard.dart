@@ -110,7 +110,7 @@ class _DashboardState extends State<Dashboard>
         FlatButton(
           color: tabController.index == 0 ? Colors.grey[100] : Colors.white,
           onPressed: () {
-            tabController.animateTo(5);
+            tabController.animateTo(0);
             if (drawerStatus) {
               Navigator.pop(context);
             }
