@@ -57,7 +57,7 @@ class _MessageTileState extends State<MessageTile> {
             ? Container(
                 padding: EdgeInsets.only(right: 16),
                 child: Text(
-                  DateFormat("yyy-MM-dd hh:mm")
+                  DateFormat("yyy-MM-dd HH:mm")
                       .format(widget.message.timestamp.toDate()),
                   textAlign: TextAlign.end,
                   style: TextStyle(
@@ -68,7 +68,7 @@ class _MessageTileState extends State<MessageTile> {
             : Container(
                 padding: EdgeInsets.only(left: 16),
                 child: Text(
-                  DateFormat("yyy-MM-dd hh:mm")
+                  DateFormat("yyy-MM-dd HH:mm")
                       .format(widget.message.timestamp.toDate()),
                   textAlign: TextAlign.start,
                   style: TextStyle(

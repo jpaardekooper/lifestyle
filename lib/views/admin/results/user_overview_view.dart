@@ -10,6 +10,7 @@ import 'package:lifestylescreening/views/admin/results/dtd_results_view.dart';
 import 'package:lifestylescreening/widgets/colors/color_theme.dart';
 import 'package:lifestylescreening/widgets/text/h1_text.dart';
 import 'package:lifestylescreening/widgets/text/h2_text.dart';
+import 'package:intl/intl.dart';
 
 import '../../../healthpoint_icons.dart';
 
@@ -60,6 +61,7 @@ class _UserResultsOverviewState extends State<UserResultsOverview> {
   }
 
   Widget showDTDResults() {
+    _dtdResults.sort((a, b) => a.date.compareTo(b.date));
     return ListView.builder(
       itemCount: _dtdResults.length,
       itemBuilder: (BuildContext ctxt, int index) {
@@ -75,7 +77,10 @@ class _UserResultsOverviewState extends State<UserResultsOverview> {
                 Expanded(
                   child: ListTile(
                     tileColor: ColorTheme.extraLightOrange,
-                    title: H2Text(text: result.fieldId),
+                    title: H2Text(
+                      text: DateFormat("yyy-MM-dd HH:mm")
+                          .format(result.date.toDate()),
+                    ),
                     onTap: () => Navigator.of(context).push(
                       MaterialPageRoute(
                         builder: (context) => DtdResultView(

@@ -1,7 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class DtdModel {
-  DtdModel({this.id, this.date, this.fieldId}) : reference = null;
+  DtdModel({this.id, this.date, this.fieldId,})
+      : reference = null;
 
   final String id;
   final Timestamp date;

@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:lifestylescreening/models/dtd_awnser_model.dart';
 import 'package:lifestylescreening/models/dtd_screening_model.dart';
 import 'package:lifestylescreening/models/result_model.dart';
 import 'package:lifestylescreening/models/survey_result_model.dart';
@@ -39,5 +40,17 @@ class ResultRepository implements IResultRepository {
     return snapshot.docs.map((DocumentSnapshot doc) {
       return SurveyResultModel.fromSnapshot(doc);
     }).toList();
+  }
+
+  @override
+  Future<List<DtdAwnserModel>> getDtdAwnsers(String dtdId) async {
+    List<DtdAwnserModel> _list = [];
+
+    var snapshot = await FirebaseFirestore.instance
+        .collection("results")
+        .doc("hddx5cnwvjLeSqQK5vDQ")
+        .collection("scores")
+        .where('id', isEqualTo: dtdId)
+        .get();
   }
 }
