@@ -165,7 +165,7 @@ class _SignInState extends State<SignIn> {
                                     SizedBox(
                                       width: 10,
                                     ),
-                                    H2Text(text: "terug"),
+                                    H2Text(text: "Terug"),
                                   ],
                                 ),
                               ),

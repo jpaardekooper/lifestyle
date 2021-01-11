@@ -15,7 +15,6 @@ import 'package:lifestylescreening/widgets/painter/top_small_wave_painter.dart';
 import 'package:lifestylescreening/widgets/text/body_text.dart';
 import 'package:lifestylescreening/widgets/text/h1_text.dart';
 import 'package:lifestylescreening/widgets/text/intro_grey_text.dart';
-import 'package:lifestylescreening/widgets/text/intro_light_grey_text.dart';
 import 'package:lifestylescreening/widgets/transitions/route_transition.dart';
 import 'package:lifestylescreening/widgets/text/lifestyle_text.dart';
 
@@ -227,7 +226,7 @@ class ExpertOptions extends StatelessWidget {
           Spacer(),
           adminModel.medical
               ? GhostGreyButton(
-                  text: "Message",
+                  text: "Chat",
                   onTap: () => {
                     Navigator.push(
                       context,
@@ -241,7 +240,7 @@ class ExpertOptions extends StatelessWidget {
                   },
                 )
               : GhostOrangeButton(
-                  text: "Message",
+                  text: "Chat",
                   onTap: () => {
                     Navigator.push(
                       context,

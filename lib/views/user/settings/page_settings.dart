@@ -38,22 +38,24 @@ class PageSettings extends StatelessWidget {
   Widget build(BuildContext context) {
     final _userData = InheritedDataProvider.of(context);
     final size = MediaQuery.of(context).size;
+    final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
     return Scaffold(
+      key: _scaffoldKey,
       appBar: AppBar(
         title: H1Text(
-          text: "Settings",
+          text: "Instellingen",
         ),
         backgroundColor: Colors.white,
         centerTitle: true,
         actions: [
           TextButton(
-            child: H3OrangeText(text: "Wijzigen"),
-            onPressed: () => Navigator.of(context).push(
-              MaterialPageRoute(
-                builder: (context) => EditSettingsView(user: _userData.data),
-              ),
-            ),
-          )
+              child: H3OrangeText(text: "Wijzigen"),
+              onPressed: () => Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) =>
+                          EditSettingsView(user: _userData.data),
+                    ),
+                  ))
         ],
       ),
       body: SingleChildScrollView(
