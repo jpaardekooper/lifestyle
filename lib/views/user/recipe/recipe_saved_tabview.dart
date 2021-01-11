@@ -43,7 +43,7 @@ class _RecipeFavoritesViewState extends State<RecipeFavoritesView> {
         if (!snapshot.hasData) {
           return Center(
             child: BodyText(
-              text: "Nog geen favoriete recepten toegevoegd",
+              text: "Nog geen recepten toegevoegd",
             ),
           );
         } else {

@@ -22,25 +22,23 @@ class _RecipeFeedViewState extends State<RecipeFeedView> {
   Widget build(BuildContext context) {
     final _userData = InheritedDataProvider.of(context);
 
-    return Center(
-      child: RefreshIndicator(
-        onRefresh: _refreshData,
-        child: FutureBuilder<List<RecipeModel>>(
-          future: _recipeController.getRecipeListOnce(),
-          builder: (context, snapshot) {
-            final List<RecipeModel> _recipeList = snapshot.data;
-            if (!snapshot.hasData) {
-              return CircularProgressIndicator();
-            } else {
-              return RecipeGrid(
-                recipeList: _recipeList,
-                userData: _userData.data,
-                userRecipe: false,
-                onTap: null,
-              );
-            }
-          },
-        ),
+    return RefreshIndicator(
+      onRefresh: _refreshData,
+      child: FutureBuilder<List<RecipeModel>>(
+        future: _recipeController.getRecipeListOnce(),
+        builder: (context, snapshot) {
+          final List<RecipeModel> _recipeList = snapshot.data;
+          if (!snapshot.hasData) {
+            return CircularProgressIndicator();
+          } else {
+            return RecipeGrid(
+              recipeList: _recipeList,
+              userData: _userData.data,
+              userRecipe: false,
+              onTap: null,
+            );
+          }
+        },
       ),
     );
   }

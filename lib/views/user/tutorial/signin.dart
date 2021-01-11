@@ -225,16 +225,27 @@ class _SignInState extends State<SignIn> {
     setState(() {
       _isLoading = false;
 
-      ScaffoldMessenger.of(context).showSnackBar(
+      _key.currentState.showSnackBar(
         SnackBar(
           duration: const Duration(seconds: 1),
           backgroundColor: Theme.of(context).accentColor,
           content: Text(
-            "Uw email en wachtwoord komen niet overeen",
+            "Er is iets mis gegaan probeer het nog eens",
             style: TextStyle(color: Colors.white, fontSize: 18),
           ),
         ),
       );
+
+      // ScaffoldMessenger.of(context).showSnackBar(
+      //   SnackBar(
+      //     duration: const Duration(seconds: 1),
+      //     backgroundColor: Theme.of(context).accentColor,
+      //     content: Text(
+      //       "Uw email en wachtwoord komen niet overeen",
+      //       style: TextStyle(color: Colors.white, fontSize: 18),
+      //     ),
+      //   ),
+      // );
     });
   }
 }
