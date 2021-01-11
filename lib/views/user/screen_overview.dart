@@ -90,8 +90,8 @@ class ScreenOverview extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.end,
                       children: [
                         IconButton(
-                          onPressed: () {
-                            _authController.signOut(context);
+                          onPressed: () async {
+                            await _authController.signOut(context);
                           },
                           icon: Icon(Icons.exit_to_app, size: 26.0),
                         ),
