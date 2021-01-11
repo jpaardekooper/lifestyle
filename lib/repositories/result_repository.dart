@@ -1,5 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:lifestylescreening/models/dtd_screening_model.dart';
 import 'package:lifestylescreening/models/result_model.dart';
+import 'package:lifestylescreening/models/survey_result_model.dart';
 
 import 'result_repository_interface.dart';
 
@@ -17,18 +19,25 @@ class ResultRepository implements IResultRepository {
   }
 
   @override
-  Stream<QuerySnapshot> streamResultUsers(String testId) {
+  Stream<QuerySnapshot> streamResultUsers(String surveyId) {
     return FirebaseFirestore.instance
         .collection('results')
-        .doc(testId)
+        .doc(surveyId)
         .collection('scores')
         .snapshots();
   }
 
   @override
-  List<ResultModel> getResultUserList(QuerySnapshot snapshot) {
+  List<DtdModel> getDtdUserList(QuerySnapshot snapshot) {
     return snapshot.docs.map((DocumentSnapshot doc) {
-      return ResultModel.fromSnapshot(doc);
+      return DtdModel.fromSnapshot(doc);
+    }).toList();
+  }
+
+  @override
+  List<SurveyResultModel> getSurveyUserList(QuerySnapshot snapshot) {
+    return snapshot.docs.map((DocumentSnapshot doc) {
+      return SurveyResultModel.fromSnapshot(doc);
     }).toList();
   }
 }
