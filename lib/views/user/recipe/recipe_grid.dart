@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:lifestylescreening/models/answer_model.dart';
 import 'package:lifestylescreening/models/firebase_user.dart';
 import 'package:lifestylescreening/models/recipe_model.dart';
 import 'package:lifestylescreening/views/user/food_preparation_view.dart';
