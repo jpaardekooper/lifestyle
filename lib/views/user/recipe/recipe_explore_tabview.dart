@@ -9,7 +9,6 @@ import 'package:lifestylescreening/widgets/forms/custom_answerfield.dart';
 import 'package:lifestylescreening/widgets/forms/custom_textformfield.dart';
 import 'package:lifestylescreening/widgets/text/body_text.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:lifestylescreening/widgets/text/lifestyle_text.dart';
 import 'package:path/path.dart';
 import 'package:permission_handler/permission_handler.dart';
 

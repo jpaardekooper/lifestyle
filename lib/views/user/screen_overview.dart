@@ -1,6 +1,5 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:lifestylescreening/controllers/auth_controller.dart';
 import 'package:lifestylescreening/healthpoint_icons.dart';
 import 'package:lifestylescreening/models/firebase_user.dart';
 import 'package:lifestylescreening/views/user/screening/screening_view.dart';

@@ -140,7 +140,7 @@ class PageSettings extends StatelessWidget {
                       "Geslacht", "", _userData.data.gender.toString()),
 
                   SizedBox(
-                    height: 20,
+                    height: 40,
                   ),
 
                   Center(

@@ -34,7 +34,7 @@ class _AskQuestionViewState extends State<AskQuestionView> {
       //fetching data from the corresponding questionId
       future: SurveyController().getLastSurveyResult(email),
       builder: (context, snapshot) {
-        if (!snapshot.hasData) {
+        if (!snapshot.hasData || snapshot.data.isEmpty) {
           return Text("geen data gevonden");
         } else {
           final List<SurveyResultModel> _survey = snapshot.data;

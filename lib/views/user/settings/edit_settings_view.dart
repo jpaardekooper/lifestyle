@@ -186,6 +186,7 @@ class _EditSettingsViewState extends State<EditSettingsView> {
               duration: const Duration(seconds: 2),
               backgroundColor: ColorTheme.lightOrange,
               content: Text(
+                // ignore: lines_longer_than_80_chars
                 "Uw instellingen worden de volgende keer als u inlogd gewijzigd",
                 style: TextStyle(
                     color: Theme.of(context).primaryColor, fontSize: 15),
