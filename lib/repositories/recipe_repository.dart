@@ -114,20 +114,12 @@ class RecipeRepository implements IRecipeRepository {
     List<dynamic> favRecipeList = [];
     int recipeId;
 
-    var snapshot = await FirebaseFirestore.instance
-        .collection('users')
-        .doc(userId)
-        .collection('favoriteRecipes')
-        .get();
+    var snapshot =
+        await FirebaseFirestore.instance.collection('users').doc(userId).get();
 
     var recipes = await FirebaseFirestore.instance.collection('recipes').get();
 
-    // if (snapshot.docs[0].exists) {
-    snapshot.docs
-        .map(
-          (e) => favRecipeList = e.data()['id'],
-        )
-        .toList();
+    favRecipeList = List.from(snapshot.data()['favorite_recipes']);
 
     for (var ids in favRecipeList) {
       recipeId = recipes.docs.indexWhere((element) => element.id == ids);
@@ -135,7 +127,6 @@ class RecipeRepository implements IRecipeRepository {
         returnList.add(
           RecipeModel.fromSnapshot(recipes.docs[recipeId]),
         );
-        // }
       }
     }
     return returnList;
@@ -147,15 +138,9 @@ class RecipeRepository implements IRecipeRepository {
     var snapshot = await FirebaseFirestore.instance
         .collection('users')
         .doc(userId)
-        .collection('favoriteRecipes')
-        .get()
-        .catchError((e) {});
+        .get();
 
-    snapshot.docs
-        .map(
-          (e) => favRecipeList = e.data()['id'],
-        )
-        .toList();
+    favRecipeList = List.from(snapshot.data()['favorite_recipes']);
 
     for (var ids in favRecipeList) {
       if (ids == recipeId) {
@@ -167,32 +152,15 @@ class RecipeRepository implements IRecipeRepository {
 
   @override
   Future<void> addFavoriteRecipe(String userId, String recipeId) async {
-    // var snapshot = FirebaseFirestore.instance
-    //     .collection('users')
-    //     .doc(userId)
-    //     .collection('favoriteRecipes')
-    //     .doc('recipe')
-    //     .snapshots();
-
-    await FirebaseFirestore.instance
-        .collection('users')
-        .doc(userId)
-        .collection('favoriteRecipes')
-        .doc('recipe')
-        .update({
-      'id': FieldValue.arrayUnion([recipeId]),
+    await FirebaseFirestore.instance.collection('users').doc(userId).update({
+      'favorite_recipes': FieldValue.arrayUnion([recipeId]),
     });
   }
 
   @override
   Future<void> removeFavoriteRecipe(String userId, String recipeId) async {
-    await FirebaseFirestore.instance
-        .collection('users')
-        .doc(userId)
-        .collection('favoriteRecipes')
-        .doc('recipe')
-        .update({
-      'id': FieldValue.arrayRemove([recipeId]),
+    await FirebaseFirestore.instance.collection('users').doc(userId).update({
+      'favorite_recipes': FieldValue.arrayRemove([recipeId]),
     });
   }
 
