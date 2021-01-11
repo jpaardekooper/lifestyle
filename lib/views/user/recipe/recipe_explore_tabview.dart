@@ -253,10 +253,11 @@ class _RecipeExploreViewState extends State<RecipeExploreView> {
               _key.currentState.showSnackBar(
                 SnackBar(
                   duration: const Duration(seconds: 1),
-                  backgroundColor: Theme.of(context).accentColor,
+                  backgroundColor: ColorTheme.lightOrange,
                   content: Text(
                     "Uw recept is toegevoegd",
-                    style: TextStyle(color: Colors.white, fontSize: 18),
+                    style: TextStyle(
+                        color: Theme.of(context).primaryColor, fontSize: 18),
                   ),
                 ),
               );

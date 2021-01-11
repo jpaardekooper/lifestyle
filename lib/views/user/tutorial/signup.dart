@@ -185,7 +185,7 @@ class _SignUpState extends State<SignUp> {
                     errorMessage: "Gebruik minimaal 6 karakters",
                     validator: 1,
                     secureText: true,
-                    hintText: 'Minimaal 8 karakters',
+                    hintText: 'Minimaal 6 karakters',
                   ),
 
                   Padding(
