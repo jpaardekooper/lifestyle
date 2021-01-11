@@ -34,6 +34,7 @@ class _EditRecipeState extends State<EditRecipe> {
   String _selectedLocation;
 
   final _formKey = GlobalKey<FormState>();
+  File _imageFile;
 
   @override
   void initState() {
@@ -45,8 +46,6 @@ class _EditRecipeState extends State<EditRecipe> {
 
     super.initState();
   }
-
-  File _imageFile;
 
   final _picker = ImagePicker();
 
@@ -256,9 +255,15 @@ class _EditRecipeState extends State<EditRecipe> {
 
   void saveRecipeChanges(context) {
     if (_formKey.currentState.validate()) {
+      var test;
+      if (_imageFile != null) {
+        test = basename(_imageFile.path);
+      } else {
+        test = _urlController.text;
+      }
       Map<String, dynamic> data = {
         "title": _recipenameController.text,
-        "url": basename(_imageFile.path),
+        "url": test,
         "duration": int.parse(_durationController.text),
         "difficulty": _difficultyController.text,
         "published": _published,
@@ -268,10 +273,16 @@ class _EditRecipeState extends State<EditRecipe> {
             .updateUserRecipe(widget.recipe.id, data, widget.isNewRecipe)
             .then((value) => Navigator.pop(context));
       } else {
-        _recipeController.uploadImage(_imageFile).then((value) =>
-            _recipeController
-                .updateRecipe(widget.recipe.id, data, widget.isNewRecipe)
-                .then((value) => Navigator.pop(context)));
+        if (_imageFile != null) {
+          _recipeController.uploadImage(_imageFile).then((value) =>
+              _recipeController
+                  .updateRecipe(widget.recipe.id, data, widget.isNewRecipe)
+                  .then((value) => Navigator.pop(context)));
+        } else {
+          _recipeController
+              .updateRecipe(widget.recipe.id, data, widget.isNewRecipe)
+              .then((value) => Navigator.pop(context));
+        }
       }
     }
   }
