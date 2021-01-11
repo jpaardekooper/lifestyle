@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:lifestylescreening/models/dtd_awnser_model.dart';
 import 'package:lifestylescreening/models/dtd_screening_model.dart';
 import 'package:lifestylescreening/models/result_model.dart';
 import 'package:lifestylescreening/models/survey_result_model.dart';
@@ -26,5 +27,9 @@ class ResultController {
 
   List<SurveyResultModel> getSurveyUserList(QuerySnapshot snapshot) {
     return _resultRepository.getSurveyUserList(snapshot);
+  }
+
+  Future<List<DtdAwnserModel>> getDtdAwnsers(String dtdId) {
+    return _resultRepository.getDtdAwnsers(dtdId);
   }
 }

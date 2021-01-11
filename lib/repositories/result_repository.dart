@@ -50,7 +50,16 @@ class ResultRepository implements IResultRepository {
         .collection("results")
         .doc("hddx5cnwvjLeSqQK5vDQ")
         .collection("scores")
-        .where('id', isEqualTo: dtdId)
+        .doc(dtdId)
+        .collection("DTD")
         .get();
+
+    snapshot.docs.map((DocumentSnapshot doc) {
+      return _list.add(DtdAwnserModel.fromSnapshot(doc));
+    }).toList();
+
+    _list.sort((a, b) => a.order.compareTo(b.order));
+
+    return _list;
   }
 }
