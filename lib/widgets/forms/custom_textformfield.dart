@@ -25,7 +25,7 @@ class CustomTextFormField extends StatelessWidget {
   final String passwordChecker;
   final String suffixText;
   final String hintText;
-  final Function(AnswerModel) function;
+  final Function(AnswerModel, String) function;
   final AnswerModel answerModel;
   final bool border;
 
@@ -134,15 +134,18 @@ class CustomTextFormField extends StatelessWidget {
               break;
             //this is only for answer screening
             case 7:
-              function(answerModel);
               if (double.tryParse(val) != null) {
+                function(answerModel, val);
                 return null;
               } else {
                 return 'Vul een geldig getal in';
               }
               break;
             case 8:
-              function(answerModel);
+              if (val.isNotEmpty) {
+                function(answerModel, val);
+              }
+
               return val.isEmpty ? errorMessage : null;
               break;
             default:

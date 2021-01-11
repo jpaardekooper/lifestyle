@@ -245,6 +245,7 @@ class QuestionnaireRepository implements IQuestionnaireRepository {
     int index,
     Map surveyData,
     Map data,
+    String id,
   ) async {
     //adding data to correct survey
     await FirebaseFirestore.instance
@@ -252,50 +253,84 @@ class QuestionnaireRepository implements IQuestionnaireRepository {
         .where("title", isEqualTo: surveyTitle)
         .get()
         .then((value) async {
-      List<int> firstInt = [];
-      if (category == "Bewegen") {
-        Map<String, dynamic> firstData = {
-          "email": user.email,
-          "index": index,
-          "categories": surveyData['categories'],
-          "category_points": firstInt,
-          "total_points": 0,
-          "total_duration": 0,
-          "finished": false,
-          "date": DateTime.now(),
-        };
+      //first time uploading survey
+      if (category == "Bewegen" || id == "") {
+        // List<int> firstInt = [];
+        // var dateTime = DateTime.now();
+        // Map<String, dynamic> firstData = {
+        //   "email": user.email,
+        //   "index": index,
+        //   "categories": surveyData['categories'],
+        //   "category_points": firstInt,
+        //   "total_points": 0,
+        //   "total_duration": 0,
+        //   "finished": false,
+        //   "date": dateTime,
+        // };
+
+        // print(surveyData['date']);
 
         await FirebaseFirestore.instance
             .collection("results")
             .doc(value.docs.first.id)
             .collection('scores')
             .doc()
-            .set(firstData);
-      }
-      await FirebaseFirestore.instance
-          .collection("results")
-          .doc(value.docs.first.id)
-          .collection('scores')
-          .where("email", isEqualTo: user.email)
-          .get()
-          .then((value2) async {
+            .set(surveyData);
+
         await FirebaseFirestore.instance
             .collection("results")
             .doc(value.docs.first.id)
             .collection('scores')
-            .doc(value2.docs.first.id)
+            .where("date", isEqualTo: surveyData['date'])
+            .get()
+            .then((value2) async {
+          await FirebaseFirestore.instance
+              .collection("results")
+              .doc(value.docs.first.id)
+              .collection('scores')
+              .doc(value2.docs.first.id)
+              .collection(category)
+              .doc()
+              .set(data);
+
+//update data
+          // await FirebaseFirestore.instance
+          //     .collection("results")
+          //     .doc(value.docs.first.id)
+          //     .collection('scores')
+          //     .doc(value2.docs.first.id)
+          //     .update(surveyData);
+        });
+      }
+      //second time uploading survey
+      else {
+        await FirebaseFirestore.instance
+            .collection("results")
+            .doc(value.docs.first.id)
+            .collection('scores')
+            .doc(id)
             .collection(category)
             .doc()
             .set(data);
+        //   .get()
+        //   .then((value2) async {
+        // await FirebaseFirestore.instance
+        //     .collection("results")
+        //     .doc(value.docs.first.id)
+        //     .collection('scores')
+        //     .doc(value2.docs.first.id)
+        //     .collection(category)
+        //     .doc()
+        //     .set(data);
 
 //update data
         await FirebaseFirestore.instance
             .collection("results")
             .doc(value.docs.first.id)
             .collection('scores')
-            .doc(value2.docs.first.id)
+            .doc(id)
             .update(surveyData);
-      });
+      }
     });
   }
 

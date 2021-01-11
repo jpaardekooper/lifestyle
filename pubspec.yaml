@@ -31,7 +31,7 @@ dependencies:
   permission_handler: ^5.0.1+1
   cloud_firestore: ^0.14.4
   firebase_storage: ^5.2.0
-  shared_preferences: ^0.5.12
+  shared_preferences: ^0.5.12+4
   provider: ^4.3.2+2
   hovering: ^1.0.2
   uuid: 2.2.2

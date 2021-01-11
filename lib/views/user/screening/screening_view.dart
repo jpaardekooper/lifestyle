@@ -10,10 +10,13 @@ import 'package:lifestylescreening/models/question_model.dart';
 
 import 'package:lifestylescreening/models/survey_model.dart';
 import 'package:lifestylescreening/models/survey_result_model.dart';
+import 'package:lifestylescreening/views/user/screening/screening_calc.dart';
+import 'package:lifestylescreening/views/user/screening/survey_complete.dart';
 
 import 'package:lifestylescreening/widgets/buttons/confirm_orange_button.dart';
 import 'package:lifestylescreening/widgets/cards/selected_answer_card.dart';
 import 'package:lifestylescreening/widgets/inherited/inherited_timer_service.dart';
+
 import 'package:lifestylescreening/widgets/text/h1_text.dart';
 import 'package:lifestylescreening/widgets/text/h2_text.dart';
 
@@ -34,46 +37,36 @@ class _ScreeningViewState extends State<ScreeningView> {
   double progressIndicatorValue;
   int categoryIndex;
   int screeningDuration;
-  final timerService = TimerService();
-  List<TextEditingController> _controllerList;
-  // List<QuestionModel> _questionList;
+  TimerService timerService;
+  ScreeningCalc sc; //calculator for screening
+
   List<SurveyResultModel> _surveyResult;
   List<SurveyModel> _surveyList;
   List<AnswerModel> _userAnswers;
   List<String> _questions;
   String category;
-  // bool lastSurveyCategory;
+  List<String> _questionAnswer = [];
+
   @override
   void initState() {
-    print("KOM IK HIER DAN");
     _formKey = GlobalKey<FormState>();
+    timerService = TimerService();
+    sc = ScreeningCalc();
     category = "";
     categoryIndex = 0;
     progressIndicatorValue = 0;
     timerService.start();
-    _controllerList = [];
-//    _questionList = [];
     _surveyResult = [];
     _surveyList = [];
     _userAnswers = [];
     _questions = [];
-    //   lastSurveyCategory = false;
+
     super.initState();
   }
 
   deleteControllers() async {
-    for (int i = 0; i < _controllerList.length; i++) {
-      //   _controllerList[i].dispose();
-      _controllerList[i].clear();
-      _controllerList[i].dispose();
-    }
-    print(_controllerList.length);
     timerService.stop();
-    controllersints.clear();
-    //  timerService.dispose();
-    _controllerList.clear();
     _userAnswers.clear();
-
     _surveyResult.clear();
     _surveyList.clear();
     _questions.clear();
@@ -83,123 +76,66 @@ class _ScreeningViewState extends State<ScreeningView> {
 
   @override
   void dispose() {
-    deleteControllers();
-
     super.dispose();
   }
 
-  void addAnswerToList(AnswerModel answer) {
+  void addAnswerToList(AnswerModel answer, String value) {
     if (!_userAnswers.contains(answer)) {
       _userAnswers.add(answer);
-    } else {
-      _userAnswers.remove(answer);
-      _userAnswers.add(answer);
+      _questionAnswer.add(value);
     }
   }
 
   nextQuestion(double progressValue) async {
+    _userAnswers.clear();
+    _questionAnswer.clear();
+
     if (_formKey.currentState.validate()) {
       FocusScope.of(context).unfocus();
       screeningDuration = timerService.currentDuration.inSeconds;
-      List<String> _ansersToFirebaseList = [];
+
+      List<int> scorevalues = [];
       List<String> categoriesList = [];
       //total score for a category
       int userCategoryScore = 0;
+      int totalScorevalue = 0;
+      int nextIndexQuestion = 0;
+      userCategoryScore =
+          await sc.calculatePoints(category, _userAnswers, _questionAnswer);
 
-      // only for category bewegen
-      int scorecalc = 0;
-
-      print(_userAnswers.length);
-      print(_controllerList.length.toString() + "halo");
-      for (int i = 0; i < _userAnswers.length; i++) {
-        //different score calculation for category bewegen
-
-        if (category == "Bewegen") {
-          switch (_userAnswers[i].pointsCalculator) {
-            case 0:
-              userCategoryScore += _userAnswers[i].points;
-              break;
-            case 1:
-              int score = (int.tryParse(_controllerList[i].text) * 0.5).round();
-              scorecalc += score;
-
-              break;
-            case 2:
-              int score = (int.tryParse(_controllerList[i].text) * 1).round();
-              scorecalc += score;
-              break;
-            case 3:
-              int score = (int.tryParse(_controllerList[i].text) * 2).round();
-              scorecalc += score;
-              break;
-            case 4:
-              if (_userAnswers[i].lastAnswer == _controllerList[i].text)
-                userCategoryScore += _userAnswers[i].points;
-              break;
-          }
-        } else {
-          switch (_userAnswers[i].pointsCalculator) {
-            case 0:
-              userCategoryScore += _userAnswers[i].points;
-              break;
-            case 1:
-              int score = (int.tryParse(_controllerList[i].text) * 0.5).round();
-              userCategoryScore += score;
-
-              break;
-            case 2:
-              int score = (int.tryParse(_controllerList[i].text) * 1).round();
-              userCategoryScore += score;
-              break;
-            case 3:
-              int score = (int.tryParse(_controllerList[i].text) * 2).round();
-              userCategoryScore += score;
-              break;
-            case 4:
-              if (_userAnswers[i].lastAnswer == _controllerList[i].text)
-                userCategoryScore += _userAnswers[i].points;
-              break;
-          }
-        }
-
-        _ansersToFirebaseList.add(_controllerList[i].text);
-      }
-
-      if (scorecalc < 30) {
-        userCategoryScore += 1;
-      }
+      int totalDurationValue = 0;
 
       Map<String, dynamic> data = {
         "question": FieldValue.arrayUnion(_questions),
-        "answer": FieldValue.arrayUnion(_ansersToFirebaseList),
+        "answer": _questionAnswer,
         "points": userCategoryScore,
-        "duration": _surveyResult.first.total_duration ?? 0 + screeningDuration,
+        "duration": screeningDuration,
         "date": DateTime.now()
       };
 
-      int totalScorevalue = 0;
-      List<int> scorevalues = [];
-
-      if (_surveyList.isNotEmpty) {
+      if (_surveyList != null && _surveyList.isNotEmpty) {
         categoriesList = _surveyList.first.category;
 
         scorevalues.add(userCategoryScore);
       }
-      if (_surveyResult.isNotEmpty) {
+      if (_surveyResult != null && _surveyResult.isNotEmpty) {
         categoriesList = _surveyResult.first.categories;
 
-        scorevalues = _surveyResult.first.points_per_category;
-        scorevalues.add(userCategoryScore);
+        //first time doing survey
+        if (category == "Bewegen") {
+          totalScorevalue = userCategoryScore;
+        } else {
+          scorevalues = _surveyResult.first.points_per_category;
 
-        totalScorevalue = _surveyResult.first.total_points;
-        for (int i = 0;
-            i < _surveyResult.first.points_per_category.length;
-            i++) {
-          totalScorevalue += _surveyResult.first.points_per_category[i];
+          scorevalues.add(userCategoryScore);
+          //adding total score from fetch data + userCategory score
+          totalScorevalue =
+              _surveyResult.first.total_points + userCategoryScore;
+          //adding duration from fetched data + screening duration
+          totalDurationValue =
+              _surveyResult.first.total_duration + screeningDuration;
         }
       }
-
-      int nextIndexQuestion = 0;
 
       if (categoryIndex < categoriesList.length) {
         nextIndexQuestion += categoryIndex + 1;
@@ -209,36 +145,35 @@ class _ScreeningViewState extends State<ScreeningView> {
         "email": widget.user.email,
         "index": nextIndexQuestion,
         "categories": FieldValue.arrayUnion(categoriesList),
-        "category_points": FieldValue.arrayUnion(scorevalues),
+        "points_per_category": scorevalues,
         "total_points": totalScorevalue,
-        "total_duration": screeningDuration,
+        "total_duration": totalDurationValue,
         "finished": false,
         "date": DateTime.now(),
       };
 
-      await _questionnaireController.setUserSurveyAnswer(widget.surveyTitle,
-          widget.user, category, categoryIndex, surveyData, data, false);
+      await _questionnaireController.setUserSurveyAnswer(
+          widget.surveyTitle,
+          widget.user,
+          category,
+          categoryIndex,
+          surveyData,
+          data,
+          category == "Bewegen" ? "" : _surveyResult.first.id);
 
-      // timerService.reset();
-      //starting timer again
+      await deleteControllers();
 
-      _ansersToFirebaseList.clear();
-      deleteControllers();
-
-      Route route = MaterialPageRoute(
-          builder: (context) => ScreeningView(
-                user: widget.user,
-                surveyTitle: widget.surveyTitle,
-              ));
+      final Route route = MaterialPageRoute(
+        builder: (context) => ScreeningView(
+          user: widget.user,
+          surveyTitle: widget.surveyTitle,
+        ),
+      );
       await Navigator.pushReplacement(context, route);
-
-      // setState(() {
-      //   timerService.start();
-      // });
     }
   }
 
-  Widget showAnsers(String category, QuestionModel question, int index) {
+  Widget showAnsers(String category, QuestionModel question, int nr) {
     return FutureBuilder<List<AnswerModel>>(
       //fetching data from the corresponding questionId
       future: _questionnaireController.fetchAnswer(category, question.id),
@@ -255,7 +190,7 @@ class _ScreeningViewState extends State<ScreeningView> {
         } else {
           return SelectedAnswerCard(
             answerList: _answerList,
-            controller: _controllerList[index],
+            //      controller: _controllerList[nr],
             function: addAnswerToList,
           );
         }
@@ -263,7 +198,7 @@ class _ScreeningViewState extends State<ScreeningView> {
     );
   }
 
-  List<int> controllersints = [];
+//  List<int> controllersints = [];
 
   Widget getScreeningQuestion(String category) {
     return FutureBuilder<List<QuestionModel>>(
@@ -282,11 +217,9 @@ class _ScreeningViewState extends State<ScreeningView> {
             shrinkWrap: true,
             itemCount: _questionList.length,
             itemBuilder: (BuildContext ctx, index) {
-              QuestionModel question = _questionList[index];
+              final QuestionModel question = _questionList[index];
 
-              if (!controllersints.contains(index)) {
-                controllersints.add(index);
-                _controllerList.add(TextEditingController());
+              if (!_questions.contains(question)) {
                 _questions.add(question.question);
               }
 
@@ -345,12 +278,14 @@ class _ScreeningViewState extends State<ScreeningView> {
               AlwaysStoppedAnimation<Color>(Theme.of(context).accentColor),
           minHeight: 5,
         ),
-
+        //showing category
         Padding(
           padding: const EdgeInsets.all(20.0),
           child: H1Text(text: "Vragen over $category"),
         ),
+        //show questions
         getScreeningQuestion(category),
+        // show next button
         Padding(
           padding: const EdgeInsets.all(20.0),
           child: ConfirmOrangeButton(
@@ -365,25 +300,10 @@ class _ScreeningViewState extends State<ScreeningView> {
   }
 
   Widget surveyIsFinished(SurveyResultModel surveyResult) {
-    return Center(
-      child: Padding(
-        padding: const EdgeInsets.all(20.0),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Text("Bedankt voor uw deelname"),
-            ConfirmOrangeButton(
-              text: "Terug",
-              onTap: () {
-                _questionnaireController.setSurveyToFalse(
-                    widget.surveyTitle, widget.user, surveyResult);
-                Navigator.of(context).pop();
-              },
-            ),
-          ],
-        ),
-      ),
+    return SurveyComplete(
+      surveyResult: surveyResult,
+      surveyTitle: widget.surveyTitle,
+      user: widget.user,
     );
   }
 
@@ -416,7 +336,7 @@ class _ScreeningViewState extends State<ScreeningView> {
                   _surveyList = snapshot.data;
                   category = _surveyList.first.category[categoryIndex];
                   final _progressValue =
-                      1.0 / _surveyList.first.category.length.toDouble();
+                      sc.calculateProgress(_surveyList.first.category.length);
 
                   progressIndicatorValue = _progressValue * categoryIndex;
 
@@ -433,7 +353,7 @@ class _ScreeningViewState extends State<ScreeningView> {
             );
           } else {
             final _progressValue =
-                1.0 / _surveyResult.first.categories.length.toDouble();
+                sc.calculateProgress(_surveyResult.first.categories.length);
 
             if (_surveyResult.first.finished) {
               categoryIndex = 0;
@@ -442,8 +362,6 @@ class _ScreeningViewState extends State<ScreeningView> {
             }
 
             progressIndicatorValue = _progressValue * categoryIndex;
-            print(
-                "$categoryIndex + ${_surveyResult.first.categories.length} ${_surveyResult.first.finished}");
 
             if (categoryIndex == _surveyResult.first.categories.length &&
                 _surveyResult.first.finished == false) {
@@ -478,14 +396,16 @@ class _ScreeningViewState extends State<ScreeningView> {
         ),
         centerTitle: true,
       ),
-      body: TimerServiceProvider(
-        service: timerService,
-        child: SingleChildScrollView(
-          child: Form(
-            key: _formKey,
-            child: Column(
-              children: [getScreeningCategories()],
-            ),
+      body: SingleChildScrollView(
+        child: Form(
+          key: _formKey,
+          child: Column(
+            children: [
+              TimerServiceProvider(
+                service: timerService,
+                child: getScreeningCategories(),
+              ),
+            ],
           ),
         ),
       ),

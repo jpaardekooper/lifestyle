@@ -18,7 +18,7 @@ class CustomAnswerFormField extends StatelessWidget {
   final String errorMessage;
   final int validator;
   final String hintText;
-  final Function(AnswerModel) function;
+  final Function(AnswerModel, String) function;
   final AnswerModel answerModel;
   final String suffixText;
 
@@ -96,21 +96,15 @@ class CustomAnswerFormField extends StatelessWidget {
         validator: (val) {
           switch (validator) {
             case 1:
-              if (function != null) {
-                function(answerModel);
-              }
-
+              function(answerModel, val);
               return val.isEmpty ? errorMessage : null;
               break;
             case 2:
-              if (function != null) {
-                function(answerModel);
-              }
-
               if (double.tryParse(val) != null) {
+                function(answerModel, val);
                 return null;
               } else {
-                return 'Vul een geldig getal in';
+                return errorMessage;
               }
               break;
 
