@@ -6,6 +6,7 @@ import 'package:lifestylescreening/models/recipe_model.dart';
 import 'package:lifestylescreening/widgets/dialog/edit_recipe_dialog.dart';
 import 'package:lifestylescreening/widgets/dialog/remove_recipe.dialog.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
+import 'package:firebase/firebase.dart' as fb;
 
 class RecipeCard extends StatefulWidget {
   const RecipeCard(
@@ -69,13 +70,14 @@ class _RecipeCardState extends State<RecipeCard> {
     );
   }
 
-  // Future<Uri> downloadImageUrl(String img) {
-  //   return fb
-  //       .storage()
-  //       .refFromURL('gs://lifestyle-screening.appspot.com/')
-  //       .child("recipeImages/$img")
-  //       .getDownloadURL();
-  // }
+  Future<Uri> downloadImageUrl(String img) {
+    print(img);
+    return fb
+        .storage()
+        .refFromURL('gs://lifestyle-screening.appspot.com/')
+        .child("recipeImages/$img")
+        .getDownloadURL();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -94,66 +96,34 @@ class _RecipeCardState extends State<RecipeCard> {
       child: Column(
         children: <Widget>[
           Expanded(
-            flex: 3,
-            child:
-                //      kIsWeb
-                // ? FutureBuilder<Uri>(
-                //     future: downloadImageUrl(widget._recipe.url),
-                //     builder: (context, snapshot) {
-                //       if (!snapshot.hasData) {
-                //         return SizedBox(
-                //           width: 50,
-                //           height: 50,
-                //           child: Center(child: CircularProgressIndicator()),
-                //         );
-                //       } else {
-                //         return CachedNetworkImage(
-                //           imageUrl: snapshot.data.toString(),
-                //           fit: BoxFit.cover,
-                //           progressIndicatorBuilder:
-                //               (ctx, url, downloadProgress) => SizedBox(
-                //             width: 50,
-                //             height: 50,
-                //             child: Center(
-                //               child: CircularProgressIndicator(
-                //                   value: downloadProgress.progress),
-                //             ),
-                //           ),
-                //           errorWidget: (context, url, error) =>
-                //               Icon(Icons.error),
-                //         );
-                //       }
-                //     },
-                //   )
-                // :
-                FutureBuilder<String>(
-              future: _recipeController.getImage(widget._recipe.url),
-              builder: (context, snapshot) {
-                if (!snapshot.hasData) {
-                  return SizedBox(
-                    width: 50,
-                    height: 50,
-                    child: Center(child: CircularProgressIndicator()),
-                  );
-                } else {
-                  return CachedNetworkImage(
-                    imageUrl: snapshot.data.toString(),
-                    fit: BoxFit.cover,
-                    progressIndicatorBuilder: (ctx, url, downloadProgress) =>
-                        SizedBox(
+              flex: 3,
+              child: FutureBuilder<Uri>(
+                future: downloadImageUrl(widget._recipe.url),
+                builder: (context, snapshot) {
+                  if (!snapshot.hasData) {
+                    return SizedBox(
                       width: 50,
                       height: 50,
-                      child: Center(
-                        child: CircularProgressIndicator(
-                            value: downloadProgress.progress),
+                      child: Center(child: CircularProgressIndicator()),
+                    );
+                  } else {
+                    return CachedNetworkImage(
+                      imageUrl: snapshot.data.toString(),
+                      fit: BoxFit.cover,
+                      progressIndicatorBuilder: (ctx, url, downloadProgress) =>
+                          SizedBox(
+                        width: 50,
+                        height: 50,
+                        child: Center(
+                          child: CircularProgressIndicator(
+                              value: downloadProgress.progress),
+                        ),
                       ),
-                    ),
-                    errorWidget: (context, url, error) => Icon(Icons.error),
-                  );
-                }
-              },
-            ),
-          ),
+                      errorWidget: (context, url, error) => Icon(Icons.error),
+                    );
+                  }
+                },
+              )),
           Expanded(
             flex: 1,
             child: Padding(

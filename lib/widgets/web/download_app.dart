@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:lifestylescreening/widgets/text/h1_text.dart';
-// import 'dart:js' as js;
+import 'dart:js' as js;
 
 class DownloadApp extends StatelessWidget {
   const DownloadApp({Key key, @required this.number}) : super(key: key);
@@ -46,9 +46,9 @@ class DownloadApp extends StatelessWidget {
                   ),
                   GestureDetector(
                     onTap: () {
-                      // js.context.callMethod('open', [
-                      //   'https://play.google.com/store/apps/details?id=nl.monitor.lifestylescreening'
-                      // ]);
+                      js.context.callMethod('open', [
+                        'https://play.google.com/store/apps/details?id=nl.monitor.lifestylescreening'
+                      ]);
                     },
                     child: Image(
                       width: 200,
@@ -80,9 +80,9 @@ class DownloadApp extends StatelessWidget {
               size.width > 900
                   ? GestureDetector(
                       onTap: () {
-                        // js.context.callMethod('open', [
-                        //   'https://play.google.com/store/apps/details?id=nl.monitor.lifestylescreening'
-                        // ]);
+                        js.context.callMethod('open', [
+                          'https://play.google.com/store/apps/details?id=nl.monitor.lifestylescreening'
+                        ]);
                       },
                       child: Image(
                         height: 350,
