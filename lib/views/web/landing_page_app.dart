@@ -19,7 +19,9 @@ class LandingPageApp extends StatelessWidget {
   final snackBar = SnackBar(content: Text('Bedankt voor het abonneren!'));
 
   void subscribe(BuildContext context) {
-    ScaffoldMessenger.of(context).showSnackBar(snackBar);
+    _drawerKey.currentState.showSnackBar(snackBar);
+    //when dart sdk has been updated
+    //ScaffoldMessenger.of(context).showSnackBar(snackBar);
   }
 
   @override

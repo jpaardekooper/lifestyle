@@ -98,16 +98,27 @@ class _SignUpState extends State<SignUp> {
     setState(() {
       isLoading = false;
 
-      ScaffoldMessenger.of(context).showSnackBar(
+      _key.currentState.showSnackBar(
         SnackBar(
           duration: const Duration(seconds: 1),
           backgroundColor: Theme.of(context).accentColor,
           content: Text(
-            "Uw email en wachtwoord komen niet overeen",
+            "Er is iets mis gegaan probeer het nog eens",
             style: TextStyle(color: Colors.white, fontSize: 18),
           ),
         ),
       );
+
+      // ScaffoldMessenger.of(context).showSnackBar(
+      //   SnackBar(
+      //     duration: const Duration(seconds: 1),
+      //     backgroundColor: Theme.of(context).accentColor,
+      //     content: Text(
+      //       "Uw email en wachtwoord komen niet overeen",
+      //       style: TextStyle(color: Colors.white, fontSize: 18),
+      //     ),
+      //   ),
+      // );
     });
   }
 
@@ -174,7 +185,7 @@ class _SignUpState extends State<SignUp> {
                     errorMessage: "Gebruik minimaal 6 karakters",
                     validator: 1,
                     secureText: true,
-                    hintText: 'Minimaal 8 karakters',
+                    hintText: 'Minimaal 6 karakters',
                   ),
 
                   Padding(

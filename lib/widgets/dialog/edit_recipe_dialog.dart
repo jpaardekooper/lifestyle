@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:lifestylescreening/controllers/recipe_controller.dart';
 import 'package:lifestylescreening/models/recipe_model.dart';
+import 'package:lifestylescreening/widgets/colors/color_theme.dart';
+import 'package:lifestylescreening/widgets/forms/custom_answerfield.dart';
 import 'package:lifestylescreening/widgets/forms/custom_textformfield.dart';
 import 'package:lifestylescreening/widgets/text/body_text.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -28,7 +30,16 @@ class _EditRecipeState extends State<EditRecipe> {
   TextEditingController _difficultyController = TextEditingController();
   bool _published;
 
+  List<String> _locations = [
+    'Selecteer de moeilijkheidsgraad',
+    'Moeilijk',
+    'Middel',
+    'Makkelijk'
+  ]; // Option 2
+  String _selectedLocation;
+
   final _formKey = GlobalKey<FormState>();
+  File _imageFile;
 
   @override
   void initState() {
@@ -37,11 +48,12 @@ class _EditRecipeState extends State<EditRecipe> {
     _durationController.text = (widget.recipe.duration ?? "0").toString();
     _difficultyController.text = widget.recipe.difficulty ?? "";
     _published = widget.recipe.published ?? false;
+    _selectedLocation = _difficultyController.text.isEmpty
+        ? _locations[0]
+        : _difficultyController.text;
 
     super.initState();
   }
-
-  File _imageFile;
 
   final _picker = ImagePicker();
 
@@ -141,13 +153,38 @@ class _EditRecipeState extends State<EditRecipe> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        BodyText(text: "Moeilijkheidsgraad"),
-        CustomTextFormField(
+        CustomAnswerFormField(
           keyboardType: TextInputType.name,
           textcontroller: _difficultyController,
-          hintText: "Moeilijk, Middel, Makkelijk",
-          validator: 1,
-          secureText: false,
+        ),
+        Container(
+          decoration: BoxDecoration(
+            color: Colors.white,
+            border: Border.all(color: Theme.of(context).primaryColor, width: 2),
+            borderRadius: BorderRadius.circular(15),
+          ),
+          child: DropdownButton(
+            dropdownColor: ColorTheme.extraLightGreen,
+            hint: BodyText(text: 'Selecteer de moeilijkheidsgraad'),
+            value: _selectedLocation,
+            onChanged: (newValue) {
+              setState(() {
+                if (newValue == _locations[0]) {
+                  _selectedLocation = _locations[1];
+                } else {
+                  _selectedLocation = newValue;
+                }
+
+                _difficultyController.text = _selectedLocation;
+              });
+            },
+            items: _locations.map((location) {
+              return DropdownMenuItem(
+                child: Text(location),
+                value: location,
+              );
+            }).toList(),
+          ),
         ),
       ],
     );
@@ -231,9 +268,15 @@ class _EditRecipeState extends State<EditRecipe> {
 
   void saveRecipeChanges(context) {
     if (_formKey.currentState.validate()) {
+      var test;
+      if (_imageFile != null) {
+        test = basename(_imageFile.path);
+      } else {
+        test = _urlController.text;
+      }
       Map<String, dynamic> data = {
         "title": _recipenameController.text,
-        "url": basename(_imageFile.path),
+        "url": test,
         "duration": int.parse(_durationController.text),
         "difficulty": _difficultyController.text,
         "published": _published,
@@ -243,10 +286,16 @@ class _EditRecipeState extends State<EditRecipe> {
             .updateUserRecipe(widget.recipe.id, data, widget.isNewRecipe)
             .then((value) => Navigator.pop(context));
       } else {
-        _recipeController.uploadImage(_imageFile).then((value) =>
-            _recipeController
-                .updateRecipe(widget.recipe.id, data, widget.isNewRecipe)
-                .then((value) => Navigator.pop(context)));
+        if (_imageFile != null) {
+          _recipeController.uploadImage(_imageFile).then((value) =>
+              _recipeController
+                  .updateRecipe(widget.recipe.id, data, widget.isNewRecipe)
+                  .then((value) => Navigator.pop(context)));
+        } else {
+          _recipeController
+              .updateRecipe(widget.recipe.id, data, widget.isNewRecipe)
+              .then((value) => Navigator.pop(context));
+        }
       }
     }
   }

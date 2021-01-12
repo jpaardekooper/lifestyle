@@ -56,9 +56,9 @@ class _ToggleGenderButtonState extends State<ToggleGenderButton> {
         ],
         onPressed: (int index) {
           if (index == 0) {
-            widget.onTap('male');
+            widget.onTap('Man');
           } else {
-            widget.onTap('female');
+            widget.onTap('Vrouw');
           }
           setState(() {
             for (int i = 0; i < isSelected.length; i++) {

@@ -7,13 +7,14 @@ import 'package:lifestylescreening/widgets/dialog/edit_recipe_dialog.dart';
 import 'package:lifestylescreening/widgets/dialog/remove_recipe.dialog.dart';
 
 class RecipeCard extends StatefulWidget {
-  const RecipeCard({
-    Key key,
-    @required RecipeModel recipe,
-    @required AppUser user,
-    this.on_Tap,
-    this.userRecipe,
-  })  : _recipe = recipe,
+  const RecipeCard(
+      {Key key,
+      @required recipe,
+      @required user,
+      this.on_Tap,
+      this.userRecipe,
+      this.function})
+      : _recipe = recipe,
         _user = user,
         super(key: key);
 
@@ -21,6 +22,7 @@ class RecipeCard extends StatefulWidget {
   final AppUser _user;
   final VoidCallback on_Tap;
   final bool userRecipe;
+  final Function(RecipeModel) function;
 
   @override
   _RecipeCardState createState() => _RecipeCardState();
@@ -60,7 +62,8 @@ class _RecipeCardState extends State<RecipeCard> {
       context: context,
       barrierDismissible: false,
       builder: (BuildContext context) {
-        return RemoveRecipe(recipe: recipe, role: role);
+        return RemoveRecipe(
+            recipe: recipe, role: role, function: widget.function);
       },
     );
   }
@@ -221,7 +224,7 @@ class _RecipeCardState extends State<RecipeCard> {
                                 Icons.delete,
                                 color: Colors.red,
                               ),
-                              onPressed: () {
+                              onPressed: () async {
                                 _removeRecipe(
                                     widget._recipe, widget._user.role);
                               },

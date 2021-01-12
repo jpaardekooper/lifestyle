@@ -11,8 +11,15 @@ class RecipeUserRecipes extends StatefulWidget {
 }
 
 class _RecipeUserRecipesState extends State<RecipeUserRecipes> {
-  RecipeController _recipeController = RecipeController();
+  final RecipeController _recipeController = RecipeController();
   List<RecipeModel> _recipeList = [];
+
+  void removeData(RecipeModel recipe) {
+    if (_recipeList.isNotEmpty && _recipeList.contains(recipe)) {
+      _recipeList.remove(recipe);
+      setState(() {});
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -30,9 +37,11 @@ class _RecipeUserRecipesState extends State<RecipeUserRecipes> {
           );
         } else {
           return RecipeGrid(
-              recipeList: _recipeList,
-              userData: _userData.data,
-              userRecipe: true);
+            recipeList: _recipeList,
+            userData: _userData.data,
+            userRecipe: true,
+            function: removeData,
+          );
         }
       },
     );

@@ -15,7 +15,6 @@ import 'package:lifestylescreening/widgets/painter/top_small_wave_painter.dart';
 import 'package:lifestylescreening/widgets/text/body_text.dart';
 import 'package:lifestylescreening/widgets/text/h1_text.dart';
 import 'package:lifestylescreening/widgets/text/intro_grey_text.dart';
-import 'package:lifestylescreening/widgets/text/intro_light_grey_text.dart';
 import 'package:lifestylescreening/widgets/transitions/route_transition.dart';
 import 'package:lifestylescreening/widgets/text/lifestyle_text.dart';
 
@@ -35,7 +34,7 @@ class _AskQuestionViewState extends State<AskQuestionView> {
       //fetching data from the corresponding questionId
       future: SurveyController().getLastSurveyResult(email),
       builder: (context, snapshot) {
-        if (!snapshot.hasData) {
+        if (!snapshot.hasData || snapshot.data.isEmpty) {
           return Text("geen data gevonden");
         } else {
           final List<SurveyResultModel> _survey = snapshot.data;
@@ -120,7 +119,7 @@ class _AskQuestionViewState extends State<AskQuestionView> {
                   H1Text(text: "Kom in contact met "),
                   H1Text(text: "Specialisten"),
                   SizedBox(height: 10),
-                  IntroLightGreyText(
+                  LifestyleText(
                       text:
                           // ignore: lines_longer_than_80_chars
                           "Contact opnemen met een expert heeft verschillende voordelen. Als je onzeker bent over een gezondheidsrisico of als je nieuwsgierig bent over hoe het advies van een expert je verder kan helpen, kan dat hier worden gedaan"),
@@ -227,7 +226,7 @@ class ExpertOptions extends StatelessWidget {
           Spacer(),
           adminModel.medical
               ? GhostGreyButton(
-                  text: "Message",
+                  text: "Chat",
                   onTap: () => {
                     Navigator.push(
                       context,
@@ -241,7 +240,7 @@ class ExpertOptions extends StatelessWidget {
                   },
                 )
               : GhostOrangeButton(
-                  text: "Message",
+                  text: "Chat",
                   onTap: () => {
                     Navigator.push(
                       context,

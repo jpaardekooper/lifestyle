@@ -21,6 +21,7 @@ class EditSettingsView extends StatefulWidget {
 
 class _EditSettingsViewState extends State<EditSettingsView> {
   final _formKey = GlobalKey<FormState>();
+  final _scaffoldKey = GlobalKey<ScaffoldState>();
   final TextEditingController _userNameController = TextEditingController();
   final TextEditingController _ageController = TextEditingController();
   final TextEditingController _weightController = TextEditingController();
@@ -58,6 +59,7 @@ class _EditSettingsViewState extends State<EditSettingsView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: _scaffoldKey,
       appBar: AppBar(
         title: H1Text(text: "Instellingen wijzigen"),
         backgroundColor: Colors.white,
@@ -177,9 +179,26 @@ class _EditSettingsViewState extends State<EditSettingsView> {
         weight: int.parse(_weightController.text),
         gender: _gender,
       );
-      _auth
-          .updateUserData(widget.user.id, _userNameController.text, bmi)
-          .then((value) => Navigator.pop(context));
+      _auth.updateUserData(widget.user.id, _userNameController.text, bmi).then(
+        (value) {
+          _scaffoldKey.currentState.showSnackBar(
+            SnackBar(
+              duration: const Duration(seconds: 2),
+              backgroundColor: ColorTheme.lightOrange,
+              content: Text(
+                // ignore: lines_longer_than_80_chars
+                "Uw instellingen worden de volgende keer als u inlogd gewijzigd",
+                style: TextStyle(
+                    color: Theme.of(context).primaryColor, fontSize: 15),
+              ),
+            ),
+          );
+
+          Future.delayed(Duration(milliseconds: 1500), () {
+            Navigator.pop(context);
+          });
+        },
+      );
     }
   }
 }

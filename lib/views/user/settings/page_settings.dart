@@ -1,9 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:lifestylescreening/controllers/auth_controller.dart';
 import 'package:lifestylescreening/views/user/settings/bmi_result_page.dart';
 import 'package:lifestylescreening/views/user/settings/calculator_bmi.dart';
 import 'package:lifestylescreening/views/user/settings/edit_settings_view.dart';
 import 'package:lifestylescreening/widgets/buttons/confirm_grey_button.dart';
+import 'package:lifestylescreening/widgets/buttons/confirm_orange_button.dart';
 import 'package:lifestylescreening/widgets/colors/color_theme.dart';
 import 'package:lifestylescreening/widgets/inherited/inherited_widget.dart';
 import 'package:lifestylescreening/widgets/painter/bottom_small_wave_painer.dart';
@@ -14,6 +16,8 @@ import 'package:lifestylescreening/widgets/text/intro_grey_text.dart';
 import 'package:lifestylescreening/widgets/text/intro_light_grey_text.dart';
 
 class PageSettings extends StatelessWidget {
+  final AuthController _authController = AuthController();
+
   Widget settingsUserInfoField(String text, String value, String format) {
     return Container(
       padding: EdgeInsets.only(bottom: 15, top: 30.0),
@@ -38,22 +42,24 @@ class PageSettings extends StatelessWidget {
   Widget build(BuildContext context) {
     final _userData = InheritedDataProvider.of(context);
     final size = MediaQuery.of(context).size;
+    final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
     return Scaffold(
+      key: _scaffoldKey,
       appBar: AppBar(
         title: H1Text(
-          text: "Settings",
+          text: "Instellingen",
         ),
         backgroundColor: Colors.white,
         centerTitle: true,
         actions: [
           TextButton(
-            child: H3OrangeText(text: "Wijzigen"),
-            onPressed: () => Navigator.of(context).push(
-              MaterialPageRoute(
-                builder: (context) => EditSettingsView(user: _userData.data),
-              ),
-            ),
-          )
+              child: H3OrangeText(text: "Wijzigen"),
+              onPressed: () => Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) =>
+                          EditSettingsView(user: _userData.data),
+                    ),
+                  ))
         ],
       ),
       body: SingleChildScrollView(
@@ -132,6 +138,19 @@ class PageSettings extends StatelessWidget {
                       "Lengte", _userData.data.height.toString(), "CM"),
                   settingsUserInfoField(
                       "Geslacht", "", _userData.data.gender.toString()),
+
+                  SizedBox(
+                    height: 40,
+                  ),
+
+                  Center(
+                    child: ConfirmOrangeButton(
+                      text: "Uitloggen",
+                      onTap: () async {
+                        await _authController.signOut(context);
+                      },
+                    ),
+                  ),
                 ],
               ),
             ),

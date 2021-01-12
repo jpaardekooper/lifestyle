@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:lifestylescreening/controllers/recipe_controller.dart';
 import 'package:lifestylescreening/models/recipe_model.dart';
+import 'package:lifestylescreening/widgets/colors/color_theme.dart';
 
 class RemoveRecipe extends StatelessWidget {
-  RemoveRecipe({this.recipe, this.role});
+  RemoveRecipe({this.recipe, this.role, this.function});
   final RecipeModel recipe;
   final String role;
+  final Function(RecipeModel) function;
 
   final RecipeController _recipeController = RecipeController();
 
@@ -29,16 +31,17 @@ class RemoveRecipe extends StatelessWidget {
           },
         ),
         FlatButton(
-          child: Text("verwijderen"),
-          onPressed: () {
+          color: ColorTheme.accentOrange,
+          child: Text("verwijderen", style: TextStyle(color: Colors.white)),
+          onPressed: () async {
             if (role == "user") {
-              _recipeController
-                  .removeUserRecipe(recipe.id, recipe.url)
-                  .then((value) => Navigator.of(context).pop());
+              await _recipeController.removeUserRecipe(recipe.id, recipe.url);
+
+              Navigator.pop(context);
+              function(recipe);
             } else {
-              _recipeController
-                  .removeRecipe(recipe.id, recipe.url)
-                  .then((value) => Navigator.of(context).pop());
+              await _recipeController.removeRecipe(recipe.id, recipe.url);
+              Navigator.pop(context);
             }
           },
         ),

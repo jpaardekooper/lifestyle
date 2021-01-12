@@ -1,6 +1,5 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:lifestylescreening/controllers/auth_controller.dart';
 import 'package:lifestylescreening/healthpoint_icons.dart';
 import 'package:lifestylescreening/models/firebase_user.dart';
 import 'package:lifestylescreening/views/user/screening/screening_view.dart';
@@ -15,7 +14,6 @@ import 'package:lifestylescreening/views/user/home_view.dart' as tabscreen;
 
 class ScreenOverview extends StatelessWidget {
   ScreenOverview({Key key}) : super(key: key);
-  final AuthController _authController = AuthController();
 
   void updatecounterToSettings() {
     tabscreen.counter.value = 3;
@@ -85,18 +83,7 @@ class ScreenOverview extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      crossAxisAlignment: CrossAxisAlignment.end,
-                      children: [
-                        IconButton(
-                          onPressed: () async {
-                            await _authController.signOut(context);
-                          },
-                          icon: Icon(Icons.exit_to_app, size: 26.0),
-                        ),
-                      ],
-                    ),
+                    SizedBox(height: 75),
                     Center(child: H1Text(text: "Overzicht")),
                     SizedBox(
                       height: size.height * 0.06,
@@ -148,7 +135,7 @@ class ScreenOverview extends StatelessWidget {
                             children: [
                               Text(
                                 // ignore: lines_longer_than_80_chars
-                                "Om de app nog meer te personaliseren vragen wij u om de screening test af te nemen. Dit is een test dat ongeveer 10minuten duurt",
+                                "Om de app nog meer te personaliseren vragen wij u om de screening test af te nemen. Dit is een test dat ongeveer 10 minuten duurt",
                                 style: TextStyle(
                                   fontSize: size.height * 0.025,
                                 ),

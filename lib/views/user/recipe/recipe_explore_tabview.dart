@@ -3,6 +3,9 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:lifestylescreening/controllers/recipe_controller.dart';
 import 'package:lifestylescreening/models/recipe_model.dart';
+import 'package:lifestylescreening/widgets/buttons/confirm_orange_button.dart';
+import 'package:lifestylescreening/widgets/colors/color_theme.dart';
+import 'package:lifestylescreening/widgets/forms/custom_answerfield.dart';
 import 'package:lifestylescreening/widgets/forms/custom_textformfield.dart';
 import 'package:lifestylescreening/widgets/text/body_text.dart';
 import 'package:image_picker/image_picker.dart';
@@ -24,6 +27,7 @@ class _RecipeExploreViewState extends State<RecipeExploreView> {
   TextEditingController _urlController = TextEditingController();
   TextEditingController _durationController = TextEditingController();
   TextEditingController _difficultyController = TextEditingController();
+  final _key = GlobalKey<ScaffoldState>();
 
   File _imageFile;
 
@@ -32,6 +36,11 @@ class _RecipeExploreViewState extends State<RecipeExploreView> {
   RecipeModel recipe = RecipeModel();
 
   final _formKey = GlobalKey<FormState>();
+
+  bool loading = false;
+
+  List<String> _locations = ['Moeilijk', 'Middel', 'Makkelijk']; // Option 2
+  String _selectedLocation;
 
   Future checkCameraPermission() async {
     if (!(await Permission.storage.status.isGranted))
@@ -143,13 +152,33 @@ class _RecipeExploreViewState extends State<RecipeExploreView> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        BodyText(text: "Moeilijkheidsgraad"),
-        CustomTextFormField(
+        CustomAnswerFormField(
           keyboardType: TextInputType.name,
           textcontroller: _difficultyController,
-          hintText: "Moeilijk, Middel, Makkelijk",
-          validator: 1,
-          secureText: false,
+        ),
+        Container(
+          decoration: BoxDecoration(
+            color: Colors.white,
+            border: Border.all(color: Theme.of(context).primaryColor, width: 2),
+            borderRadius: BorderRadius.circular(15),
+          ),
+          child: DropdownButton(
+            dropdownColor: ColorTheme.extraLightGreen,
+            hint: BodyText(text: 'Selecteer de moeilijkheidsgraad'),
+            value: _selectedLocation,
+            onChanged: (newValue) {
+              setState(() {
+                _selectedLocation = newValue;
+                _difficultyController.text = newValue;
+              });
+            },
+            items: _locations.map((location) {
+              return DropdownMenuItem(
+                child: Text(location),
+                value: location,
+              );
+            }).toList(),
+          ),
         ),
       ],
     );
@@ -174,6 +203,7 @@ class _RecipeExploreViewState extends State<RecipeExploreView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+        key: _key,
         appBar: AppBar(title: Text("Nieuw recept toevoegen")),
         body: SingleChildScrollView(
           child: Container(
@@ -190,16 +220,18 @@ class _RecipeExploreViewState extends State<RecipeExploreView> {
                   showRecipeDuration(context),
                   SizedBox(height: 25),
                   showRecipeDifficulty(context),
-                  SizedBox(height: 25),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      RaisedButton(
-                        child: Text('Opslaan'),
-                        onPressed: () => saveRecipeChanges(context),
-                      ),
-                    ],
-                  ),
+                  SizedBox(height: 75),
+                  loading
+                      ? Center(child: LinearProgressIndicator())
+                      : Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            ConfirmOrangeButton(
+                              text: 'Opslaan',
+                              onTap: () => saveRecipeChanges(context),
+                            ),
+                          ],
+                        ),
                 ],
               ),
             ),
@@ -209,6 +241,10 @@ class _RecipeExploreViewState extends State<RecipeExploreView> {
 
   saveRecipeChanges(context) {
     if (_formKey.currentState.validate()) {
+      setState(() {
+        loading = true;
+      });
+      FocusScope.of(context).unfocus();
       Map<String, dynamic> data = {
         "title": _recipenameController.text,
         "url": basename(_imageFile.path),
@@ -220,9 +256,29 @@ class _RecipeExploreViewState extends State<RecipeExploreView> {
       };
 
       _recipeController.uploadImage(_imageFile).then((value) =>
-          _recipeController
-              .updateRecipe(recipe.id, data, true)
-              .then((value) => Navigator.of(context).pop()));
+          _recipeController.updateUserRecipe(recipe.id, data, true).then(
+            (value) {
+              _key.currentState.showSnackBar(
+                SnackBar(
+                  duration: const Duration(seconds: 1),
+                  backgroundColor: ColorTheme.lightOrange,
+                  content: Text(
+                    "Uw recept is toegevoegd",
+                    style: TextStyle(
+                        color: Theme.of(context).primaryColor, fontSize: 18),
+                  ),
+                ),
+              );
+
+              Future.delayed(Duration(milliseconds: 1500), () {
+                Navigator.pop(context);
+              });
+            },
+          ));
+    } else {
+      setState(() {
+        loading = false;
+      });
     }
   }
 }
