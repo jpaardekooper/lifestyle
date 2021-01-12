@@ -5,6 +5,7 @@ import 'package:lifestylescreening/models/firebase_user.dart';
 import 'package:lifestylescreening/models/recipe_model.dart';
 import 'package:lifestylescreening/widgets/dialog/edit_recipe_dialog.dart';
 import 'package:lifestylescreening/widgets/dialog/remove_recipe.dialog.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
 
 class RecipeCard extends StatefulWidget {
   const RecipeCard(
@@ -68,6 +69,14 @@ class _RecipeCardState extends State<RecipeCard> {
     );
   }
 
+  // Future<Uri> downloadImageUrl(String img) {
+  //   return fb
+  //       .storage()
+  //       .refFromURL('gs://lifestyle-screening.appspot.com/')
+  //       .child("recipeImages/$img")
+  //       .getDownloadURL();
+  // }
+
   @override
   Widget build(BuildContext context) {
     Color cardColor = Color(0xffEFFAF6);
@@ -86,7 +95,38 @@ class _RecipeCardState extends State<RecipeCard> {
         children: <Widget>[
           Expanded(
             flex: 3,
-            child: FutureBuilder<String>(
+            child:
+                //      kIsWeb
+                // ? FutureBuilder<Uri>(
+                //     future: downloadImageUrl(widget._recipe.url),
+                //     builder: (context, snapshot) {
+                //       if (!snapshot.hasData) {
+                //         return SizedBox(
+                //           width: 50,
+                //           height: 50,
+                //           child: Center(child: CircularProgressIndicator()),
+                //         );
+                //       } else {
+                //         return CachedNetworkImage(
+                //           imageUrl: snapshot.data.toString(),
+                //           fit: BoxFit.cover,
+                //           progressIndicatorBuilder:
+                //               (ctx, url, downloadProgress) => SizedBox(
+                //             width: 50,
+                //             height: 50,
+                //             child: Center(
+                //               child: CircularProgressIndicator(
+                //                   value: downloadProgress.progress),
+                //             ),
+                //           ),
+                //           errorWidget: (context, url, error) =>
+                //               Icon(Icons.error),
+                //         );
+                //       }
+                //     },
+                //   )
+                // :
+                FutureBuilder<String>(
               future: _recipeController.getImage(widget._recipe.url),
               builder: (context, snapshot) {
                 if (!snapshot.hasData) {
@@ -97,7 +137,7 @@ class _RecipeCardState extends State<RecipeCard> {
                   );
                 } else {
                   return CachedNetworkImage(
-                    imageUrl: snapshot.data,
+                    imageUrl: snapshot.data.toString(),
                     fit: BoxFit.cover,
                     progressIndicatorBuilder: (ctx, url, downloadProgress) =>
                         SizedBox(
@@ -121,44 +161,48 @@ class _RecipeCardState extends State<RecipeCard> {
               child: Row(
                 children: <Widget>[
                   Expanded(
-                      flex: 3,
-                      child: Column(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.start,
+                    flex: 3,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        SizedBox(
+                          height: 5,
+                        ),
+                        FittedBox(
+                          fit: BoxFit.contain,
+                          child: Text(
+                            widget._recipe.title,
+                            style: TextStyle(
+                              color: recipeTitleColor,
+                              fontFamily: 'Sofia Pro Regular Az',
+                            ),
+                          ),
+                        ),
+                        SizedBox(
+                          height: 5,
+                        ),
+                        Row(
                           children: <Widget>[
-                            SizedBox(
-                              height: 5,
-                            ),
-                            FittedBox(
-                              fit: BoxFit.contain,
-                              child: Text(
-                                widget._recipe.title,
-                                style: TextStyle(
-                                  color: recipeTitleColor,
-                                  fontFamily: 'Sofia Pro Regular Az',
-                                ),
-                              ),
+                            Icon(
+                              Icons.access_time,
+                              size: 15,
                             ),
                             SizedBox(
-                              height: 5,
+                              width: 5,
                             ),
-                            Row(children: <Widget>[
-                              Icon(
-                                Icons.access_time,
-                                size: 15,
+                            Text(
+                              '${widget._recipe.duration.toString()} min',
+                              style: TextStyle(
+                                color: recipeTextColor,
+                                fontFamily: 'Sofia Pro Regular Az',
                               ),
-                              SizedBox(
-                                width: 5,
-                              ),
-                              Text(
-                                '${widget._recipe.duration.toString()} min',
-                                style: TextStyle(
-                                  color: recipeTextColor,
-                                  fontFamily: 'Sofia Pro Regular Az',
-                                ),
-                              ),
-                            ]),
-                          ])),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
                   widget.userRecipe == false && widget._user.role == "user"
                       ? Expanded(
                           flex: 1,

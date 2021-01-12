@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:lifestylescreening/views/user/tutorial/disclaimer_view.dart';
 import 'package:lifestylescreening/views/user/tutorial/signin.dart';
@@ -8,6 +9,8 @@ import 'package:lifestylescreening/widgets/colors/color_theme.dart';
 import 'package:lifestylescreening/widgets/painter/landing_page_painter.dart';
 import 'package:lifestylescreening/widgets/transitions/route_transition.dart';
 import 'package:lifestylescreening/widgets/web/web_disclaimer.dart';
+
+//import 'package:firebase/firebase.dart' as fb;
 
 class LandingPageApp extends StatelessWidget {
   final GlobalKey<ScaffoldState> _drawerKey = GlobalKey();
@@ -170,6 +173,7 @@ class Body extends StatelessWidget {
 class LargeChild extends StatelessWidget {
   LargeChild({@required this.function});
   final Function(BuildContext) function;
+
   @override
   Widget build(BuildContext context) {
     return SizedBox(

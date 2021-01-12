@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:lifestylescreening/helper/functions.dart';
 import 'package:lifestylescreening/models/bmi_model.dart';
@@ -8,6 +9,7 @@ import 'package:lifestylescreening/models/goals_model.dart';
 import 'package:lifestylescreening/models/interest_model.dart';
 import 'package:lifestylescreening/repositories/auth_repository_interface.dart';
 import 'package:lifestylescreening/views/user/tutorial/startup.dart';
+import 'package:lifestylescreening/views/web/landing_page_app.dart';
 
 class AuthRepository extends IAuthRepository {
   final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -152,9 +154,13 @@ class AuthRepository extends IAuthRepository {
     await HelperFunctions.removeUserPasswordSharedPreference();
 
     await _auth.signOut();
-
-    await Navigator.pushReplacement(
-        context, MaterialPageRoute(builder: (context) => StartUp()));
+    if (kIsWeb) {
+      await Navigator.pushReplacement(
+          context, MaterialPageRoute(builder: (context) => LandingPageApp()));
+    } else {
+      await Navigator.pushReplacement(
+          context, MaterialPageRoute(builder: (context) => StartUp()));
+    }
   }
 
   @override

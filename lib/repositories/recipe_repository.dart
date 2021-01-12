@@ -135,10 +135,8 @@ class RecipeRepository implements IRecipeRepository {
   @override
   Future<bool> checkFavoriteRecipe(String recipeId, String userId) async {
     List<dynamic> favRecipeList = [];
-    var snapshot = await FirebaseFirestore.instance
-        .collection('users')
-        .doc(userId)
-        .get();
+    var snapshot =
+        await FirebaseFirestore.instance.collection('users').doc(userId).get();
 
     favRecipeList = List.from(snapshot.data()['favorite_recipes']);
 
@@ -189,7 +187,6 @@ class RecipeRepository implements IRecipeRepository {
         .ref()
         .child('recipeImages/$image')
         .getDownloadURL();
-
     return imageUrl;
   }
 
