@@ -40,19 +40,25 @@ class _RecipeFavoritesViewState extends State<RecipeFavoritesView> {
     return FutureBuilder<List<RecipeModel>>(
       future: _recipeController.getUserFavoriteRecipe(widget.userId),
       builder: (context, snapshot) {
-        if (!snapshot.hasData || _savedRecipes.isEmpty) {
+        if (!snapshot.hasData) {
           return Center(
-            child: BodyText(
-              text: "Nog geen recepten als favoriete ingesteld",
-            ),
+            child: CircularProgressIndicator(),
           );
         } else {
           _savedRecipes = snapshot.data;
-          return RecipeGrid(
-              recipeList: _savedRecipes,
-              userData: _userData.data,
-              userRecipe: false,
-              onTap: _updateRecipes);
+          if (_savedRecipes.isEmpty) {
+            return Center(
+              child: BodyText(
+                text: "Nog geen recepten als favoriete ingesteld",
+              ),
+            );
+          } else {
+            return RecipeGrid(
+                recipeList: _savedRecipes,
+                userData: _userData.data,
+                userRecipe: false,
+                onTap: _updateRecipes);
+          }
         }
       },
     );

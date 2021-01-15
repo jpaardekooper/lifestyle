@@ -35,7 +35,8 @@ class _AskQuestionViewState extends State<AskQuestionView> {
       future: SurveyController().getLastSurveyResult(email),
       builder: (context, snapshot) {
         if (!snapshot.hasData || snapshot.data.isEmpty) {
-          return Text("geen data gevonden");
+          return LifestyleText(
+              text: "U heeft nog geen screening test afgenomen");
         } else {
           final List<SurveyResultModel> _survey = snapshot.data;
 
