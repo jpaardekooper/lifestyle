@@ -25,7 +25,7 @@ class ConfirmGreyButton extends StatelessWidget {
           //   color: Colors.blue,
         ),
         child: Container(
-          padding: EdgeInsets.symmetric(horizontal: 25),
+          padding: EdgeInsets.symmetric(horizontal: 8),
           constraints: BoxConstraints(
               minWidth: 100,
               minHeight: 55.0,

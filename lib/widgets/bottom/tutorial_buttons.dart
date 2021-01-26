@@ -21,36 +21,35 @@ class TutorialButtons extends StatelessWidget {
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
     return Container(
-      alignment: Alignment.bottomCenter,
+      alignment: Alignment.center,
       padding: EdgeInsets.symmetric(
-          vertical: kIsWeb && size.width < 900 ? 10 : 40,
-          horizontal: size.width * 0.08),
+        vertical: 20,
+        horizontal: kIsWeb && size.width < 900 ? size.width * 0.08 : 40,
+      ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          SizedBox(
-            width: kIsWeb ? 200 : MediaQuery.of(context).size.width / 4,
-            child: canGoBack
-                ? ListTile(
-                    autofocus: false,
-                    contentPadding: const EdgeInsets.all(0),
-                    onTap: onPressedBack,
-                    title: Row(
-                      children: [
-                        Icon(
-                          HealthpointIcons.arrowLeftIcon,
-                          size: 18,
-                          color: Theme.of(context).primaryColor,
-                        ),
-                        SizedBox(
-                          width: 10,
-                        ),
-                        H2Text(text: "terug"),
-                      ],
-                    ),
-                  )
-                : Container(),
-          ),
+          canGoBack
+              ? GestureDetector(
+                  // autofocus: false,
+                  // contentPadding: const EdgeInsets.all(0),
+                  onTap: onPressedBack,
+                  child: Row(
+                    children: [
+                      Icon(
+                        HealthpointIcons.arrowLeftIcon,
+                        size: 18,
+                        color: Theme.of(context).primaryColor,
+                      ),
+                      SizedBox(
+                        width: 10,
+                      ),
+                      H2Text(text: "terug"),
+                    ],
+                  ),
+                )
+              : Container(),
           ConfirmOrangeButton(
             text: "Volgende",
             onTap: onPressedNext,

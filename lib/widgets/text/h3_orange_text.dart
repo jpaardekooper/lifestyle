@@ -12,7 +12,7 @@ class H3OrangeText extends StatelessWidget {
       style: TextStyle(
         color: const Color(0xFFFCC88B),
         fontFamily: 'Sofia',
-        fontSize: MediaQuery.of(context).size.height * 0.025,
+        fontSize: MediaQuery.of(context).size.height * 0.020,
         fontWeight: FontWeight.bold,
       ),
     );
