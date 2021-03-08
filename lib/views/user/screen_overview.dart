@@ -191,14 +191,14 @@ class ScreenOverview extends StatelessWidget {
                               Text(
                                 "klik hier",
                                 style: TextStyle(
-                                    fontSize: size.height * 0.024,
+                                    fontSize: size.height * 0.021,
                                     color: Theme.of(context).accentColor,
                                     fontWeight: FontWeight.bold),
                               ),
                               Icon(
                                 HealthpointIcons.arrowRightIcon,
                                 color: Theme.of(context).accentColor,
-                                size: size.height * 0.024,
+                                size: size.height * 0.021,
                               ),
                             ],
                           ),
@@ -289,7 +289,7 @@ class ScreenOverview extends StatelessWidget {
                                   """
 Een goede leefstijl verkleint het risico op overgewicht en ziekten zoals hart- en vaatziekten, kanker, enzovoort. Een goede leefstijl houdt in: voldoende bewegen, niet roken, geen of weinig alcohol, goede eetgewoontes en voldoende slaap of ontspanning.""",
                                   style:
-                                      TextStyle(fontSize: size.height * 0.025),
+                                      TextStyle(fontSize: size.height * 0.022),
                                 ),
                               ],
                             ),

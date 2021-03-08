@@ -14,7 +14,7 @@ class H1Text extends StatelessWidget {
         style: TextStyle(
             color: const Color(0xFF253635),
             fontFamily: 'Sofia',
-            fontSize: MediaQuery.of(context).size.height * 0.04,
+            fontSize: MediaQuery.of(context).size.height * 0.03,
             fontWeight: FontWeight.bold,
             decoration: TextDecoration.none),
       ),

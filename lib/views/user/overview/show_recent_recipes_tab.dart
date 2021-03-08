@@ -30,14 +30,14 @@ class _ShowRecentRecipesTabState extends State<ShowRecentRecipesTab> {
                   Text(
                     "Alles inzien",
                     style: TextStyle(
-                        fontSize: size.height * 0.024,
+                        fontSize: size.height * 0.021,
                         color: Theme.of(context).accentColor,
                         fontWeight: FontWeight.bold),
                   ),
                   Icon(
                     HealthpointIcons.arrowRightIcon,
                     color: Theme.of(context).accentColor,
-                    size: size.height * 0.024,
+                    size: size.height * 0.021,
                   ),
                 ],
               ),

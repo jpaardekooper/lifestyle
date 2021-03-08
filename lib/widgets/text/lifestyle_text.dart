@@ -12,7 +12,7 @@ class LifestyleText extends StatelessWidget {
       style: TextStyle(
           color: const Color(0xFF253635),
           fontFamily: 'Sofia',
-          fontSize: MediaQuery.of(context).size.height * 0.025,
+          fontSize: MediaQuery.of(context).size.height * 0.020,
           decoration: TextDecoration.none),
     );
   }

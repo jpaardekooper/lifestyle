@@ -15,7 +15,7 @@ class H2Text extends StatelessWidget {
         style: TextStyle(
             color: Theme.of(context).primaryColor,
             fontFamily: 'Sofia',
-            fontSize: MediaQuery.of(context).size.height * 0.03,
+            fontSize: MediaQuery.of(context).size.height * 0.025,
             fontWeight: FontWeight.bold,
             decoration: TextDecoration.none),
       ),

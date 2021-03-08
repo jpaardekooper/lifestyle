@@ -84,161 +84,142 @@ class _RecipeCardState extends State<RecipeCard> {
       margin: EdgeInsets.all(10),
       child: Column(
         children: <Widget>[
-          Expanded(
-            flex: 3,
-            child: FutureBuilder<String>(
-              future: _recipeController.getImage(widget._recipe.url),
-              builder: (context, snapshot) {
-                if (!snapshot.hasData) {
-                  return SizedBox(
-                    width: 50,
-                    height: 50,
-                    child: Center(child: CircularProgressIndicator()),
-                  );
-                } else {
-                  return CachedNetworkImage(
-                    imageUrl: snapshot.data!,
-                    fit: BoxFit.cover,
-                    progressIndicatorBuilder: (ctx, url, downloadProgress) =>
-                        SizedBox(
-                      width: 50,
-                      height: 50,
-                      child: Center(
-                        child: CircularProgressIndicator(
-                            value: downloadProgress.progress),
-                      ),
-                    ),
-                    errorWidget: (context, url, error) => Icon(Icons.error),
-                  );
-                }
-              },
-            ),
-          ),
-          Expanded(
-            flex: 1,
-            child: Padding(
-              padding: const EdgeInsets.only(left: 8.0),
-              child: Row(
-                children: <Widget>[
-                  Expanded(
-                      flex: 3,
-                      child: Column(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: <Widget>[
-                            SizedBox(
-                              height: 5,
-                            ),
-                            FittedBox(
-                              fit: BoxFit.contain,
-                              child: Text(
-                                widget._recipe.title!,
-                                style: TextStyle(
-                                  color: recipeTitleColor,
-                                  fontFamily: 'Sofia Pro Regular Az',
-                                ),
-                              ),
-                            ),
-                            SizedBox(
-                              height: 5,
-                            ),
-                            Row(children: <Widget>[
-                              Icon(
-                                Icons.access_time,
-                                size: 15,
-                              ),
-                              SizedBox(
-                                width: 5,
-                              ),
-                              Text(
-                                '${widget._recipe.duration.toString()} min',
-                                style: TextStyle(
-                                  color: recipeTextColor,
-                                  fontFamily: 'Sofia Pro Regular Az',
-                                ),
-                              ),
-                            ]),
-                          ])),
-                  widget.userRecipe == false && widget._user.role == "user"
-                      ? Expanded(
-                          flex: 1,
-                          child: FutureBuilder<bool>(
-                            future: _recipeController.checkFavoriteRecipe(
-                                widget._recipe.id, widget._user.id),
-                            builder: (context, snapshot) {
-                              alreadySaved = snapshot.data;
-                              if (!snapshot.hasData) {
-                                return Container();
-                              } else {
-                                return IconButton(
-                                  icon: Icon(
-                                    alreadySaved!
-                                        ? Icons.favorite
-                                        : Icons.favorite_border,
-                                    color: alreadySaved! ? Colors.red : null,
-                                  ),
-                                  onPressed: () async {
-                                    //     await checkFavoriteRecipes();
-                                    if (alreadySaved!) {
-                                      await _recipeController
-                                          .removeFavoriteRecipe(widget._user.id,
-                                              widget._recipe.id);
-
-                                      if (widget.on_Tap != null) {
-                                        widget.on_Tap!();
-                                      }
-                                    } else {
-                                      await _recipeController.addFavoriteRecipe(
-                                          widget._user.id, widget._recipe.id);
-                                    }
-                                    if (mounted) {
-                                      setState(() {});
-                                    }
-                                  },
-                                );
-                              }
-                            },
+          Stack(
+            children: [
+              SizedBox(
+                height: 75,
+                width: MediaQuery.of(context).size.width,
+                child: FutureBuilder<String>(
+                  future: _recipeController.getImage(widget._recipe.url),
+                  builder: (context, snapshot) {
+                    if (!snapshot.hasData) {
+                      return Center(
+                        child: CircularProgressIndicator(),
+                      );
+                    } else {
+                      return CachedNetworkImage(
+                        imageUrl: snapshot.data!,
+                        fit: BoxFit.cover,
+                        progressIndicatorBuilder:
+                            (ctx, url, downloadProgress) => SizedBox(
+                          height: 100,
+                          child: Center(
+                            child: CircularProgressIndicator(
+                                value: downloadProgress.progress),
                           ),
-                        )
-                      : Row(
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          crossAxisAlignment: CrossAxisAlignment.end,
-                          children: [
-                            RawMaterialButton(
-                              child: Icon(
-                                Icons.edit,
-                                color: Colors.black,
-                              ),
-                              onPressed: () {
-                                _editRecipeName(
-                                    widget._recipe, widget._user.role);
-                              },
-                              constraints: const BoxConstraints(
-                                  minWidth: 30.0, minHeight: 30.0),
-                              elevation: 2.0,
-                              fillColor: Colors.white,
-                              shape: CircleBorder(),
-                            ),
-                            RawMaterialButton(
-                              child: Icon(
-                                Icons.delete,
-                                color: Colors.red,
+                        ),
+                        errorWidget: (context, url, error) => Icon(Icons.error),
+                      );
+                    }
+                  },
+                ),
+              ),
+              Align(
+                alignment: Alignment.topRight,
+                child: widget.userRecipe == false && widget._user.role == "user"
+                    ? FutureBuilder<bool>(
+                        future: _recipeController.checkFavoriteRecipe(
+                            widget._recipe.id, widget._user.id),
+                        builder: (context, snapshot) {
+                          alreadySaved = snapshot.data;
+                          if (!snapshot.hasData) {
+                            return Container();
+                          } else {
+                            return IconButton(
+                              icon: Icon(
+                                alreadySaved!
+                                    ? Icons.favorite
+                                    : Icons.favorite_border,
+                                color: alreadySaved! ? Colors.red : null,
                               ),
                               onPressed: () async {
-                                _removeRecipe(
-                                    widget._recipe, widget._user.role);
+                                //     await checkFavoriteRecipes();
+                                if (alreadySaved!) {
+                                  await _recipeController.removeFavoriteRecipe(
+                                      widget._user.id, widget._recipe.id);
+
+                                  if (widget.on_Tap != null) {
+                                    widget.on_Tap!();
+                                  }
+                                } else {
+                                  await _recipeController.addFavoriteRecipe(
+                                      widget._user.id, widget._recipe.id);
+                                }
+                                if (mounted) {
+                                  setState(() {});
+                                }
                               },
-                              constraints: const BoxConstraints(
-                                  minWidth: 30.0, minHeight: 30.0),
-                              elevation: 2.0,
-                              fillColor: Colors.white,
-                              shape: CircleBorder(),
-                            ),
-                          ],
-                        ),
+                            );
+                          }
+                        },
+                      )
+                    : Container(),
+              ),
+            ],
+          ),
+          Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: <Widget>[
+              Text(
+                widget._recipe.title!,
+                style: TextStyle(
+                  color: recipeTitleColor,
+                  fontFamily: 'Sofia Pro Regular Az',
+                ),
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Icon(
+                    Icons.access_time,
+                    size: 15,
+                  ),
+                  Text(
+                    '${widget._recipe.duration.toString()} min',
+                    style: TextStyle(
+                      color: recipeTextColor,
+                      fontFamily: 'Sofia Pro Regular Az',
+                    ),
+                  ),
                 ],
               ),
-            ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: [
+                  RawMaterialButton(
+                    child: Icon(
+                      Icons.edit,
+                      color: Colors.black,
+                    ),
+                    onPressed: () {
+                      _editRecipeName(widget._recipe, widget._user.role);
+                    },
+                    constraints:
+                        const BoxConstraints(minWidth: 30.0, minHeight: 30.0),
+                    elevation: 2.0,
+                    fillColor: Colors.white,
+                    shape: CircleBorder(),
+                  ),
+                  RawMaterialButton(
+                    child: Icon(
+                      Icons.delete,
+                      color: Colors.red,
+                    ),
+                    onPressed: () async {
+                      _removeRecipe(widget._recipe, widget._user.role);
+                    },
+                    constraints:
+                        const BoxConstraints(minWidth: 30.0, minHeight: 30.0),
+                    elevation: 2.0,
+                    fillColor: Colors.white,
+                    shape: CircleBorder(),
+                  ),
+                ],
+              ),
+            ],
           ),
         ],
       ),
