@@ -26,8 +26,8 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   AuthController _authController = AuthController();
 
-  bool _isLoggedin = false;
-  String _email, _password;
+  bool? _isLoggedin = false;
+  String? _email, _password;
   var result;
 
   @override

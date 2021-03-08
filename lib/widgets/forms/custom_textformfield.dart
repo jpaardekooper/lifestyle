@@ -17,17 +17,17 @@ class CustomTextFormField extends StatelessWidget {
     this.border,
   });
 
-  final TextInputType keyboardType;
-  final TextEditingController textcontroller;
-  final String errorMessage;
-  final int validator;
-  final bool secureText;
-  final String passwordChecker;
-  final String suffixText;
-  final String hintText;
-  final Function(AnswerModel, String) function;
-  final AnswerModel answerModel;
-  final bool border;
+  final TextInputType? keyboardType;
+  final TextEditingController? textcontroller;
+  final String? errorMessage;
+  final int? validator;
+  final bool? secureText;
+  final String? passwordChecker;
+  final String? suffixText;
+  final String? hintText;
+  final Function(AnswerModel, String)? function;
+  final AnswerModel? answerModel;
+  final bool? border;
 
   inputDecoration(BuildContext context) {
     return InputDecoration(
@@ -79,7 +79,7 @@ class CustomTextFormField extends StatelessWidget {
   bool validateEmail(String value) {
     Pattern pattern =
         r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
-    RegExp regex = RegExp(pattern);
+    RegExp regex = RegExp(pattern as String);
     return (!regex.hasMatch(value)) ? false : true;
   }
 
@@ -92,7 +92,7 @@ class CustomTextFormField extends StatelessWidget {
         textInputAction: TextInputAction.next,
         controller: textcontroller,
         keyboardType: keyboardType,
-        maxLines: secureText ? 1 : 5,
+        maxLines: secureText! ? 1 : 5,
         minLines: 1,
         autofocus: false,
         decoration: (border ?? true)
@@ -105,51 +105,43 @@ class CustomTextFormField extends StatelessWidget {
 
           switch (validator) {
             case 1:
-              return val.isEmpty ? errorMessage : null;
-              break;
+              return val!.isEmpty ? errorMessage : null;
             case 2:
-              return validateEmail(val)
+              return validateEmail(val!)
                   ? null
                   : errorMessage ?? "gebruik een geldige email";
-              break;
             case 3:
               return val != passwordChecker
                   ? "wachtwoord komt niet overeen"
                   : null;
-              break;
             case 4:
-              return val.isEmpty
-                  ? textcontroller.text = "/placeholder.png"
+              return val!.isEmpty
+                  ? textcontroller!.text = "/placeholder.png"
                   : null;
-              break;
             case 5:
               return null;
-              break;
             case 6:
-              if (double.tryParse(val) != null) {
+              if (double.tryParse(val!) != null) {
                 return null;
               } else {
                 return 'Vul een geldig getal in';
               }
-              break;
             //this is only for answer screening
             case 7:
-              if (double.tryParse(val) != null) {
-                function(answerModel, val);
+              if (double.tryParse(val!) != null) {
+                function!(answerModel!, val);
                 return null;
               } else {
                 return 'Vul een geldig getal in';
               }
-              break;
             case 8:
-              if (val.isNotEmpty) {
-                function(answerModel, val);
+              if (val!.isNotEmpty) {
+                function!(answerModel!, val);
               }
 
               return val.isEmpty ? errorMessage : null;
-              break;
             default:
-              return val.isEmpty ? errorMessage : null;
+              return val!.isEmpty ? errorMessage : null;
           }
         },
       ),

@@ -6,7 +6,7 @@ import 'package:lifestylescreening/views/user/recipe/recipe_grid.dart';
 import 'package:lifestylescreening/widgets/text/body_text.dart';
 
 class RecipeFavoritesView extends StatefulWidget {
-  final String userId;
+  final String? userId;
 
   RecipeFavoritesView({this.userId});
 
@@ -16,7 +16,7 @@ class RecipeFavoritesView extends StatefulWidget {
 
 class _RecipeFavoritesViewState extends State<RecipeFavoritesView> {
   final RecipeController _recipeController = RecipeController();
-  List<RecipeModel> _savedRecipes = [];
+  List<RecipeModel>? _savedRecipes = [];
 
   @override
   void initState() {
@@ -25,7 +25,7 @@ class _RecipeFavoritesViewState extends State<RecipeFavoritesView> {
 
   @override
   void dispose() {
-    _savedRecipes.clear();
+    _savedRecipes!.clear();
     super.dispose();
   }
 
@@ -46,7 +46,7 @@ class _RecipeFavoritesViewState extends State<RecipeFavoritesView> {
           );
         } else {
           _savedRecipes = snapshot.data;
-          if (_savedRecipes.isEmpty) {
+          if (_savedRecipes!.isEmpty) {
             return Center(
               child: BodyText(
                 text: "Nog geen recepten als favoriete ingesteld",
@@ -55,7 +55,7 @@ class _RecipeFavoritesViewState extends State<RecipeFavoritesView> {
           } else {
             return RecipeGrid(
                 recipeList: _savedRecipes,
-                userData: _userData.data,
+                userData: _userData!.data,
                 userRecipe: false,
                 onTap: _updateRecipes);
           }

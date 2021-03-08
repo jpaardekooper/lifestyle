@@ -17,7 +17,7 @@ import 'package:lifestylescreening/widgets/text/lifestyle_text.dart';
 import '../../../healthpoint_icons.dart';
 
 class UserResultsOverview extends StatefulWidget {
-  UserResultsOverview({@required this.resultInfo});
+  UserResultsOverview({required this.resultInfo});
   final ResultModel resultInfo;
 
   @override
@@ -27,7 +27,7 @@ class UserResultsOverview extends StatefulWidget {
 class _UserResultsOverviewState extends State<UserResultsOverview> {
   final ResultController _resultController = ResultController();
 
-  StreamSubscription<QuerySnapshot> _currentSubscription;
+  StreamSubscription<QuerySnapshot>? _currentSubscription;
   bool _isLoading = true;
   List<DtdModel> _dtdResults = [];
   List<SurveyResultModel> _surveyResults = [];
@@ -63,7 +63,7 @@ class _UserResultsOverviewState extends State<UserResultsOverview> {
   }
 
   Widget showDTDResults() {
-    _dtdResults.sort((a, b) => a.date.compareTo(b.date));
+    _dtdResults.sort((a, b) => a.date!.compareTo(b.date!));
     return ListView.builder(
       itemCount: _dtdResults.length,
       itemBuilder: (BuildContext ctxt, int index) {
@@ -81,7 +81,7 @@ class _UserResultsOverviewState extends State<UserResultsOverview> {
                     tileColor: ColorTheme.extraLightOrange,
                     title: H2Text(
                       text: DateFormat("yyy-MM-dd HH:mm")
-                          .format(result.date.toDate()),
+                          .format(result.date!.toDate()),
                     ),
                     onTap: () => Navigator.of(context).push(
                       MaterialPageRoute(
@@ -137,7 +137,7 @@ class _UserResultsOverviewState extends State<UserResultsOverview> {
                         children: [
                           H2Text(
                             text: DateFormat('yyy-MM-dd').format(
-                              _result.date.toDate(),
+                              _result.date!.toDate(),
                             ),
                           ),
                           LifestyleText(
@@ -149,15 +149,16 @@ class _UserResultsOverviewState extends State<UserResultsOverview> {
                           ListView.builder(
                             shrinkWrap: true,
                             physics: NeverScrollableScrollPhysics(),
-                            itemCount: _result.categories.length,
+                            itemCount: _result.categories!.length,
                             itemBuilder: (context, index) {
                               return Row(
                                 children: [
                                   SizedBox(
                                     width: 150,
-                                    child: Text("${_result.categories[index]}"),
+                                    child:
+                                        Text("${_result.categories![index]}"),
                                   ),
-                                  Text(_result.points_per_category[index]
+                                  Text(_result.points_per_category![index]
                                       .toString())
                                 ],
                               );

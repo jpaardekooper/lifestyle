@@ -14,55 +14,55 @@ abstract class IQuestionnaireRepository {
   Future<List<QuestionModel>> getDTDQuestion();
 
   //get question for user for Screening test
-  Future<List<QuestionModel>> getScreeningQuestion(String category);
+  Future<List<QuestionModel>> getScreeningQuestion(String? category);
 
   Future<List<SurveyModel>> fetchCategories(String id);
 
   //get options for question
-  Future<List<AnswerModel>> getAnswer(String category, String questionId);
+  Future<List<AnswerModel>> getAnswer(String? category, String? questionId);
 
-  Future<List<AnswerModel>> getDTDAnswer(String questionId);
+  Future<List<AnswerModel>> getDTDAnswer(String? questionId);
 
   //admin functions
-  Stream<QuerySnapshot> streamQuestions(String id);
+  Stream<QuerySnapshot> streamQuestions(String? id);
 
   List<QuestionModel> fetchQuestions(QuerySnapshot snapshot);
 
-  Stream<QuerySnapshot> streamAnswers(String id, String questionId);
+  Stream<QuerySnapshot> streamAnswers(String? id, String? questionId);
 
   List<AnswerModel> fetchAnswers(AsyncSnapshot<QuerySnapshot> snapshot);
 
 //add
-  Future<void> setQuestion(CategoryModel category, String questionId, Map data,
-      int totalQuestions, bool _newQuestion);
+  Future<void> setQuestion(CategoryModel category, String? questionId, Map data,
+      int? totalQuestions, bool? _newQuestion);
 //delete question
   Future<void> removeQuestion(
-      CategoryModel category, String questionId, int totalQuestions);
+      CategoryModel? category, String? questionId, int? totalQuestions);
 // add answer
-  Future<void> setAnswer(String surveyID, String questionId, String answerId,
+  Future<void> setAnswer(String? surveyID, String? questionId, String? answerId,
       Map data, bool insertNewAnswer);
 //delete answer
   Future<void> removeAnswerFromQuestion(
-      String surveyId, String questionId, String answerId);
+      String? surveyId, String? questionId, String? answerId);
 
   //Add User Survey Data to firebase
   Future<void> setUserSurveyAnswers(
     String surveyTitle,
     AppUser user,
-    String category,
-    int index,
+    String? category,
+    int? index,
     Map surveyData,
     Map data,
-    String id,
+    String? id,
   );
 
   Future<void> setSurveyToFalse(
       String surveyTitle, AppUser user, SurveyResultModel surveyResult);
 
   Future<List<SurveyResultModel>> checkSurveyResult(
-      String surveyTitle, String email);
+      String surveyTitle, String? email);
 
-  Future<String> createDTDid();
+  Future<String?> createDTDid();
 
-  Future<void> setDTDSurveyResults(String id, Map data);
+  Future<void> setDTDSurveyResults(String? id, Map data);
 }

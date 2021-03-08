@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 class GhostOrangeButton extends StatelessWidget {
   const GhostOrangeButton({this.text, this.onTap});
 
-  final String text;
-  final VoidCallback onTap;
+  final String? text;
+  final VoidCallback? onTap;
 
   @override
   Widget build(BuildContext context) {
@@ -15,7 +15,7 @@ class GhostOrangeButton extends StatelessWidget {
         width: 3.5,
       ),
       child: Text(
-        text,
+        text!,
         style: TextStyle(
             color: Theme.of(context).accentColor,
             fontWeight: FontWeight.bold,

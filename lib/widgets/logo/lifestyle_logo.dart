@@ -3,10 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:lifestylescreening/widgets/text/h2_text.dart';
 
 class LifestyleLogo extends StatelessWidget {
-  LifestyleLogo({@required this.size, this.description});
+  LifestyleLogo({required this.size, this.description});
 
   final double size;
-  final String description;
+  final String? description;
 
   @override
   Widget build(BuildContext context) {

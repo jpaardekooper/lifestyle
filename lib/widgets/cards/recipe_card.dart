@@ -8,9 +8,9 @@ import 'package:lifestylescreening/widgets/dialog/remove_recipe.dialog.dart';
 
 class RecipeCard extends StatefulWidget {
   const RecipeCard(
-      {Key key,
-      @required recipe,
-      @required user,
+      {Key? key,
+      required recipe,
+      required user,
       this.on_Tap,
       this.userRecipe,
       this.function})
@@ -20,9 +20,9 @@ class RecipeCard extends StatefulWidget {
 
   final RecipeModel _recipe;
   final AppUser _user;
-  final VoidCallback on_Tap;
-  final bool userRecipe;
-  final Function(RecipeModel) function;
+  final VoidCallback? on_Tap;
+  final bool? userRecipe;
+  final Function(RecipeModel?)? function;
 
   @override
   _RecipeCardState createState() => _RecipeCardState();
@@ -30,8 +30,8 @@ class RecipeCard extends StatefulWidget {
 
 class _RecipeCardState extends State<RecipeCard> {
   RecipeController _recipeController = RecipeController();
-  bool alreadySaved = false;
-  String imageUrl;
+  bool? alreadySaved = false;
+  String? imageUrl;
 
   @override
   void initState() {
@@ -44,7 +44,7 @@ class _RecipeCardState extends State<RecipeCard> {
   //       widget._recipe.id, widget._user.id);
   // }
 
-  void _editRecipeName(RecipeModel recipe, String role) {
+  void _editRecipeName(RecipeModel recipe, String? role) {
     showDialog(
         barrierDismissible: false,
         context: context,
@@ -57,7 +57,7 @@ class _RecipeCardState extends State<RecipeCard> {
         });
   }
 
-  void _removeRecipe(RecipeModel recipe, String role) {
+  void _removeRecipe(RecipeModel recipe, String? role) {
     showDialog(
       context: context,
       barrierDismissible: false,
@@ -97,7 +97,7 @@ class _RecipeCardState extends State<RecipeCard> {
                   );
                 } else {
                   return CachedNetworkImage(
-                    imageUrl: snapshot.data,
+                    imageUrl: snapshot.data!,
                     fit: BoxFit.cover,
                     progressIndicatorBuilder: (ctx, url, downloadProgress) =>
                         SizedBox(
@@ -132,7 +132,7 @@ class _RecipeCardState extends State<RecipeCard> {
                             FittedBox(
                               fit: BoxFit.contain,
                               child: Text(
-                                widget._recipe.title,
+                                widget._recipe.title!,
                                 style: TextStyle(
                                   color: recipeTitleColor,
                                   fontFamily: 'Sofia Pro Regular Az',
@@ -172,20 +172,20 @@ class _RecipeCardState extends State<RecipeCard> {
                               } else {
                                 return IconButton(
                                   icon: Icon(
-                                    alreadySaved
+                                    alreadySaved!
                                         ? Icons.favorite
                                         : Icons.favorite_border,
-                                    color: alreadySaved ? Colors.red : null,
+                                    color: alreadySaved! ? Colors.red : null,
                                   ),
                                   onPressed: () async {
                                     //     await checkFavoriteRecipes();
-                                    if (alreadySaved) {
+                                    if (alreadySaved!) {
                                       await _recipeController
                                           .removeFavoriteRecipe(widget._user.id,
                                               widget._recipe.id);
 
                                       if (widget.on_Tap != null) {
-                                        widget.on_Tap();
+                                        widget.on_Tap!();
                                       }
                                     } else {
                                       await _recipeController.addFavoriteRecipe(

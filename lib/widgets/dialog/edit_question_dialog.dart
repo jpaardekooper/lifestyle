@@ -9,15 +9,15 @@ import 'package:lifestylescreening/widgets/text/h1_text.dart';
 
 class EditQuestionDialog extends StatefulWidget {
   const EditQuestionDialog({
-    @required this.category,
-    @required this.question,
+    required this.category,
+    required this.question,
     this.newQuestion,
     this.totalQuestion,
   });
   final CategoryModel category;
   final QuestionModel question;
-  final bool newQuestion;
-  final int totalQuestion;
+  final bool? newQuestion;
+  final int? totalQuestion;
 
   @override
   _EditQuestionDialogState createState() => _EditQuestionDialogState();
@@ -138,7 +138,7 @@ class _EditQuestionDialogState extends State<EditQuestionDialog> {
     if (!hasImage) {
       imageController.text = "0";
     }
-    if (_formKey.currentState.validate()) {
+    if (_formKey.currentState!.validate()) {
       // category,example,has_followup,next,order,question,
       Map<String, dynamic> data = {
         "order": int.parse(orderController.text),
@@ -157,7 +157,7 @@ class _EditQuestionDialogState extends State<EditQuestionDialog> {
   Widget build(BuildContext context) {
     return AlertDialog(
       scrollable: true,
-      title: widget.newQuestion ? Text("NIEUW") : Text(widget.question.id),
+      title: widget.newQuestion! ? Text("NIEUW") : Text(widget.question.id!),
       content: Builder(builder: (context) {
         Size size = MediaQuery.of(context).size;
         return Container(

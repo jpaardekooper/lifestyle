@@ -9,7 +9,7 @@ import 'package:lifestylescreening/repositories/auth_repository_interface.dart';
 class AuthController {
   final IAuthRepository _authRepository = AuthRepository();
 
-  Future signInWithEmailAndPassword(String email, String password) {
+  Future signInWithEmailAndPassword(String? email, String? password) {
     return _authRepository.signInWithEmailAndPassword(email, password);
   }
 
@@ -17,8 +17,8 @@ class AuthController {
     String email,
     String username,
     String password,
-    BMI bmi,
-    List<InterestModel> interestList,
+    BMI? bmi,
+    List<InterestModel>? interestList,
     List<GoalsModel> goalsList,
   ) {
     return _authRepository.signUpWithEmailAndPassword(
@@ -31,7 +31,7 @@ class AuthController {
     );
   }
 
-  Future updateUserData(String userId, String userName, BMI bmi) {
+  Future updateUserData(String? userId, String userName, BMI bmi) {
     return _authRepository.updateUserData(userId, userName, bmi);
   }
 
@@ -39,7 +39,7 @@ class AuthController {
     return _authRepository.signOut(context);
   }
 
-  saveUserDetailsOnLogin(AppUser user, String password, bool rememberMe) {
+  saveUserDetailsOnLogin(AppUser user, String password, bool? rememberMe) {
     return _authRepository.saveUserDetailsOnLogin(user, password, rememberMe);
   }
 

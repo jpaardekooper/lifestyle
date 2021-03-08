@@ -10,7 +10,7 @@ import 'package:lifestylescreening/widgets/dialog/edit_category_dialog.dart';
 import 'package:lifestylescreening/widgets/text/h2_text.dart';
 
 class CategoriesView extends StatefulWidget {
-  CategoriesView({Key key}) : super(key: key);
+  CategoriesView({Key? key}) : super(key: key);
 
   @override
   _CategoriesViewState createState() => _CategoriesViewState();
@@ -19,7 +19,7 @@ class CategoriesView extends StatefulWidget {
 class _CategoriesViewState extends State<CategoriesView> {
   final CategoryController _surveyController = CategoryController();
 
-  StreamSubscription<QuerySnapshot> _currentSubscription;
+  StreamSubscription<QuerySnapshot>? _currentSubscription;
   bool _isLoading = true;
   List<CategoryModel> _categoryList = [];
 

@@ -9,10 +9,10 @@ import 'package:lifestylescreening/widgets/text/h2_text.dart';
 
 class SurveyComplete extends StatelessWidget {
   const SurveyComplete(
-      {Key key,
-      @required this.surveyResult,
-      @required this.user,
-      @required this.surveyTitle})
+      {Key? key,
+      required this.surveyResult,
+      required this.user,
+      required this.surveyTitle})
       : super(key: key);
   final SurveyResultModel surveyResult;
   final AppUser user;
@@ -49,7 +49,7 @@ class SurveyComplete extends StatelessWidget {
           ListView.builder(
             physics: NeverScrollableScrollPhysics(),
             shrinkWrap: true,
-            itemCount: surveyResult.categories.length,
+            itemCount: surveyResult.categories!.length,
             itemBuilder: (BuildContext ctx, index) {
               return Row(
                 // mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -57,9 +57,9 @@ class SurveyComplete extends StatelessWidget {
                   SizedBox(
                     width: 200,
                     height: 20,
-                    child: BodyText(text: surveyResult.categories[index]),
+                    child: BodyText(text: surveyResult.categories![index]),
                   ),
-                  Text("${surveyResult.points_per_category[index]}")
+                  Text("${surveyResult.points_per_category![index]}")
                 ],
               );
             },

@@ -4,16 +4,15 @@ class CategoryModel {
   CategoryModel({this.id, this.questionCount, this.category})
       : reference = null;
 
-  final String id;
-  final int questionCount;
-  final String category;
+  final String? id;
+  final int? questionCount;
+  final String? category;
 
-  final DocumentReference reference;
+  final DocumentReference? reference;
 
   CategoryModel.fromSnapshot(DocumentSnapshot snapshot)
-      : assert(snapshot != null),
-        id = snapshot.id,
-        questionCount = snapshot.data()['questionCount'],
-        category = snapshot.data()['category'],
+      : id = snapshot.id,
+        questionCount = snapshot.data()!['questionCount'],
+        category = snapshot.data()!['category'],
         reference = snapshot.reference;
 }

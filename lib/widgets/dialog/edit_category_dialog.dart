@@ -7,8 +7,8 @@ import 'dart:math' as math;
 
 class EditCategoryDialog extends StatefulWidget {
   EditCategoryDialog({this.categoryModel, this.newItem});
-  final CategoryModel categoryModel;
-  final bool newItem;
+  final CategoryModel? categoryModel;
+  final bool? newItem;
 
   @override
   _EditCategoryDialogState createState() => _EditCategoryDialogState();
@@ -23,7 +23,7 @@ class _EditCategoryDialogState extends State<EditCategoryDialog> {
 
   void initState() {
     super.initState();
-    _catController.text = widget.categoryModel.category ?? "";
+    _catController.text = widget.categoryModel!.category ?? "";
   }
 
   void _removeCategory() {
@@ -56,10 +56,10 @@ class _EditCategoryDialogState extends State<EditCategoryDialog> {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: widget.newItem
+      title: widget.newItem!
           ? Text("Nieuwe survey")
           : Text(
-              "ID: ${widget.categoryModel.id}",
+              "ID: ${widget.categoryModel!.id}",
               style: TextStyle(fontSize: 11),
             ),
       content: Container(
@@ -81,7 +81,7 @@ class _EditCategoryDialogState extends State<EditCategoryDialog> {
                 SizedBox(
                   height: 25,
                 ),
-                widget.newItem
+                widget.newItem!
                     ? Container()
                     : Center(
                         child: RaisedButton(
@@ -106,14 +106,14 @@ class _EditCategoryDialogState extends State<EditCategoryDialog> {
   }
 
   void saveCategoryChanges(BuildContext context) {
-    if (_formKey.currentState.validate()) {
+    if (_formKey.currentState!.validate()) {
       Map<String, dynamic> data = {
         "category": _catController.text,
-        "questionCount": widget.categoryModel.questionCount ?? 0,
+        "questionCount": widget.categoryModel!.questionCount ?? 0,
       };
 
       _categoryController
-          .updateCategory(widget.categoryModel.id, data, widget.newItem)
+          .updateCategory(widget.categoryModel!.id, data, widget.newItem)
           .then((value) => Navigator.pop(context));
     }
   }

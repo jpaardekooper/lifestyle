@@ -7,7 +7,7 @@ import 'package:lifestylescreening/views/user/recipe/recipe_user_recipes.dart';
 import 'package:lifestylescreening/widgets/inherited/inherited_widget.dart';
 
 class RecipeTab extends StatefulWidget {
-  RecipeTab({Key key}) : super(key: key);
+  RecipeTab({Key? key}) : super(key: key);
 
   @override
   _RecipeTabState createState() => _RecipeTabState();
@@ -15,8 +15,8 @@ class RecipeTab extends StatefulWidget {
 
 class _RecipeTabState extends State<RecipeTab>
     with SingleTickerProviderStateMixin {
-  TabController _tabController;
-  int active;
+  TabController? _tabController;
+  int? active;
 
   @override
   void initState() {
@@ -24,20 +24,20 @@ class _RecipeTabState extends State<RecipeTab>
     _tabController = TabController(length: 3, vsync: this)
       ..addListener(() {
         setState(() {
-          active = _tabController.index;
+          active = _tabController!.index;
         });
       });
     super.initState();
   }
 
   void dispose() {
-    _tabController.dispose();
+    _tabController!.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    final _userData = InheritedDataProvider.of(context);
+    final _userData = InheritedDataProvider.of(context)!;
 
     return Scaffold(
       appBar: AppBar(

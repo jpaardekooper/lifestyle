@@ -6,12 +6,12 @@ import 'package:lifestylescreening/widgets/slider/slider.dart';
 
 class SelectedAnswerCard extends StatefulWidget {
   SelectedAnswerCard(
-      {Key key,
-      @required this.answerList,
+      {Key? key,
+      required this.answerList,
       //    @required this.controller,
-      @required this.function})
+      required this.function})
       : super(key: key);
-  final List<AnswerModel> answerList;
+  final List<AnswerModel>? answerList;
 
   final Function(AnswerModel, String) function;
 
@@ -20,9 +20,9 @@ class SelectedAnswerCard extends StatefulWidget {
 }
 
 class _SelectedAnswerCardState extends State<SelectedAnswerCard> {
-  TextEditingController controller;
+  TextEditingController? controller;
   bool isChecked = false;
-  String selectedAnswer = "";
+  String? selectedAnswer = "";
 
   @override
   void initState() {
@@ -32,7 +32,7 @@ class _SelectedAnswerCardState extends State<SelectedAnswerCard> {
 
   @override
   void dispose() {
-    controller.dispose();
+    controller!.dispose();
     super.dispose();
   }
 
@@ -54,11 +54,11 @@ class _SelectedAnswerCardState extends State<SelectedAnswerCard> {
           value: answer.option,
           groupValue: selectedAnswer,
           activeColor: Theme.of(context).accentColor,
-          title: Text(answer.option),
-          onChanged: (value) {
+          title: Text(answer.option!),
+          onChanged: (dynamic value) {
             setState(() {
               selectedAnswer = value;
-              controller.text = value;
+              controller!.text = value;
             });
           },
           selected: selectedAnswer == answer.option,
@@ -119,7 +119,7 @@ class _SelectedAnswerCardState extends State<SelectedAnswerCard> {
       //  value: widget.answerModel.option,
       //  groupValue: selectedAnswer,
       activeColor: Theme.of(context).accentColor,
-      title: Text(answer.option),
+      title: Text(answer.option!),
       onChanged: (value) {
         setState(() {
           //   selectedAnswer = value;
@@ -136,13 +136,10 @@ class _SelectedAnswerCardState extends State<SelectedAnswerCard> {
     switch (_answerModel.type) {
       case "AnswerType.closed":
         return showClosedTile(_answerModel, index);
-        break;
       case "AnswerType.open":
         return showOpenTile(_answerModel);
-        break;
       case "AnswerType.multipleChoice":
         return showMultipleTile(_answerModel);
-        break;
       default:
         return Container();
     }
@@ -153,9 +150,9 @@ class _SelectedAnswerCardState extends State<SelectedAnswerCard> {
     return ListView.builder(
       physics: NeverScrollableScrollPhysics(),
       shrinkWrap: true,
-      itemCount: widget.answerList.length,
+      itemCount: widget.answerList!.length,
       itemBuilder: (context, index) {
-        final AnswerModel _answerModel = widget.answerList[index];
+        final AnswerModel _answerModel = widget.answerList![index];
 
         return defineAnswerType(_answerModel, index);
       },

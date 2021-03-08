@@ -4,8 +4,8 @@ import 'package:lifestylescreening/widgets/colors/color_theme.dart';
 import 'package:lifestylescreening/widgets/text/h1_text.dart';
 
 class ShowRecentRecipesTab extends StatefulWidget {
-  ShowRecentRecipesTab({Key key, this.onTap}) : super(key: key);
-  final VoidCallback onTap;
+  ShowRecentRecipesTab({Key? key, this.onTap}) : super(key: key);
+  final VoidCallback? onTap;
   @override
   _ShowRecentRecipesTabState createState() => _ShowRecentRecipesTabState();
 }

@@ -3,16 +3,16 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 
 class ImageTransition extends StatefulWidget {
-  ImageTransition({Key key}) : super(key: key);
+  ImageTransition({Key? key}) : super(key: key);
 
   @override
   _ImageTransitionState createState() => _ImageTransitionState();
 }
 
 class _ImageTransitionState extends State<ImageTransition> {
-  Timer _timer;
+  late Timer _timer;
   int _start = 4;
-  Image image;
+  late Image image;
 
   @override
   void initState() {
@@ -39,28 +39,27 @@ class _ImageTransitionState extends State<ImageTransition> {
 
             switch (_start) {
               case 3:
-                return image = Image.asset(
+                image = Image.asset(
                   'assets/images/poppetje2.png',
                   scale: 2,
                 );
+                return;
 
-                break;
               case 2:
-                return image = Image.asset(
+                image = Image.asset(
                   'assets/images/poppetje1.png',
                   scale: 2,
                 );
+                return;
 
-                break;
               case 1:
-                return image = Image.asset(
+                image = Image.asset(
                   'assets/images/poppetje1.png',
                   scale: 2,
                 );
-
-                break;
+                return;
               default:
-                return image;
+                return;
             }
           }
         },

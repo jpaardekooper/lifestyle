@@ -2,13 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:lifestylescreening/views/user/tutorial/disclaimer_view.dart';
 import 'package:lifestylescreening/views/user/tutorial/signin.dart';
 import 'package:lifestylescreening/views/web/utils/responsive_layout.dart';
+import 'package:lifestylescreening/views/web/widgets/hover_text.dart';
 import 'package:lifestylescreening/widgets/colors/color_theme.dart';
-import 'package:hovering/hovering.dart';
 import 'package:lifestylescreening/widgets/transitions/route_transition.dart';
 import 'package:lifestylescreening/widgets/web/web_disclaimer.dart';
 
 class NavBar extends StatelessWidget {
-  NavBar({@required this.function});
+  NavBar({required this.function});
   final VoidCallback function;
 
   final navLinks = ["Aanmelden", "Inloggen"];
@@ -17,7 +17,7 @@ class NavBar extends StatelessWidget {
     return navLinks.map((text) {
       return Padding(
         padding: EdgeInsets.only(left: 40),
-        child: HoverWidget(
+        child: HoverText(
             hoverChild: GestureDetector(
               onTap: () {
                 if (text == navLinks.first) {

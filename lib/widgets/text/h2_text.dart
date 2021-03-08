@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 class H2Text extends StatelessWidget {
   const H2Text({this.text});
 
-  final String text;
+  final String? text;
 
   @override
   Widget build(BuildContext context) {
@@ -11,7 +11,7 @@ class H2Text extends StatelessWidget {
       color: Colors.transparent,
       type: MaterialType.transparency,
       child: Text(
-        text,
+        text!,
         style: TextStyle(
             color: Theme.of(context).primaryColor,
             fontFamily: 'Sofia',

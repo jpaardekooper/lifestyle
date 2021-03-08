@@ -7,11 +7,11 @@ abstract class ISurveyRepository {
 
   List<SurveyModel> getSurveyList(QuerySnapshot snapshot);
 
-  Future<void> updateSurvey(String id, Map data, bool newItem);
+  Future<void> updateSurvey(String? id, Map data, bool? newItem);
 
-  Future<void> removeSurvey(String id);
+  Future<void> removeSurvey(String? id);
 
-  Future<void> removeCategory(String id, String data);
+  Future<void> removeCategory(String? id, String data);
 
-  Future<List<SurveyResultModel>> getLastSurveyResult(String email);
+  Future<List<SurveyResultModel>> getLastSurveyResult(String? email);
 }

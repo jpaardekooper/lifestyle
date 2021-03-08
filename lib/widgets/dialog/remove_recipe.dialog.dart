@@ -5,9 +5,9 @@ import 'package:lifestylescreening/widgets/colors/color_theme.dart';
 
 class RemoveRecipe extends StatelessWidget {
   RemoveRecipe({this.recipe, this.role, this.function});
-  final RecipeModel recipe;
-  final String role;
-  final Function(RecipeModel) function;
+  final RecipeModel? recipe;
+  final String? role;
+  final Function(RecipeModel?)? function;
 
   final RecipeController _recipeController = RecipeController();
 
@@ -19,7 +19,7 @@ class RemoveRecipe extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           Text("weet u zeker of u"),
-          Text(recipe.title),
+          Text(recipe!.title!),
           Text("wilt verwijderen?")
         ],
       ),
@@ -35,12 +35,12 @@ class RemoveRecipe extends StatelessWidget {
           child: Text("verwijderen", style: TextStyle(color: Colors.white)),
           onPressed: () async {
             if (role == "user") {
-              await _recipeController.removeUserRecipe(recipe.id, recipe.url);
+              await _recipeController.removeUserRecipe(recipe!.id, recipe!.url);
 
               Navigator.pop(context);
-              function(recipe);
+              function!(recipe);
             } else {
-              await _recipeController.removeRecipe(recipe.id, recipe.url);
+              await _recipeController.removeRecipe(recipe!.id, recipe!.url);
               Navigator.pop(context);
             }
           },

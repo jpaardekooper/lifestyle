@@ -40,7 +40,7 @@ class PageSettings extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final _userData = InheritedDataProvider.of(context);
+    final _userData = InheritedDataProvider.of(context)!;
     final size = MediaQuery.of(context).size;
     final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
     return Scaffold(

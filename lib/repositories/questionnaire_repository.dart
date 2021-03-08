@@ -27,7 +27,7 @@ class QuestionnaireRepository implements IQuestionnaireRepository {
   }
 
   @override
-  Future<List<QuestionModel>> getScreeningQuestion(String category) async {
+  Future<List<QuestionModel>> getScreeningQuestion(String? category) async {
     // List<QuestionModel> screeningList = [];
 
     QuerySnapshot snapshot = await FirebaseFirestore.instance
@@ -67,7 +67,7 @@ class QuestionnaireRepository implements IQuestionnaireRepository {
   }
 
   @override
-  Future<List<AnswerModel>> getAnswer(String category, String id) async {
+  Future<List<AnswerModel>> getAnswer(String? category, String? id) async {
     // List<AnswerModel> _answerList = [];
 
     QuerySnapshot snapshot = await FirebaseFirestore.instance
@@ -93,7 +93,7 @@ class QuestionnaireRepository implements IQuestionnaireRepository {
   }
 
   @override
-  Future<List<AnswerModel>> getDTDAnswer(String id) async {
+  Future<List<AnswerModel>> getDTDAnswer(String? id) async {
     QuerySnapshot snapshot = await FirebaseFirestore.instance
         .collection("categories")
         .doc('6rkGdqflHFzlbrPvDXCu')
@@ -109,7 +109,7 @@ class QuestionnaireRepository implements IQuestionnaireRepository {
   }
 
   @override
-  Stream<QuerySnapshot> streamQuestions(String id) {
+  Stream<QuerySnapshot> streamQuestions(String? id) {
     return FirebaseFirestore.instance
         .collection('categories')
         .doc(id)
@@ -126,7 +126,7 @@ class QuestionnaireRepository implements IQuestionnaireRepository {
   }
 
   @override
-  Stream<QuerySnapshot> streamAnswers(String id, String questionId) {
+  Stream<QuerySnapshot> streamAnswers(String? id, String? questionId) {
     return FirebaseFirestore.instance
         .collection('categories')
         .doc(id)
@@ -139,21 +139,21 @@ class QuestionnaireRepository implements IQuestionnaireRepository {
 
   @override
   List<AnswerModel> fetchAnswers(AsyncSnapshot<QuerySnapshot> snapshot) {
-    return snapshot.data.docs.map((DocumentSnapshot doc) {
+    return snapshot.data!.docs.map((DocumentSnapshot doc) {
       return AnswerModel.fromSnapshot(doc);
     }).toList();
   }
 
   @override
-  Future<void> setQuestion(CategoryModel category, String id, Map data,
-      int totalQuestions, bool newQuestion) async {
-    if (newQuestion) {
+  Future<void> setQuestion(CategoryModel category, String? id, Map data,
+      int? totalQuestions, bool? newQuestion) async {
+    if (newQuestion!) {
       await FirebaseFirestore.instance
           .collection("categories")
           .doc(category.id)
           .collection("questions")
           .doc()
-          .set(data)
+          .set(data as Map<String, dynamic>)
           .catchError((e) {});
 
 //update the amount of questions inside a category
@@ -167,17 +167,17 @@ class QuestionnaireRepository implements IQuestionnaireRepository {
           .doc(category.id)
           .collection("questions")
           .doc(id)
-          .set(data)
+          .set(data as Map<String, dynamic>)
           .catchError((e) {});
     }
   }
 
   @override
   Future<void> removeQuestion(
-      CategoryModel category, String questionId, int totalQuestions) async {
+      CategoryModel? category, String? questionId, int? totalQuestions) async {
     await FirebaseFirestore.instance
         .collection("categories")
-        .doc(category.id)
+        .doc(category!.id)
         .collection('questions')
         .doc(questionId)
         .delete()
@@ -188,11 +188,11 @@ class QuestionnaireRepository implements IQuestionnaireRepository {
     await FirebaseFirestore.instance
         .collection("categories")
         .doc(category.id)
-        .update({"questionCount": totalQuestions - 1}).catchError((e) {});
+        .update({"questionCount": totalQuestions! - 1}).catchError((e) {});
   }
 
   @override
-  Future<void> setAnswer(String surveyId, String questionId, String answerId,
+  Future<void> setAnswer(String? surveyId, String? questionId, String? answerId,
       Map data, bool insertNewAnswer) async {
     if (insertNewAnswer) {
       await FirebaseFirestore.instance
@@ -202,7 +202,7 @@ class QuestionnaireRepository implements IQuestionnaireRepository {
           .doc(questionId)
           .collection('answers')
           .doc()
-          .set(data)
+          .set(data as Map<String, dynamic>)
           .catchError((e) {
         //    print(e);
       });
@@ -214,7 +214,7 @@ class QuestionnaireRepository implements IQuestionnaireRepository {
           .doc(questionId)
           .collection('answers')
           .doc(answerId)
-          .set(data)
+          .set(data as Map<String, dynamic>)
           .catchError((e) {
         //   print(e);
       });
@@ -223,7 +223,7 @@ class QuestionnaireRepository implements IQuestionnaireRepository {
 
   @override
   Future<void> removeAnswerFromQuestion(
-      String category, String questionId, String answerId) async {
+      String? category, String? questionId, String? answerId) async {
     await FirebaseFirestore.instance
         .collection("categories")
         .doc(category)
@@ -241,11 +241,11 @@ class QuestionnaireRepository implements IQuestionnaireRepository {
   Future<void> setUserSurveyAnswers(
     String surveyTitle,
     AppUser user,
-    String category,
-    int index,
+    String? category,
+    int? index,
     Map surveyData,
     Map data,
-    String id,
+    String? id,
   ) async {
     //adding data to correct survey
     await FirebaseFirestore.instance
@@ -275,7 +275,7 @@ class QuestionnaireRepository implements IQuestionnaireRepository {
             .doc(value.docs.first.id)
             .collection('scores')
             .doc()
-            .set(surveyData);
+            .set(surveyData as Map<String, dynamic>);
 
         await FirebaseFirestore.instance
             .collection("results")
@@ -289,9 +289,9 @@ class QuestionnaireRepository implements IQuestionnaireRepository {
               .doc(value.docs.first.id)
               .collection('scores')
               .doc(value2.docs.first.id)
-              .collection(category)
+              .collection(category!)
               .doc()
-              .set(data);
+              .set(data as Map<String, dynamic>);
 
 //update data
           // await FirebaseFirestore.instance
@@ -309,9 +309,9 @@ class QuestionnaireRepository implements IQuestionnaireRepository {
             .doc(value.docs.first.id)
             .collection('scores')
             .doc(id)
-            .collection(category)
+            .collection(category!)
             .doc()
-            .set(data);
+            .set(data as Map<String, dynamic>);
         //   .get()
         //   .then((value2) async {
         // await FirebaseFirestore.instance
@@ -329,7 +329,7 @@ class QuestionnaireRepository implements IQuestionnaireRepository {
             .doc(value.docs.first.id)
             .collection('scores')
             .doc(id)
-            .update(surveyData);
+            .update(surveyData as Map<String, dynamic>);
       }
     });
   }
@@ -337,7 +337,7 @@ class QuestionnaireRepository implements IQuestionnaireRepository {
   @override
   Future<List<SurveyResultModel>> checkSurveyResult(
     String surveyTitle,
-    String email,
+    String? email,
   ) async {
     List<SurveyResultModel> result = [];
     QuerySnapshot snapshot = await FirebaseFirestore.instance
@@ -360,7 +360,7 @@ class QuestionnaireRepository implements IQuestionnaireRepository {
         return result.add(SurveyResultModel.fromSnapshot(doc));
       }).toList();
 
-      result.sort((a, b) => b.date.compareTo(a.date));
+      result.sort((a, b) => b.date!.compareTo(a.date!));
 
       return result;
     }
@@ -384,11 +384,11 @@ class QuestionnaireRepository implements IQuestionnaireRepository {
   }
 
   @override
-  Future<String> createDTDid() async {
+  Future<String?> createDTDid() async {
     var uuid = Uuid();
 
     final String id = uuid.v1();
-    String docId;
+    String? docId;
 
     Map<String, dynamic> firstData = {
       "id": id,
@@ -416,7 +416,7 @@ class QuestionnaireRepository implements IQuestionnaireRepository {
   }
 
   @override
-  Future<void> setDTDSurveyResults(String id, Map data) async {
+  Future<void> setDTDSurveyResults(String? id, Map data) async {
     await FirebaseFirestore.instance
         .collection("results")
         .doc("hddx5cnwvjLeSqQK5vDQ")
@@ -424,6 +424,6 @@ class QuestionnaireRepository implements IQuestionnaireRepository {
         .doc(id)
         .collection("DTD")
         .doc()
-        .set(data);
+        .set(data as Map<String, dynamic>);
   }
 }

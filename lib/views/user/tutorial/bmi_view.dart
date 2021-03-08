@@ -11,7 +11,7 @@ import 'package:lifestylescreening/widgets/transitions/route_transition.dart';
 
 class BMIView extends StatefulWidget {
   BMIView({this.username});
-  final String username;
+  final String? username;
 
   @override
   _BMIViewState createState() => _BMIViewState();
@@ -26,7 +26,7 @@ class _BMIViewState extends State<BMIView> {
   String _gender = 'male';
 
   void goToSelectInterest() {
-    if (_formKey.currentState.validate()) {
+    if (_formKey.currentState!.validate()) {
       BMI bmi = BMI(
         age: int.parse(_ageController.text),
         height: int.parse(_heightController.text),
@@ -68,7 +68,7 @@ class _BMIViewState extends State<BMIView> {
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
     return Scaffold(
-      appBar: introductionAppBar(context, 0.4, false),
+      appBar: introductionAppBar(context, 0.4, false) as PreferredSizeWidget?,
       body: Form(
         key: _formKey,
         child: SingleChildScrollView(

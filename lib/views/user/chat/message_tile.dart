@@ -6,7 +6,7 @@ import 'package:lifestylescreening/widgets/text/body_text.dart';
 class MessageTile extends StatefulWidget {
   MessageTile({this.message});
 
-  final MessageModel message;
+  final MessageModel? message;
 
   @override
   _MessageTileState createState() => _MessageTileState();
@@ -20,7 +20,7 @@ class _MessageTileState extends State<MessageTile> {
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         Container(
-            margin: widget.message.sender
+            margin: widget.message!.sender!
                 //true
                 ? EdgeInsets.only(
                     left: MediaQuery.of(context).size.width / 3.5,
@@ -35,7 +35,7 @@ class _MessageTileState extends State<MessageTile> {
                     right: MediaQuery.of(context).size.width / 3.5),
             padding: EdgeInsets.all(10),
             decoration: BoxDecoration(
-              color: widget.message.sender
+              color: widget.message!.sender!
                   //true
                   ? const Color(0xFFFFF4E6)
                   //false
@@ -50,15 +50,15 @@ class _MessageTileState extends State<MessageTile> {
               ],
             ),
             child: BodyText(
-              text: widget.message.description,
+              text: widget.message!.description,
             )),
-        widget.message.sender
+        widget.message!.sender!
             //true
             ? Container(
                 padding: EdgeInsets.only(right: 16),
                 child: Text(
                   DateFormat("yyy-MM-dd HH:mm")
-                      .format(widget.message.timestamp.toDate()),
+                      .format(widget.message!.timestamp!.toDate()),
                   textAlign: TextAlign.end,
                   style: TextStyle(
                     fontSize: 10,
@@ -69,7 +69,7 @@ class _MessageTileState extends State<MessageTile> {
                 padding: EdgeInsets.only(left: 16),
                 child: Text(
                   DateFormat("yyy-MM-dd HH:mm")
-                      .format(widget.message.timestamp.toDate()),
+                      .format(widget.message!.timestamp!.toDate()),
                   textAlign: TextAlign.start,
                   style: TextStyle(
                     fontSize: 10,

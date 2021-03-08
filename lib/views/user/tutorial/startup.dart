@@ -8,7 +8,7 @@ import 'package:lifestylescreening/widgets/text/h1_text.dart';
 import 'package:lifestylescreening/widgets/transitions/route_transition.dart';
 
 class StartUp extends StatefulWidget {
-  StartUp({Key key}) : super(key: key);
+  StartUp({Key? key}) : super(key: key);
 
   @override
   _HomeScreenState createState() => _HomeScreenState();

@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:lifestylescreening/controllers/auth_controller.dart';
 import 'package:lifestylescreening/healthpoint_icons.dart';
@@ -25,16 +27,16 @@ class _SignInState extends State<SignIn> {
 
   bool _isLoading = false;
   String userName = "";
-  bool rememberMe = false;
-  String userRole;
+  bool? rememberMe = false;
+  String? userRole;
 
-  void _onRememberMeChanged(bool newValue) => setState(() {
+  void _onRememberMeChanged(bool? newValue) => setState(() {
         rememberMe = newValue;
       });
 
   void changeValue() {
     setState(() {
-      rememberMe = !rememberMe;
+      rememberMe = !rememberMe!;
     });
   }
 
@@ -194,12 +196,14 @@ class _SignInState extends State<SignIn> {
 
   signIn() async {
     FocusScope.of(context).unfocus();
-    if (_formKey.currentState.validate()) {
+    if (_formKey.currentState!.validate()) {
       setState(() {
         _isLoading = true;
       });
-      AppUser result = await _authController.signInWithEmailAndPassword(
-          _emailController.text, _passwordController.text);
+      AppUser? result = await (_authController.signInWithEmailAndPassword(
+              _emailController.text, _passwordController.text)
+          // as FutureOr<AppUser?>
+          );
       if (result != null) {
         await _authController.saveUserDetailsOnLogin(
             result, _passwordController.text, rememberMe);
@@ -225,7 +229,7 @@ class _SignInState extends State<SignIn> {
     setState(() {
       _isLoading = false;
 
-      _key.currentState.showSnackBar(
+      _key.currentState!.showSnackBar(
         SnackBar(
           duration: const Duration(seconds: 1),
           backgroundColor: ColorTheme.lightOrange,

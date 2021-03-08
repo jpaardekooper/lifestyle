@@ -11,9 +11,9 @@ import 'package:lifestylescreening/widgets/text/h1_text.dart';
 import 'package:lifestylescreening/widgets/transitions/route_transition.dart';
 
 class SelectInterestsView extends StatefulWidget {
-  SelectInterestsView({Key key, this.username, this.bmi}) : super(key: key);
-  final String username;
-  final BMI bmi;
+  SelectInterestsView({Key? key, this.username, this.bmi}) : super(key: key);
+  final String? username;
+  final BMI? bmi;
 
   @override
   _SelectInterestsViewState createState() => _SelectInterestsViewState();
@@ -21,7 +21,7 @@ class SelectInterestsView extends StatefulWidget {
 
 class _SelectInterestsViewState extends State<SelectInterestsView> {
   final InterestRepository _interestRepository = InterestRepository();
-  List<InterestModel> _interestList;
+  List<InterestModel>? _interestList;
   List<InterestModel> _selectedInterest = [];
 
   void signUp() {
@@ -52,7 +52,7 @@ class _SelectInterestsViewState extends State<SelectInterestsView> {
   void dispose() {
     super.dispose();
     _selectedInterest.clear();
-    _interestList.clear();
+    _interestList!.clear();
   }
 
   Widget showInterestList() {
@@ -69,7 +69,7 @@ class _SelectInterestsViewState extends State<SelectInterestsView> {
             child: GridView.builder(
               physics: NeverScrollableScrollPhysics(),
               shrinkWrap: true,
-              itemCount: _interestList.length,
+              itemCount: _interestList!.length,
               gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: 2,
                 crossAxisSpacing: 10.0,
@@ -77,7 +77,7 @@ class _SelectInterestsViewState extends State<SelectInterestsView> {
                 childAspectRatio: 1.3,
               ),
               itemBuilder: (BuildContext context, int index) {
-                InterestModel _interest = _interestList[index];
+                InterestModel _interest = _interestList![index];
                 return SelectedInterestCard(
                   onTap: toggleSelected,
                   interest: _interest,
@@ -94,7 +94,7 @@ class _SelectInterestsViewState extends State<SelectInterestsView> {
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
     return Scaffold(
-      appBar: introductionAppBar(context, 0.6, false),
+      appBar: introductionAppBar(context, 0.6, false) as PreferredSizeWidget?,
       body: SingleChildScrollView(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,

@@ -19,7 +19,7 @@ class QuestionnaireController {
   }
 
   //Fetch a question for the user
-  Future<List<QuestionModel>> fetchScreeningQuestion(String category) {
+  Future<List<QuestionModel>> fetchScreeningQuestion(String? category) {
     return _questionnaireRepository.getScreeningQuestion(category);
   }
 
@@ -28,16 +28,16 @@ class QuestionnaireController {
   }
 
 //fetch an answer for the question
-  Future<List<AnswerModel>> fetchAnswer(String category, String questionId) {
+  Future<List<AnswerModel>> fetchAnswer(String? category, String? questionId) {
     return _questionnaireRepository.getAnswer(category, questionId);
   }
 
   //fetch an answer for the question
-  Future<List<AnswerModel>> fetchDTDAnswer(String questionId) {
+  Future<List<AnswerModel>> fetchDTDAnswer(String? questionId) {
     return _questionnaireRepository.getDTDAnswer(questionId);
   }
 
-  Stream<QuerySnapshot> streamQuestion(String id) {
+  Stream<QuerySnapshot> streamQuestion(String? id) {
     return _questionnaireRepository.streamQuestions(id);
   }
 
@@ -45,7 +45,7 @@ class QuestionnaireController {
     return _questionnaireRepository.fetchQuestions(snapshot);
   }
 
-  Stream<QuerySnapshot> streamAnswers(String id, String questionId) {
+  Stream<QuerySnapshot> streamAnswers(String? id, String? questionId) {
     return _questionnaireRepository.streamAnswers(id, questionId);
   }
 
@@ -53,37 +53,37 @@ class QuestionnaireController {
     return _questionnaireRepository.fetchAnswers(snapshot);
   }
 
-  Future<void> setQuestion(CategoryModel category, String questionId, Map data,
-      int totalQuestions, bool _newQuestion) {
+  Future<void> setQuestion(CategoryModel category, String? questionId, Map data,
+      int? totalQuestions, bool? _newQuestion) {
     return _questionnaireRepository.setQuestion(
         category, questionId, data, totalQuestions, _newQuestion);
   }
 
   Future<void> removeQuestion(
-      CategoryModel category, String questionId, int totalQuestions) {
+      CategoryModel? category, String? questionId, int? totalQuestions) {
     return _questionnaireRepository.removeQuestion(
         category, questionId, totalQuestions);
   }
 
-  Future<void> setAnswer(String surveyID, String questionId, String answerId,
+  Future<void> setAnswer(String? surveyID, String? questionId, String? answerId,
       Map data, bool insertNewAnswer) {
     return _questionnaireRepository.setAnswer(
         surveyID, questionId, answerId, data, insertNewAnswer);
   }
 
   Future<void> removeAnswerFromQuestion(
-      String parentId, String questionDoc, String answerDoc) {
+      String? parentId, String? questionDoc, String? answerDoc) {
     return _questionnaireRepository.removeAnswerFromQuestion(
         parentId, questionDoc, answerDoc);
   }
 
   Future<void> setUserSurveyAnswer(String surveyTitle, AppUser user,
-      String category, int index, Map surveyData, Map data, String id) {
+      String? category, int? index, Map surveyData, Map data, String? id) {
     return _questionnaireRepository.setUserSurveyAnswers(
         surveyTitle, user, category, index, surveyData, data, id);
   }
 
-  Future<void> checkSurveyResult(String surveyTitle, String email) {
+  Future<void> checkSurveyResult(String surveyTitle, String? email) {
     return _questionnaireRepository.checkSurveyResult(surveyTitle, email);
   }
 
@@ -93,11 +93,11 @@ class QuestionnaireController {
         surveyTitle, user, surveyResult);
   }
 
-  Future<String> createDTDid() {
+  Future<String?> createDTDid() {
     return _questionnaireRepository.createDTDid();
   }
 
-  Future<void> setDTDSurveyResults(String id, Map data) {
+  Future<void> setDTDSurveyResults(String? id, Map data) {
     return _questionnaireRepository.setDTDSurveyResults(id, data);
   }
 }

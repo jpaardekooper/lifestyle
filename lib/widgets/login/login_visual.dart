@@ -14,7 +14,7 @@ import 'package:lifestylescreening/widgets/transitions/image_transition.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 
 class LoginVisual extends StatelessWidget {
-  LoginVisual({Key key}) : super(key: key);
+  LoginVisual({Key? key}) : super(key: key);
 
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
@@ -60,7 +60,7 @@ class LoginVisual extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final data = InheritedDataProvider.of(context).data;
+    final data = InheritedDataProvider.of(context)!.data;
     final size = MediaQuery.of(context).size;
 
     Future.delayed(const Duration(seconds: 4), () {

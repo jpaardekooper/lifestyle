@@ -4,7 +4,7 @@ import 'package:lifestylescreening/models/survey_model.dart';
 
 class RemoveSurvey extends StatelessWidget {
   RemoveSurvey({this.survey});
-  final SurveyModel survey;
+  final SurveyModel? survey;
 
   final SurveyController _surveyController = SurveyController();
 
@@ -18,8 +18,8 @@ class RemoveSurvey extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text("id: " + survey.id, style: TextStyle(color: Colors.white)),
-          Text("Titel: " + survey.title, style: TextStyle(color: Colors.white)),
+          Text("id: " + survey!.id!, style: TextStyle(color: Colors.white)),
+          Text("Titel: " + survey!.title!, style: TextStyle(color: Colors.white)),
           SizedBox(
             height: 10,
           ),
@@ -35,7 +35,7 @@ class RemoveSurvey extends StatelessWidget {
         RaisedButton(
           child: Text('Opslaan'),
           onPressed: () => _surveyController
-              .removeSurvey(survey.id)
+              .removeSurvey(survey!.id)
               .then((value) => Navigator.of(context).pop()),
         )
       ],

@@ -21,7 +21,7 @@ class ResultRepository implements IResultRepository {
   }
 
   @override
-  Stream<QuerySnapshot> streamResultUsers(String surveyId) {
+  Stream<QuerySnapshot> streamResultUsers(String? surveyId) {
     return FirebaseFirestore.instance
         .collection('results')
         .doc(surveyId)
@@ -44,7 +44,7 @@ class ResultRepository implements IResultRepository {
   }
 
   @override
-  Future<List<DtdAwnserModel>> getDtdAnswers(String dtdId) async {
+  Future<List<DtdAwnserModel>> getDtdAnswers(String? dtdId) async {
     List<DtdAwnserModel> _list = [];
 
     var snapshot = await FirebaseFirestore.instance
@@ -59,14 +59,14 @@ class ResultRepository implements IResultRepository {
       return _list.add(DtdAwnserModel.fromSnapshot(doc));
     }).toList();
 
-    _list.sort((a, b) => a.order.compareTo(b.order));
+    _list.sort((a, b) => a.order!.compareTo(b.order!));
 
     return _list;
   }
 
   @override
   Future<List<SurveyAnswerModel>> getSurveyAnswers(
-      String surveyId, String category) async {
+      String? surveyId, String? category) async {
     List<SurveyAnswerModel> _list = [];
 
     var snapshot = await FirebaseFirestore.instance
@@ -74,7 +74,7 @@ class ResultRepository implements IResultRepository {
         .doc('j4HGRmdE62VTRbtqYsvM')
         .collection('scores')
         .doc(surveyId)
-        .collection(category)
+        .collection(category!)
         .get();
 
     snapshot.docs.map((DocumentSnapshot doc) {

@@ -9,7 +9,7 @@ import 'package:lifestylescreening/widgets/transitions/route_transition.dart';
 import 'package:lifestylescreening/widgets/web/start_survey.dart';
 
 class WebDisclaimer extends StatefulWidget {
-  const WebDisclaimer({Key key}) : super(key: key);
+  const WebDisclaimer({Key? key}) : super(key: key);
 
   @override
   _WebDisclaimerViewState createState() => _WebDisclaimerViewState();
@@ -20,7 +20,7 @@ class _WebDisclaimerViewState extends State<WebDisclaimer> {
       QuestionnaireController();
 
   onTap() async {
-    String id = await _questionnaireController.createDTDid();
+    String? id = await _questionnaireController.createDTDid();
 
     await Navigator.of(context).push(
       createRoute(

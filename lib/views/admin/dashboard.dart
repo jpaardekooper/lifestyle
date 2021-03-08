@@ -9,7 +9,7 @@ import 'package:lifestylescreening/views/admin/survey/survey_view.dart';
 import 'package:lifestylescreening/widgets/inherited/inherited_widget.dart';
 
 class Dashboard extends StatefulWidget {
-  Dashboard({Key key}) : super(key: key);
+  Dashboard({Key? key}) : super(key: key);
 
   @override
   _DashboardState createState() => _DashboardState();
@@ -17,9 +17,9 @@ class Dashboard extends StatefulWidget {
 
 class _DashboardState extends State<Dashboard>
     with SingleTickerProviderStateMixin {
-  String userEmail;
+  String? userEmail;
 
-  TabController tabController;
+  TabController? tabController;
   int active = 0;
   @override
   void initState() {
@@ -27,14 +27,14 @@ class _DashboardState extends State<Dashboard>
     tabController = TabController(vsync: this, length: 5, initialIndex: 0)
       ..addListener(() {
         setState(() {
-          active = tabController.index;
+          active = tabController!.index;
         });
       });
   }
 
   @override
   Widget build(BuildContext context) {
-    final _userData = InheritedDataProvider.of(context);
+    final _userData = InheritedDataProvider.of(context)!;
 
     return WillPopScope(
       onWillPop: () => Future.value(false),
@@ -108,9 +108,9 @@ class _DashboardState extends State<Dashboard>
     return ListView(
       children: <Widget>[
         FlatButton(
-          color: tabController.index == 0 ? Colors.grey[100] : Colors.white,
+          color: tabController!.index == 0 ? Colors.grey[100] : Colors.white,
           onPressed: () {
-            tabController.animateTo(0);
+            tabController!.animateTo(0);
             if (drawerStatus) {
               Navigator.pop(context);
             }
@@ -138,10 +138,10 @@ class _DashboardState extends State<Dashboard>
           ),
         ),
         FlatButton(
-          color: tabController.index == 1 ? Colors.grey[100] : Colors.white,
+          color: tabController!.index == 1 ? Colors.grey[100] : Colors.white,
           //color: Colors.grey[100],
           onPressed: () {
-            tabController.animateTo(1);
+            tabController!.animateTo(1);
             if (drawerStatus) {
               Navigator.pop(context);
             }
@@ -168,9 +168,9 @@ class _DashboardState extends State<Dashboard>
           ),
         ),
         FlatButton(
-          color: tabController.index == 2 ? Colors.grey[100] : Colors.white,
+          color: tabController!.index == 2 ? Colors.grey[100] : Colors.white,
           onPressed: () {
-            tabController.animateTo(2);
+            tabController!.animateTo(2);
             if (drawerStatus) {
               Navigator.pop(context);
             }
@@ -196,9 +196,9 @@ class _DashboardState extends State<Dashboard>
           ),
         ),
         FlatButton(
-          color: tabController.index == 3 ? Colors.grey[100] : Colors.white,
+          color: tabController!.index == 3 ? Colors.grey[100] : Colors.white,
           onPressed: () {
-            tabController.animateTo(3);
+            tabController!.animateTo(3);
             if (drawerStatus) {
               Navigator.pop(context);
             }
@@ -226,9 +226,9 @@ class _DashboardState extends State<Dashboard>
           ),
         ),
         FlatButton(
-          color: tabController.index == 4 ? Colors.grey[100] : Colors.white,
+          color: tabController!.index == 4 ? Colors.grey[100] : Colors.white,
           onPressed: () {
-            tabController.animateTo(4);
+            tabController!.animateTo(4);
             if (drawerStatus) {
               Navigator.pop(context);
             }

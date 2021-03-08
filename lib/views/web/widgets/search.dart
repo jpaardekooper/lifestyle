@@ -6,7 +6,7 @@ import 'package:lifestylescreening/widgets/forms/custom_textformfield.dart';
 
 // ignore: must_be_immutable
 class Search extends StatelessWidget {
-  Search({@required this.function});
+  Search({required this.function});
   final Function(BuildContext) function;
 
   final _formKey = GlobalKey<FormState>();
@@ -73,7 +73,7 @@ class Search extends StatelessWidget {
                       color: Colors.transparent,
                       child: InkWell(
                         onTap: () async {
-                          if (_formKey.currentState.validate()) {
+                          if (_formKey.currentState!.validate()) {
                             Map<String, dynamic> data = {
                               "email": controller.text,
                               "date": DateTime.now(),

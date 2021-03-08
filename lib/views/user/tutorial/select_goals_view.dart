@@ -12,11 +12,11 @@ import 'package:lifestylescreening/widgets/text/h1_text.dart';
 import 'package:lifestylescreening/widgets/transitions/route_transition.dart';
 
 class SelectGoalsView extends StatefulWidget {
-  SelectGoalsView({Key key, this.username, this.bmi, this.selectedInterestList})
+  SelectGoalsView({Key? key, this.username, this.bmi, this.selectedInterestList})
       : super(key: key);
-  final String username;
-  final BMI bmi;
-  final List<InterestModel> selectedInterestList;
+  final String? username;
+  final BMI? bmi;
+  final List<InterestModel>? selectedInterestList;
 
   @override
   _SelectGoalsViewState createState() => _SelectGoalsViewState();
@@ -24,7 +24,7 @@ class SelectGoalsView extends StatefulWidget {
 
 class _SelectGoalsViewState extends State<SelectGoalsView> {
   final GoalsRepository _goalsRepository = GoalsRepository();
-  List<GoalsModel> _goalsList = [];
+  List<GoalsModel>? _goalsList = [];
   List<GoalsModel> _selectedGoals = [];
 
   void signUp() {
@@ -54,7 +54,7 @@ class _SelectGoalsViewState extends State<SelectGoalsView> {
   @override
   void dispose() {
     super.dispose();
-    _goalsList.clear();
+    _goalsList!.clear();
     _selectedGoals.clear();
   }
 
@@ -72,9 +72,9 @@ class _SelectGoalsViewState extends State<SelectGoalsView> {
             child: ListView.builder(
               physics: NeverScrollableScrollPhysics(),
               shrinkWrap: true,
-              itemCount: _goalsList.length,
+              itemCount: _goalsList!.length,
               itemBuilder: (BuildContext context, int index) {
-                GoalsModel _goals = _goalsList[index];
+                GoalsModel _goals = _goalsList![index];
                 return SelectedGoalCard(onTap: toggleSelected, goal: _goals);
               },
             ),
@@ -88,7 +88,7 @@ class _SelectGoalsViewState extends State<SelectGoalsView> {
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
     return Scaffold(
-      appBar: introductionAppBar(context, 0.8, false),
+      appBar: introductionAppBar(context, 0.8, false) as PreferredSizeWidget?,
       body: SingleChildScrollView(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,

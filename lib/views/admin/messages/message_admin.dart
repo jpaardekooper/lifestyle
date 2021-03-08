@@ -11,10 +11,10 @@ import 'package:lifestylescreening/widgets/text/h2_text.dart';
 import 'package:lifestylescreening/widgets/transitions/fade_transition.dart';
 
 class MessageAdmin extends StatefulWidget {
-  MessageAdmin({@required this.email, this.id});
+  MessageAdmin({required this.email, this.id});
 
-  final String email;
-  final String id;
+  final String? email;
+  final String? id;
 
   @override
   _MessageAdminState createState() => _MessageAdminState();
@@ -23,7 +23,7 @@ class MessageAdmin extends StatefulWidget {
 class _MessageAdminState extends State<MessageAdmin> {
   TextEditingController messageController = TextEditingController();
   ChatController _chatController = ChatController();
-  StreamSubscription<QuerySnapshot> _currentSubscription;
+  StreamSubscription<QuerySnapshot>? _currentSubscription;
   List<MessageModel> messageList = <MessageModel>[];
   bool loading = true;
 
@@ -117,7 +117,7 @@ class _MessageAdminState extends State<MessageAdmin> {
                         ),
                         enabledBorder: OutlineInputBorder(
                           borderSide:
-                              BorderSide(color: Colors.grey[500], width: 1.0),
+                              BorderSide(color: Colors.grey[500]!, width: 1.0),
                           borderRadius: BorderRadius.circular(23),
                         ),
                         focusedBorder: OutlineInputBorder(
@@ -154,7 +154,7 @@ class _MessageAdminState extends State<MessageAdmin> {
   sendMessage() {
     if (messageController.text.isNotEmpty) {
       Map<String, dynamic> chatMessage = {
-        'description': messageController.text ?? "",
+        'description': messageController.text,
         'sender': widget.id == widget.email,
         'timestamp': DateTime.now(),
       };

@@ -4,10 +4,10 @@ import 'package:lifestylescreening/models/method_model.dart';
 import 'package:lifestylescreening/widgets/forms/custom_textformfield.dart';
 
 class EditMethod extends StatefulWidget {
-  EditMethod({@required this.recipeId, @required this.method, this.newMethod});
-  final String recipeId;
+  EditMethod({required this.recipeId, required this.method, this.newMethod});
+  final String? recipeId;
   final MethodModel method;
-  final bool newMethod;
+  final bool? newMethod;
 
   @override
   _EditMethodState createState() => _EditMethodState();
@@ -31,7 +31,7 @@ class _EditMethodState extends State<EditMethod> {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: widget.newMethod
+      title: widget.newMethod!
           ? Text("Voeg een stappenplan toe")
           : Text(
               "ID: ${widget.method.id}",
@@ -83,7 +83,7 @@ class _EditMethodState extends State<EditMethod> {
   }
 
   void saveSurveyChanges(BuildContext context) {
-    if (_formKey.currentState.validate()) {
+    if (_formKey.currentState!.validate()) {
       Map<String, dynamic> data = {
         "step": int.parse(_stepController.text),
         "instruction": _instructionController.text,

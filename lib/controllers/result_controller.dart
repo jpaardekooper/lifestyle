@@ -18,7 +18,7 @@ class ResultController {
     return _resultRepository.getResultList(snapshot);
   }
 
-  Stream<QuerySnapshot> streamResultUsers(String surveyId) {
+  Stream<QuerySnapshot> streamResultUsers(String? surveyId) {
     return _resultRepository.streamResultUsers(surveyId);
   }
 
@@ -30,12 +30,12 @@ class ResultController {
     return _resultRepository.getSurveyUserList(snapshot);
   }
 
-  Future<List<DtdAwnserModel>> getDtdAnswers(String dtdId) {
+  Future<List<DtdAwnserModel>> getDtdAnswers(String? dtdId) {
     return _resultRepository.getDtdAnswers(dtdId);
   }
 
   Future<List<SurveyAnswerModel>> getSurveyAnswers(
-      String surveyId, String category) {
+      String? surveyId, String? category) {
     return _resultRepository.getSurveyAnswers(surveyId, category);
   }
 }

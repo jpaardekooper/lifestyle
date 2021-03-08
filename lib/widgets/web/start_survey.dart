@@ -13,8 +13,8 @@ import 'package:lifestylescreening/widgets/web/download_app.dart';
 import 'package:lifestylescreening/widgets/web/checkbox_survey.dart';
 
 class StartSurvey extends StatefulWidget {
-  const StartSurvey({Key key, @required this.docId}) : super(key: key);
-  final String docId;
+  const StartSurvey({Key? key, required this.docId}) : super(key: key);
+  final String? docId;
   @override
   _StartSurveyState createState() => _StartSurveyState();
 }
@@ -24,15 +24,15 @@ class _StartSurveyState extends State<StartSurvey> {
       QuestionnaireController();
 
   final _formKey = GlobalKey<FormState>();
-  String selectedAnswer;
-  int nextQuestionInQue;
-  int _tempNextQuestion;
+  String? selectedAnswer;
+  int? nextQuestionInQue;
+  int? _tempNextQuestion;
 
-  double questionAnsweredValue;
-  double valueforquestion;
-  int calculateDifference;
-  List<QuestionModel> _questionList;
-  String currentQuestion = "";
+  late double questionAnsweredValue;
+  late double valueforquestion;
+  late int calculateDifference;
+  List<QuestionModel>? _questionList;
+  String? currentQuestion = "";
 
   @override
   void initState() {
@@ -51,7 +51,7 @@ class _StartSurveyState extends State<StartSurvey> {
   //vraag 8 = Overleg alvorens met een specialist om de app te downloaden
 
   nextQuestion() async {
-    if (_formKey.currentState.validate()) {
+    if (_formKey.currentState!.validate()) {
       Map<String, dynamic> surveyData = {
         "question": currentQuestion,
         "answer": controller.text,
@@ -62,7 +62,7 @@ class _StartSurveyState extends State<StartSurvey> {
           widget.docId, surveyData);
 
       setState(() {
-        calculateDifference = _tempNextQuestion - nextQuestionInQue;
+        calculateDifference = _tempNextQuestion! - nextQuestionInQue!;
 
         nextQuestionInQue = _tempNextQuestion;
         selectedAnswer = "";
@@ -82,14 +82,14 @@ class _StartSurveyState extends State<StartSurvey> {
       future: _questionnaireController.fetchDTDQuestion(),
       builder: (context, snapshot) {
         _questionList = snapshot.data;
-        if (_questionList == null || _questionList.isEmpty) {
+        if (_questionList == null || _questionList!.isEmpty) {
           return CircularProgressIndicator();
         } else {
-          valueforquestion = 1.0 / _questionList.length.toDouble();
+          valueforquestion = 1.0 / _questionList!.length.toDouble();
 
 //get the correct question from the list
           var question =
-              _questionList.singleWhere((i) => i.order == nextQuestionInQue);
+              _questionList!.singleWhere((i) => i.order == nextQuestionInQue);
 
           currentQuestion = question.question;
 
@@ -121,11 +121,11 @@ class _StartSurveyState extends State<StartSurvey> {
     );
   }
 
-  void setNextQuestion(int number) {
+  void setNextQuestion(int? number) {
     _tempNextQuestion = number;
   }
 
-  Widget fetchAnswer(String questionId) {
+  Widget fetchAnswer(String? questionId) {
     return FutureBuilder<List<AnswerModel>>(
       future: _questionnaireController.fetchDTDAnswer(questionId),
       builder: (context, snapshot) {
@@ -165,13 +165,13 @@ class _StartSurveyState extends State<StartSurvey> {
                           groupValue: selectedAnswer,
                           activeColor: ColorTheme.accentOrange,
                           title: Text(
-                            answer[index].option,
+                            answer[index].option!,
                             style: TextStyle(
                                 fontSize: 20, fontWeight: FontWeight.bold),
                           ),
-                          onChanged: (value) {
+                          onChanged: (dynamic value) {
                             setState(() {
-                              controller.text = answer[index].option;
+                              controller.text = answer[index].option!;
                               selectedAnswer = value;
                               setNextQuestion(answer[index].next);
                             });

@@ -11,7 +11,7 @@ class FoodPreparationController {
       FoodPreparationRepository();
 
   //stream ingredients data
-  Stream<QuerySnapshot> streamIngredients(String recipeId) {
+  Stream<QuerySnapshot> streamIngredients(String? recipeId) {
     return _foodPreparationRepository.streamIngredients(recipeId);
   }
 
@@ -22,7 +22,7 @@ class FoodPreparationController {
   }
 
 //stream method data
-  Stream<QuerySnapshot> streamMethod(String recipeId) {
+  Stream<QuerySnapshot> streamMethod(String? recipeId) {
     return _foodPreparationRepository.streamMethod(recipeId);
   }
 
@@ -32,7 +32,7 @@ class FoodPreparationController {
   }
 
 //stream nutritional data
-  Stream<QuerySnapshot> streamNutritionalValue(String recipeId) {
+  Stream<QuerySnapshot> streamNutritionalValue(String? recipeId) {
     return _foodPreparationRepository.streamNutritionalValue(recipeId);
   }
 
@@ -44,36 +44,36 @@ class FoodPreparationController {
 
   //update or add new data for ingredient
   Future<void> updateIngredient(
-      String recipeId, String ingredientId, Map data, bool newIngredient) {
+      String? recipeId, String? ingredientId, Map data, bool? newIngredient) {
     return _foodPreparationRepository.updateIngredient(
         recipeId, ingredientId, data, newIngredient);
   }
 
   //update or add new data for method
   Future<void> updateMethod(
-      String recipeId, String methodId, Map data, bool newMethod) {
+      String? recipeId, String? methodId, Map data, bool? newMethod) {
     return _foodPreparationRepository.updateMethod(
         recipeId, methodId, data, newMethod);
   }
 
   //update or add new data for nutritional
-  Future<void> updateNutritrionalValue(String recipeId,
-      String nutritrionalValueId, Map data, bool newNutritional) {
+  Future<void> updateNutritrionalValue(String? recipeId,
+      String? nutritrionalValueId, Map data, bool? newNutritional) {
     return _foodPreparationRepository.updateNutritionalValue(
         recipeId, nutritrionalValueId, data, newNutritional);
   }
 
   //remove data
 
-  Future<void> removeIngredient(String recipeId, String ingredientId) {
+  Future<void> removeIngredient(String? recipeId, String? ingredientId) {
     return _foodPreparationRepository.deleteIngredient(recipeId, ingredientId);
   }
 
-  Future<void> removeMethod(String recipeId, String methodId) {
+  Future<void> removeMethod(String? recipeId, String? methodId) {
     return _foodPreparationRepository.deleteMethod(recipeId, methodId);
   }
 
-  Future<void> removeNutritionalValue(String recipeId, String nutritionalID) {
+  Future<void> removeNutritionalValue(String? recipeId, String? nutritionalID) {
     return _foodPreparationRepository.deleteNutritrionalValue(
         recipeId, nutritionalID);
   }

@@ -27,13 +27,13 @@ class _RecipeFeedViewState extends State<RecipeFeedView> {
       child: FutureBuilder<List<RecipeModel>>(
         future: _recipeController.getRecipeListOnce(),
         builder: (context, snapshot) {
-          final List<RecipeModel> _recipeList = snapshot.data;
+          final List<RecipeModel>? _recipeList = snapshot.data;
           if (!snapshot.hasData) {
             return CircularProgressIndicator();
           } else {
             return RecipeGrid(
               recipeList: _recipeList,
-              userData: _userData.data,
+              userData: _userData!.data,
               userRecipe: false,
               onTap: null,
             );

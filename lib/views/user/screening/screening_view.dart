@@ -21,7 +21,7 @@ import 'package:lifestylescreening/widgets/text/h1_text.dart';
 import 'package:lifestylescreening/widgets/text/h2_text.dart';
 
 class ScreeningView extends StatefulWidget {
-  const ScreeningView({@required this.user, @required this.surveyTitle});
+  const ScreeningView({required this.user, required this.surveyTitle});
   final AppUser user;
   final String surveyTitle;
   @override
@@ -34,17 +34,17 @@ class _ScreeningViewState extends State<ScreeningView> {
 
   var _formKey;
 
-  double progressIndicatorValue;
-  int categoryIndex;
-  int screeningDuration;
-  TimerService timerService;
-  ScreeningCalc sc; //calculator for screening
+  double? progressIndicatorValue;
+  int? categoryIndex;
+  int? screeningDuration;
+  TimerService? timerService;
+  late ScreeningCalc sc; //calculator for screening
 
-  List<SurveyResultModel> _surveyResult;
-  List<SurveyModel> _surveyList;
-  List<AnswerModel> _userAnswers;
-  List<String> _questions;
-  String category;
+  List<SurveyResultModel>? _surveyResult;
+  List<SurveyModel>? _surveyList;
+  late List<AnswerModel> _userAnswers;
+  late List<String?> _questions;
+  String? category;
   List<String> _questionAnswer = [];
 
   @override
@@ -55,7 +55,7 @@ class _ScreeningViewState extends State<ScreeningView> {
     category = "";
     categoryIndex = 0;
     progressIndicatorValue = 0;
-    timerService.start();
+    timerService!.start();
     _surveyResult = [];
     _surveyList = [];
     _userAnswers = [];
@@ -65,10 +65,10 @@ class _ScreeningViewState extends State<ScreeningView> {
   }
 
   deleteControllers() async {
-    timerService.stop();
+    timerService!.stop();
     _userAnswers.clear();
-    _surveyResult.clear();
-    _surveyList.clear();
+    _surveyResult!.clear();
+    _surveyList!.clear();
     _questions.clear();
     category = "";
     categoryIndex = 0;
@@ -92,10 +92,10 @@ class _ScreeningViewState extends State<ScreeningView> {
 
     if (_formKey.currentState.validate()) {
       FocusScope.of(context).unfocus();
-      screeningDuration = timerService.currentDuration.inSeconds;
+      screeningDuration = timerService!.currentDuration.inSeconds;
 
-      List<int> scorevalues = [];
-      List<String> categoriesList = [];
+      List<int>? scorevalues = [];
+      List<String>? categoriesList = [];
       //total score for a category
       int userCategoryScore = 0;
       int totalScorevalue = 0;
@@ -113,32 +113,32 @@ class _ScreeningViewState extends State<ScreeningView> {
         "date": DateTime.now()
       };
 
-      if (_surveyList != null && _surveyList.isNotEmpty) {
-        categoriesList = _surveyList.first.category;
+      if (_surveyList != null && _surveyList!.isNotEmpty) {
+        categoriesList = _surveyList!.first.category;
 
         scorevalues.add(userCategoryScore);
       }
-      if (_surveyResult != null && _surveyResult.isNotEmpty) {
-        categoriesList = _surveyResult.first.categories;
+      if (_surveyResult != null && _surveyResult!.isNotEmpty) {
+        categoriesList = _surveyResult!.first.categories;
 
         //first time doing survey
         if (category == "Bewegen") {
           totalScorevalue = userCategoryScore;
         } else {
-          scorevalues = _surveyResult.first.points_per_category;
+          scorevalues = _surveyResult!.first.points_per_category;
 
-          scorevalues.add(userCategoryScore);
+          scorevalues!.add(userCategoryScore);
           //adding total score from fetch data + userCategory score
           totalScorevalue =
-              _surveyResult.first.total_points + userCategoryScore;
+              _surveyResult!.first.total_points! + userCategoryScore;
           //adding duration from fetched data + screening duration
           totalDurationValue =
-              _surveyResult.first.total_duration + screeningDuration;
+              _surveyResult!.first.total_duration! + screeningDuration!;
         }
       }
 
-      if (categoryIndex < categoriesList.length) {
-        nextIndexQuestion += categoryIndex + 1;
+      if (categoryIndex! < categoriesList!.length) {
+        nextIndexQuestion += categoryIndex! + 1;
       }
 
       Map<String, dynamic> surveyData = {
@@ -159,7 +159,7 @@ class _ScreeningViewState extends State<ScreeningView> {
           categoryIndex,
           surveyData,
           data,
-          category == "Bewegen" ? "" : _surveyResult.first.id);
+          category == "Bewegen" ? "" : _surveyResult!.first.id);
 
       await deleteControllers();
 
@@ -173,12 +173,12 @@ class _ScreeningViewState extends State<ScreeningView> {
     }
   }
 
-  Widget showAnsers(String category, QuestionModel question, int nr) {
+  Widget showAnsers(String? category, QuestionModel question, int nr) {
     return FutureBuilder<List<AnswerModel>>(
       //fetching data from the corresponding questionId
       future: _questionnaireController.fetchAnswer(category, question.id),
       builder: (ctxt, snapshot) {
-        List<AnswerModel> _answerList = snapshot.data;
+        List<AnswerModel>? _answerList = snapshot.data;
         if (snapshot.connectionState != ConnectionState.done)
           return Center(
             child: Container(),
@@ -200,11 +200,11 @@ class _ScreeningViewState extends State<ScreeningView> {
 
 //  List<int> controllersints = [];
 
-  Widget getScreeningQuestion(String category) {
+  Widget getScreeningQuestion(String? category) {
     return FutureBuilder<List<QuestionModel>>(
       future: _questionnaireController.fetchScreeningQuestion(category),
       builder: (context, snapshot) {
-        List<QuestionModel> _questionList = snapshot.data;
+        List<QuestionModel>? _questionList = snapshot.data;
 
         if (!snapshot.hasData) {
           return Center(
@@ -215,7 +215,7 @@ class _ScreeningViewState extends State<ScreeningView> {
           return ListView.builder(
             physics: NeverScrollableScrollPhysics(),
             shrinkWrap: true,
-            itemCount: _questionList.length,
+            itemCount: _questionList!.length,
             itemBuilder: (BuildContext ctx, index) {
               final QuestionModel question = _questionList[index];
 
@@ -240,9 +240,9 @@ class _ScreeningViewState extends State<ScreeningView> {
                       ],
                     ),
                     //check if question url exist and not equal to 0
-                    question.url.contains("https://") && question.url != 0
+                    question.url!.contains("https://") && question.url != 0
                         ? CachedNetworkImage(
-                            imageUrl: question.url,
+                            imageUrl: question.url!,
                             progressIndicatorBuilder:
                                 (ctx, url, downloadProgress) =>
                                     CircularProgressIndicator(
@@ -264,7 +264,7 @@ class _ScreeningViewState extends State<ScreeningView> {
     );
   }
 
-  Widget showFirstTimeSurvey(double _progressValue, String category) {
+  Widget showFirstTimeSurvey(double _progressValue, String? category) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -311,13 +311,13 @@ class _ScreeningViewState extends State<ScreeningView> {
     return FutureBuilder<List<SurveyResultModel>>(
         //fetching data from the corresponding questionId
         future: _questionnaireController.checkSurveyResult(
-            widget.surveyTitle, widget.user.email),
+            widget.surveyTitle, widget.user.email) as Future<List<SurveyResultModel>>?,
         builder: (context, snapshot) {
           _surveyResult = snapshot.data;
           //while loading
           //no data found or doesnt exist
           //doing quiz for the first time
-          if (!snapshot.hasData || _surveyResult.isEmpty) {
+          if (!snapshot.hasData || _surveyResult!.isEmpty) {
             return FutureBuilder<List<SurveyModel>>(
               //fetching data from the corresponding questionId
               future:
@@ -334,14 +334,14 @@ class _ScreeningViewState extends State<ScreeningView> {
                 } else {
                   //if data has been found
                   _surveyList = snapshot.data;
-                  category = _surveyList.first.category[categoryIndex];
+                  category = _surveyList!.first.category![categoryIndex!];
                   final _progressValue =
-                      sc.calculateProgress(_surveyList.first.category.length);
+                      sc.calculateProgress(_surveyList!.first.category!.length);
 
                   progressIndicatorValue = _progressValue * categoryIndex;
 
-                  if (categoryIndex == _surveyList.first.category.length) {
-                    return surveyIsFinished(_surveyResult.first);
+                  if (categoryIndex == _surveyList!.first.category!.length) {
+                    return surveyIsFinished(_surveyResult!.first);
                   }
                   //showing the actual survey data
                   else {
@@ -353,21 +353,21 @@ class _ScreeningViewState extends State<ScreeningView> {
             );
           } else {
             final _progressValue =
-                sc.calculateProgress(_surveyResult.first.categories.length);
+                sc.calculateProgress(_surveyResult!.first.categories!.length);
 
-            if (_surveyResult.first.finished) {
+            if (_surveyResult!.first.finished!) {
               categoryIndex = 0;
             } else {
-              categoryIndex = _surveyResult.first.index;
+              categoryIndex = _surveyResult!.first.index;
             }
 
             progressIndicatorValue = _progressValue * categoryIndex;
 
-            if (categoryIndex == _surveyResult.first.categories.length &&
-                _surveyResult.first.finished == false) {
-              return surveyIsFinished(_surveyResult.first);
+            if (categoryIndex == _surveyResult!.first.categories!.length &&
+                _surveyResult!.first.finished == false) {
+              return surveyIsFinished(_surveyResult!.first);
             } else {
-              category = _surveyResult.first.categories[categoryIndex];
+              category = _surveyResult!.first.categories![categoryIndex!];
               return showFirstTimeSurvey(_progressValue, category);
             }
           }

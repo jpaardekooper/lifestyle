@@ -3,7 +3,7 @@ import 'package:lifestylescreening/models/goals_model.dart';
 import 'package:lifestylescreening/widgets/text/h2_text.dart';
 
 class SelectedGoalCard extends StatefulWidget {
-  SelectedGoalCard({Key key, @required this.onTap, @required this.goal})
+  SelectedGoalCard({Key? key, required this.onTap, required this.goal})
       : super(key: key);
   final Function(bool, GoalsModel) onTap;
   final GoalsModel goal;

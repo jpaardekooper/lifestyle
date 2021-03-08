@@ -6,7 +6,7 @@ abstract class ICategoryRepository {
 
   List<CategoryModel> fetchCategories(QuerySnapshot snapshot);
 
-  Future<void> updateCategory(String id, Map data, bool newItem);
+  Future<void> updateCategory(String? id, Map data, bool? newItem);
 
-  Future<void> removeCategory(String id);
+  Future<void> removeCategory(String? id);
 }

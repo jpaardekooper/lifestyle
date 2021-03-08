@@ -5,9 +5,9 @@ import 'package:lifestylescreening/models/question_model.dart';
 
 class RemoveQuestion extends StatelessWidget {
   RemoveQuestion({this.category, this.question, this.totalQuestions});
-  final CategoryModel category;
-  final QuestionModel question;
-  final int totalQuestions;
+  final CategoryModel? category;
+  final QuestionModel? question;
+  final int? totalQuestions;
 
   final QuestionnaireController _questionnaireController =
       QuestionnaireController();
@@ -21,8 +21,8 @@ class RemoveQuestion extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text("id: " + question.id),
-          Text("Titel: " + question.question),
+          Text("id: " + question!.id!),
+          Text("Titel: " + question!.question!),
           SizedBox(
             height: 10,
           ),
@@ -38,7 +38,7 @@ class RemoveQuestion extends StatelessWidget {
         RaisedButton(
           child: Text('Opslaan'),
           onPressed: () => _questionnaireController
-              .removeQuestion(category, question.id, totalQuestions)
+              .removeQuestion(category, question!.id, totalQuestions)
               .then((value) => Navigator.of(context).pop()),
         )
       ],

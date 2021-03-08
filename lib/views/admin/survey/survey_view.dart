@@ -18,7 +18,7 @@ class SurveyView extends StatefulWidget {
 class _SurveyViewState extends State<SurveyView> {
   final SurveyController _surveyController = SurveyController();
 
-  StreamSubscription<QuerySnapshot> _currentSubscription;
+  StreamSubscription<QuerySnapshot>? _currentSubscription;
   bool _isLoading = true;
   List<SurveyModel> _surveys = <SurveyModel>[];
 
@@ -95,13 +95,13 @@ class _SurveyViewState extends State<SurveyView> {
                     tileColor: ColorTheme.extraLightOrange,
                     title: H2Text(text: survey.title),
                     subtitle: ListView.builder(
-                      itemCount: survey.category.length,
+                      itemCount: survey.category!.length,
                       shrinkWrap: true,
                       itemBuilder: (context, index) {
                         return Row(
                           children: [
                             Text("${(index + 1)} \t"),
-                            Text(survey.category[index]),
+                            Text(survey.category![index]),
                           ],
                         );
                       },

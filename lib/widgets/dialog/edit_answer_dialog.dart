@@ -15,13 +15,13 @@ class Formule {
 
 class EditAnswerDialog extends StatefulWidget {
   const EditAnswerDialog({
-    @required this.surveyId,
-    @required this.question,
-    @required this.answer,
-    @required this.insertNewAnswer,
-    @required this.totalQuestion,
+    required this.surveyId,
+    required this.question,
+    required this.answer,
+    required this.insertNewAnswer,
+    required this.totalQuestion,
   });
-  final String surveyId;
+  final String? surveyId;
   final QuestionModel question;
   final AnswerModel answer;
   final bool insertNewAnswer;
@@ -41,13 +41,13 @@ class _EditAnswerDialogState extends State<EditAnswerDialog> {
   TextEditingController nextController = TextEditingController();
   TextEditingController orderController = TextEditingController();
   TextEditingController optionController = TextEditingController();
-  bool optionTypeIsNumber;
+  bool? optionTypeIsNumber;
   TextEditingController pointsController = TextEditingController();
   TextEditingController typeController = TextEditingController();
   TextEditingController lastAnswerCheckController = TextEditingController();
 
-  AnswerType answerType;
-  Formule selectedPointsCalculator;
+  AnswerType? answerType;
+  Formule? selectedPointsCalculator;
 
   final List<Formule> formulas = <Formule>[
     const Formule(0, 'handmatig'),
@@ -129,7 +129,6 @@ class _EditAnswerDialogState extends State<EditAnswerDialog> {
             ),
           ],
         );
-        break;
       case AnswerType.closed:
         return Column(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -152,7 +151,6 @@ class _EditAnswerDialogState extends State<EditAnswerDialog> {
             ),
           ],
         );
-        break;
       case AnswerType.open:
         return Column(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -192,7 +190,7 @@ class _EditAnswerDialogState extends State<EditAnswerDialog> {
                 ),
                 Flexible(
                   child: Switch(
-                    value: optionTypeIsNumber,
+                    value: optionTypeIsNumber!,
                     onChanged: (value) {
                       setState(() {
                         optionTypeIsNumber = value;
@@ -206,10 +204,8 @@ class _EditAnswerDialogState extends State<EditAnswerDialog> {
             ),
           ],
         );
-        break;
       default:
         return Container();
-        break;
     }
   }
 
@@ -223,7 +219,7 @@ class _EditAnswerDialogState extends State<EditAnswerDialog> {
           title: Text("gesloten"),
           value: AnswerType.closed,
           groupValue: answerType,
-          onChanged: (AnswerType value) {
+          onChanged: (AnswerType? value) {
             setState(() {
               answerType = value;
               typeController.text = value.toString();
@@ -234,7 +230,7 @@ class _EditAnswerDialogState extends State<EditAnswerDialog> {
           title: Text("open"),
           value: AnswerType.open,
           groupValue: answerType,
-          onChanged: (AnswerType value) {
+          onChanged: (AnswerType? value) {
             setState(() {
               answerType = value;
               typeController.text = value.toString();
@@ -245,7 +241,7 @@ class _EditAnswerDialogState extends State<EditAnswerDialog> {
           title: Text("meerkeuze"),
           value: AnswerType.multipleChoice,
           groupValue: answerType,
-          onChanged: (AnswerType value) {
+          onChanged: (AnswerType? value) {
             setState(() {
               answerType = value;
               typeController.text = value.toString();
@@ -326,7 +322,7 @@ class _EditAnswerDialogState extends State<EditAnswerDialog> {
     return DropdownButton<Formule>(
       value: selectedPointsCalculator,
       hint: Text("selecteer een formule"),
-      onChanged: (Formule newValue) {
+      onChanged: (Formule? newValue) {
         setState(() {
           selectedPointsCalculator = newValue;
           pointsController.text = 0.toString();
@@ -415,7 +411,7 @@ class _EditAnswerDialogState extends State<EditAnswerDialog> {
   }
 
   void saveAnswerChanges(BuildContext context) {
-    if (_formKey.currentState.validate()) {
+    if (_formKey.currentState!.validate()) {
       // category,example,has_followup,next,order,question,
 
       Map<String, dynamic> data = {
@@ -424,7 +420,7 @@ class _EditAnswerDialogState extends State<EditAnswerDialog> {
         "option_type_is_number": optionTypeIsNumber,
         "order": int.parse(orderController.text),
         "points": int.parse(pointsController.text),
-        "pointsCalculator": selectedPointsCalculator.id,
+        "pointsCalculator": selectedPointsCalculator!.id,
         "type": typeController.text,
         "lastAnswer": lastAnswerCheckController.text,
       };

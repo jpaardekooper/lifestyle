@@ -5,13 +5,13 @@ import 'package:lifestylescreening/models/user_message_model.dart';
 
 abstract class IChatRepository {
   Future<List<UserMessageModel>> getUserChatRef(
-      String email, String expert_email);
+      String? email, String? expert_email);
 
-  Stream<QuerySnapshot> streamUserChat(String ref);
+  Stream<QuerySnapshot> streamUserChat(String? ref);
 
-  Stream<QuerySnapshot> streamAdminChat(String userId);
+  Stream<QuerySnapshot> streamAdminChat(String? userId);
 
-  Stream<QuerySnapshot> streamUserMessage(String email);
+  Stream<QuerySnapshot> streamUserMessage(String? email);
 
   List<UserMessageModel> getUserMessageList(QuerySnapshot snapshot);
 
@@ -20,9 +20,9 @@ abstract class IChatRepository {
   Future<List<AdminModel>> getExperts();
 
   Future<void> sendMessageData(
-      String email, Map chatMessage, String expert_email, String id);
+      String? email, Map chatMessage, String? expert_email, String? id);
 
-  Future<void> sendMessageDataAsAdmin(String id, Map chatMessage);
+  Future<void> sendMessageDataAsAdmin(String? id, Map chatMessage);
 
   Future<void> closeChat(String id);
 }

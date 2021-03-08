@@ -19,7 +19,7 @@ class HealthpointIcons {
   HealthpointIcons._();
 
   static const _kFontFam = 'HealthpointIcons';
-  static const _kFontPkg = null;
+  static const dynamic _kFontPkg = null;
 
   static const IconData streak1Icon =
       IconData(0xe80f, fontFamily: _kFontFam, fontPackage: _kFontPkg);

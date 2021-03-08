@@ -16,24 +16,24 @@ class CategoryRepository extends ICategoryRepository {
   }
 
   @override
-  Future<void> updateCategory(String id, Map data, bool newItem) async {
-    if (newItem) {
+  Future<void> updateCategory(String? id, Map data, bool? newItem) async {
+    if (newItem!) {
       await FirebaseFirestore.instance
           .collection("categories")
           .doc()
-          .set(data)
+          .set(data as Map<String, dynamic>)
           .catchError((e) {});
     } else {
       await FirebaseFirestore.instance
           .collection("categories")
           .doc(id)
-          .set(data)
+          .set(data as Map<String, dynamic>)
           .catchError((e) {});
     }
   }
 
   @override
-  Future<void> removeCategory(String id) async {
+  Future<void> removeCategory(String? id) async {
     await FirebaseFirestore.instance
         .collection("categories")
         .doc(id)

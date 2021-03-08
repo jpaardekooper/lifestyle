@@ -8,27 +8,27 @@ abstract class IRecipeRepository {
 
   Stream<QuerySnapshot> streamAllRecipes();
 
-  Future<List<RecipeModel>> getUserRecipes(String userId);
+  Future<List<RecipeModel>> getUserRecipes(String? userId);
 
   List<RecipeModel> getRecipeList(QuerySnapshot snapshot);
 
-  Future<void> updateUserRecipe(String recipeId, Map data, bool newItem);
+  Future<void> updateUserRecipe(String? recipeId, Map data, bool newItem);
 
-  Future<void> updateRecipe(String recipeId, Map data, bool newItem);
+  Future<void> updateRecipe(String? recipeId, Map data, bool newItem);
 
-  Future<void> removeRecipe(String recipeId, String url);
+  Future<void> removeRecipe(String? recipeId, String? url);
 
-  Future<void> removeUserRecipe(String recipeId, String url);
+  Future<void> removeUserRecipe(String? recipeId, String? url);
 
-  Future<List<RecipeModel>> getUserFavoriteRecipe(String userId);
+  Future<List<RecipeModel>> getUserFavoriteRecipe(String? userId);
 
-  Future<void> addFavoriteRecipe(String userId, String recipeId);
+  Future<void> addFavoriteRecipe(String? userId, String? recipeId);
 
-  Future<void> removeFavoriteRecipe(String userId, String recipeId);
+  Future<void> removeFavoriteRecipe(String? userId, String? recipeId);
 
-  Future<bool> checkFavoriteRecipe(String markerId, String userId);
+  Future<bool> checkFavoriteRecipe(String? markerId, String? userId);
 
-  Future<void> uploadImage(File img);
+  Future<void> uploadImage(File? img);
 
-  Future<String> getImage(String image);
+  Future<String> getImage(String? image);
 }

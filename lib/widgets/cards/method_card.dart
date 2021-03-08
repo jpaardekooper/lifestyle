@@ -9,13 +9,13 @@ import '../text/body_text.dart';
 
 // ignore: must_be_immutable
 class MethodStream extends StatelessWidget {
-  MethodStream({@required this.recipeId, this.userNewRecipe});
-  final String recipeId;
-  final bool userNewRecipe;
+  MethodStream({required this.recipeId, this.userNewRecipe});
+  final String? recipeId;
+  final bool? userNewRecipe;
   final FoodPreparationController _foodPreparationController =
       FoodPreparationController();
 
-  List<MethodModel> _methodList;
+  late List<MethodModel> _methodList;
 
   @override
   Widget build(BuildContext context) {
@@ -49,10 +49,10 @@ class MethodStream extends StatelessWidget {
 // ignore: must_be_immutable
 class MethodCard extends StatelessWidget {
   MethodCard(
-      {@required this.recipeId, @required this.method, this.userNewRecipe});
-  final String recipeId;
+      {required this.recipeId, required this.method, this.userNewRecipe});
+  final String? recipeId;
   final MethodModel method;
-  final bool userNewRecipe;
+  final bool? userNewRecipe;
   final FoodPreparationController _foodPreparationController =
       FoodPreparationController();
 
@@ -74,11 +74,11 @@ class MethodCard extends StatelessWidget {
     _foodPreparationController.removeMethod(recipeId, method.id);
   }
 
-  String role;
+  String? role;
 
   @override
   Widget build(BuildContext context) {
-    final _userData = InheritedDataProvider.of(context);
+    final _userData = InheritedDataProvider.of(context)!;
     role = _userData.data.role;
     return Padding(
       padding: const EdgeInsets.only(top: 8, bottom: 8),

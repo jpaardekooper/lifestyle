@@ -20,9 +20,9 @@ import '../../widgets/text/h1_text.dart';
 import '../../widgets/text/h2_text.dart';
 
 class FoodPreparationView extends StatefulWidget {
-  FoodPreparationView({@required this.recipe, this.userNewRecipe});
+  FoodPreparationView({required this.recipe, this.userNewRecipe});
   final RecipeModel recipe;
-  final bool userNewRecipe;
+  final bool? userNewRecipe;
 
   @override
   _FoodPreparationViewState createState() => _FoodPreparationViewState();
@@ -30,7 +30,7 @@ class FoodPreparationView extends StatefulWidget {
 
 class _FoodPreparationViewState extends State<FoodPreparationView> {
   RecipeController _recipeController = RecipeController();
-  String imageUrl;
+  String? imageUrl;
 
   void onTap() {
     Navigator.pop(context);
@@ -129,11 +129,11 @@ class _FoodPreparationViewState extends State<FoodPreparationView> {
     );
   }
 
-  String role;
+  String? role;
 
   @override
   Widget build(BuildContext context) {
-    final _userData = InheritedDataProvider.of(context);
+    final _userData = InheritedDataProvider.of(context)!;
     role = _userData.data.role;
     Size size = MediaQuery.of(context).size;
 
@@ -175,7 +175,7 @@ class _FoodPreparationViewState extends State<FoodPreparationView> {
                           placeholder: (context, url) => Center(
                             child: CircularProgressIndicator(),
                           ),
-                          imageUrl: imageUrl,
+                          imageUrl: imageUrl!,
                           fit: BoxFit.cover,
                         ),
                 ),

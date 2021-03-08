@@ -13,9 +13,9 @@ import '../../../healthpoint_icons.dart';
 class FirstMessageScreen extends StatefulWidget {
   FirstMessageScreen({this.model, this.email, this.hallo});
 
-  final AdminModel model;
-  final String email;
-  final VoidCallback hallo;
+  final AdminModel? model;
+  final String? email;
+  final VoidCallback? hallo;
 
   @override
   _FirstMessageScreen createState() => _FirstMessageScreen();
@@ -40,7 +40,7 @@ class _FirstMessageScreen extends State<FirstMessageScreen> {
         centerTitle: true,
         leading: IconButton(
           icon: Icon(HealthpointIcons.arrowLeftIcon),
-          color: widget.model.medical
+          color: widget.model!.medical!
               ? Theme.of(context).primaryColor
               : Theme.of(context).accentColor,
           onPressed: () =>
@@ -48,7 +48,7 @@ class _FirstMessageScreen extends State<FirstMessageScreen> {
         ),
         bottom: PreferredSize(
             child: Container(
-              color: widget.model.medical
+              color: widget.model!.medical!
                   ? Theme.of(context).primaryColor
                   : Theme.of(context).accentColor,
               height: 4.0,
@@ -62,7 +62,7 @@ class _FirstMessageScreen extends State<FirstMessageScreen> {
           margin: EdgeInsets.symmetric(vertical: 30, horizontal: 20),
           padding: EdgeInsets.all(20),
           decoration: BoxDecoration(
-            color: widget.model.medical
+            color: widget.model!.medical!
                 ? const Color(0xFFEFFAF6)
                 : const Color(0xFFFFF4E6),
             borderRadius: BorderRadius.circular(20),
@@ -77,7 +77,7 @@ class _FirstMessageScreen extends State<FirstMessageScreen> {
                       child: CircleAvatar(
                         // backgroundImage: NetworkImage(widget.model.image),
                         child: Icon(Icons.person),
-                        backgroundColor: widget.model.medical
+                        backgroundColor: widget.model!.medical!
                             ? const Color(0xFFA1CFBE)
                             : const Color(0xFFFFDFB9),
                       )),
@@ -87,22 +87,22 @@ class _FirstMessageScreen extends State<FirstMessageScreen> {
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      H2Text(text: widget.model.name),
-                      IntroGreyText(text: widget.model.profession)
+                      H2Text(text: widget.model!.name),
+                      IntroGreyText(text: widget.model!.profession)
                     ],
                   )
                 ],
               ),
               SizedBox(height: 20),
-              widget.model.medical
+              widget.model!.medical!
                   ? H3GreenBlueText(
                       text:
                           // ignore: lines_longer_than_80_chars
-                          "Schrijf in het tekstvak hieronder uw vraag die u wilt stellen aan ${widget.model.name}. Wij doen ons best om zo snel mogelijk te reageren!")
+                          "Schrijf in het tekstvak hieronder uw vraag die u wilt stellen aan ${widget.model!.name}. Wij doen ons best om zo snel mogelijk te reageren!")
                   : H3OrangeText(
                       text:
                           // ignore: lines_longer_than_80_chars
-                          "Schrijf in het tekstvak hieronder uw vraag die u wilt stellen aan ${widget.model.name}. Wij doen ons best om zo snel mogelijk te reageren!"),
+                          "Schrijf in het tekstvak hieronder uw vraag die u wilt stellen aan ${widget.model!.name}. Wij doen ons best om zo snel mogelijk te reageren!"),
               SizedBox(
                 height: 30,
               ),
@@ -110,7 +110,7 @@ class _FirstMessageScreen extends State<FirstMessageScreen> {
                 decoration: BoxDecoration(
                   color: Colors.white,
                   border: Border.all(
-                      color: widget.model.medical
+                      color: widget.model!.medical!
                           ? Theme.of(context).primaryColor
                           : Theme.of(context).accentColor,
                       width: 3),
@@ -125,7 +125,7 @@ class _FirstMessageScreen extends State<FirstMessageScreen> {
                   keyboardType: TextInputType.multiline,
                   textCapitalization: TextCapitalization.sentences,
                   controller: messageController,
-                  cursorColor: widget.model.medical
+                  cursorColor: widget.model!.medical!
                       ? Theme.of(context).primaryColor
                       : Theme.of(context).accentColor,
                   decoration: InputDecoration(
@@ -164,15 +164,15 @@ class _FirstMessageScreen extends State<FirstMessageScreen> {
   sendMessage() {
     if (messageController.text.isNotEmpty) {
       Map<String, dynamic> chatMessage = {
-        'description': messageController.text ?? "",
+        'description': messageController.text,
         'sender': true,
         'timestamp': DateTime.now(),
       };
 
       _chatController.sendMessageData(
-          widget.email, chatMessage, widget.model.expert_email, "");
+          widget.email, chatMessage, widget.model!.expert_email, "");
 
-      widget.hallo();
+      widget.hallo!();
       setState(() {
         messageController.clear();
       });

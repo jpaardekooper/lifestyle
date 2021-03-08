@@ -2,12 +2,12 @@ import 'package:flutter/material.dart';
 
 class TopLargeWavePainter extends CustomPainter {
   TopLargeWavePainter({this.color});
-  final Color color;
+  final Color? color;
 
   @override
   void paint(Canvas canvas, Size size) {
     Paint paint_0 = Paint()
-      ..color = color
+      ..color = color!
       ..style = PaintingStyle.fill
       ..strokeWidth = 1.0;
 

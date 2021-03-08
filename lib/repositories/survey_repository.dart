@@ -17,12 +17,12 @@ class SurveyRepository implements ISurveyRepository {
   }
 
   @override
-  Future<void> updateSurvey(String id, Map data, bool newItem) async {
-    if (newItem) {
+  Future<void> updateSurvey(String? id, Map data, bool? newItem) async {
+    if (newItem!) {
       await FirebaseFirestore.instance
           .collection("surveys")
           .doc()
-          .set(data)
+          .set(data as Map<String, dynamic>)
           .catchError((e) {});
 
       await FirebaseFirestore.instance
@@ -34,13 +34,13 @@ class SurveyRepository implements ISurveyRepository {
       await FirebaseFirestore.instance
           .collection("surveys")
           .doc(id)
-          .set(data)
+          .set(data as Map<String, dynamic>)
           .catchError((e) {});
     }
   }
 
   @override
-  Future<void> removeSurvey(String id) async {
+  Future<void> removeSurvey(String? id) async {
     await FirebaseFirestore.instance
         .collection("surveys")
         .doc(id)
@@ -49,14 +49,14 @@ class SurveyRepository implements ISurveyRepository {
   }
 
   @override
-  Future<void> removeCategory(String id, String data) async {
+  Future<void> removeCategory(String? id, String data) async {
     await FirebaseFirestore.instance.collection("surveys").doc(id).update({
       "category": FieldValue.arrayRemove([data])
     }).catchError((e) {});
   }
 
   @override
-  Future<List<SurveyResultModel>> getLastSurveyResult(String email) async {
+  Future<List<SurveyResultModel>> getLastSurveyResult(String? email) async {
     List<SurveyResultModel> _list = [];
 
     var snapshot = await FirebaseFirestore.instance
@@ -71,7 +71,7 @@ class SurveyRepository implements ISurveyRepository {
       return _list.add(SurveyResultModel.fromSnapshot(doc));
     }).toList();
 
-    _list.sort((a, b) => b.date.compareTo(a.date));
+    _list.sort((a, b) => b.date!.compareTo(a.date!));
 
     return _list;
   }

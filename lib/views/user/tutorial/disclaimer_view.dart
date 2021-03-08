@@ -7,7 +7,7 @@ import 'package:lifestylescreening/widgets/painter/top_small_wave_painter.dart';
 import 'package:lifestylescreening/widgets/transitions/route_transition.dart';
 
 class DisclaimerView extends StatefulWidget {
-  const DisclaimerView({Key key}) : super(key: key);
+  const DisclaimerView({Key? key}) : super(key: key);
 
   @override
   _DisclaimerViewState createState() => _DisclaimerViewState();

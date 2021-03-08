@@ -7,7 +7,7 @@ import 'package:lifestylescreening/widgets/text/h2_text.dart';
 
 class RemoveCategory extends StatelessWidget {
   RemoveCategory({this.category});
-  final CategoryModel category;
+  final CategoryModel? category;
 
   final CategoryController _surveyController = CategoryController();
 
@@ -23,11 +23,11 @@ class RemoveCategory extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          H2Text(text: "Category: " + category.category),
+          H2Text(text: "Category: " + category!.category!),
           SizedBox(
             height: 10,
           ),
-          Text("id: " + category.id),
+          Text("id: " + category!.id!),
           SizedBox(
             height: 10,
           ),
@@ -44,7 +44,7 @@ class RemoveCategory extends StatelessWidget {
         RaisedButton(
           child: Text('Opslaan'),
           onPressed: () => _surveyController
-              .removeCategory(category.id)
+              .removeCategory(category!.id)
               .then((value) => Navigator.pop(context)),
         )
       ],

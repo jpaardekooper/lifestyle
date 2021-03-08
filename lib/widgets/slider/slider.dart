@@ -4,12 +4,12 @@ import 'package:lifestylescreening/widgets/text/h2_text.dart';
 
 class SliderWidget extends StatefulWidget {
   SliderWidget({
-    Key key,
-    @required this.controller,
+    Key? key,
+    required this.controller,
     //@required this.function,
   }) : super(key: key);
 
-  final TextEditingController controller;
+  final TextEditingController? controller;
   // final Function(AnswerModel, String) function;
 
   @override
@@ -50,7 +50,7 @@ class _SliderWidgetState extends State<SliderWidget> {
             min: 1.0,
             max: 10.0,
             onChangeEnd: (val) {
-              widget.controller.text = val.round().toString();
+              widget.controller!.text = val.round().toString();
             },
             onChanged: (newValue) {
               setState(() {

@@ -18,7 +18,7 @@ class MessageOverView extends StatefulWidget {
 
 class _MessageOverViewState extends State<MessageOverView> {
   ChatController _chatController = ChatController();
-  StreamSubscription<QuerySnapshot> _currentSubscription;
+  StreamSubscription<QuerySnapshot>? _currentSubscription;
   List<UserMessageModel> messageList = <UserMessageModel>[];
   bool loading = true;
 
@@ -63,7 +63,7 @@ class _MessageOverViewState extends State<MessageOverView> {
 
 class MessageCard extends StatelessWidget {
   MessageCard({this.messageModel});
-  final UserMessageModel messageModel;
+  final UserMessageModel? messageModel;
 
   @override
   Widget build(BuildContext context) {
@@ -86,8 +86,8 @@ class MessageCard extends StatelessWidget {
           Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) =>
-                  MessageAdmin(email: messageModel.expert, id: messageModel.id),
+              builder: (context) => MessageAdmin(
+                  email: messageModel!.expert, id: messageModel!.id),
             ),
           );
         },
@@ -97,8 +97,8 @@ class MessageCard extends StatelessWidget {
             size: 35,
             color: Theme.of(context).primaryColor,
           ),
-          title: Text(messageModel.id),
-          subtitle: Text(messageModel.expert),
+          title: Text(messageModel!.id!),
+          subtitle: Text(messageModel!.expert!),
           trailing: Material(
             color: Colors.transparent,
             child: SizedBox(

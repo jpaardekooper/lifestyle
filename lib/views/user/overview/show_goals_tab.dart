@@ -4,8 +4,8 @@ import 'package:lifestylescreening/widgets/colors/color_theme.dart';
 import 'package:lifestylescreening/widgets/text/h1_text.dart';
 
 class ShowGoalsTab extends StatefulWidget {
-  const ShowGoalsTab({Key key, this.onTap}) : super(key: key);
-  final VoidCallback onTap;
+  const ShowGoalsTab({Key? key, this.onTap}) : super(key: key);
+  final VoidCallback? onTap;
 
   @override
   _ShowGoalsTabState createState() => _ShowGoalsTabState();

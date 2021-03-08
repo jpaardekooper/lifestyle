@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:lifestylescreening/widgets/text/h1_text.dart';
 
 class DownloadApp extends StatelessWidget {
-  const DownloadApp({Key key, @required this.number}) : super(key: key);
-  final int number;
+  const DownloadApp({Key? key, required this.number}) : super(key: key);
+  final int? number;
 
   @override
   Widget build(BuildContext context) {

@@ -8,10 +8,10 @@ class ChatRepository extends IChatRepository {
   //fetching data with the future builder
   @override
   Future<List<UserMessageModel>> getUserChatRef(
-      String email, String expert_email) async {
+      String? email, String? expert_email) async {
     var snapshot = await FirebaseFirestore.instance
         .collection('messages')
-        .where('ref', isEqualTo: email + "_" + expert_email)
+        .where('ref', isEqualTo: email! + "_" + expert_email!)
         .get();
 
     return snapshot.docs.map((DocumentSnapshot doc) {
@@ -21,7 +21,7 @@ class ChatRepository extends IChatRepository {
 
 //streaming data with the corresponding ref
   @override
-  Stream<QuerySnapshot> streamUserChat(String ref) {
+  Stream<QuerySnapshot> streamUserChat(String? ref) {
     return FirebaseFirestore.instance
         .collection('messages')
         .doc(ref)
@@ -31,7 +31,7 @@ class ChatRepository extends IChatRepository {
   }
 
   @override
-  Stream<QuerySnapshot> streamAdminChat(String userId) {
+  Stream<QuerySnapshot> streamAdminChat(String? userId) {
     return FirebaseFirestore.instance
         .collection("messages")
         .doc(userId)
@@ -41,7 +41,7 @@ class ChatRepository extends IChatRepository {
   }
 
   @override
-  Stream<QuerySnapshot> streamUserMessage(String email) {
+  Stream<QuerySnapshot> streamUserMessage(String? email) {
     return FirebaseFirestore.instance
         .collection("messages")
         .where('ref', isNotEqualTo: "closed")
@@ -76,14 +76,14 @@ class ChatRepository extends IChatRepository {
 
   @override
   Future<void> sendMessageData(
-      String email, Map chatMessage, String expert_email, String id) async {
+      String? email, Map chatMessage, String? expert_email, String? id) async {
     if (id == null || id.isEmpty) {
       await FirebaseFirestore.instance
           .collection("messages")
           .add({
             'open': true,
             'expert': expert_email,
-            'ref': email + "_" + expert_email,
+            'ref': email! + "_" + expert_email!,
           })
           .catchError((e) {})
           .then((value) async {
@@ -92,7 +92,7 @@ class ChatRepository extends IChatRepository {
                 .doc(value.id)
                 .collection("user_message")
                 .doc()
-                .set(chatMessage)
+                .set(chatMessage as Map<String, dynamic>)
                 .catchError((e) {
               //    print(e);
             });
@@ -107,7 +107,7 @@ class ChatRepository extends IChatRepository {
           .doc(id)
           .collection("user_message")
           .doc()
-          .set(chatMessage)
+          .set(chatMessage as Map<String, dynamic>)
           .catchError((e) {
         //    print(e);
       });
@@ -115,13 +115,13 @@ class ChatRepository extends IChatRepository {
   }
 
   @override
-  Future<void> sendMessageDataAsAdmin(String id, Map chatMessage) async {
+  Future<void> sendMessageDataAsAdmin(String? id, Map chatMessage) async {
     await FirebaseFirestore.instance
         .collection("messages")
         .doc(id)
         .collection("user_message")
         .doc()
-        .set(chatMessage)
+        .set(chatMessage as Map<String, dynamic>)
         .catchError((e) {
       //    print(e);
     });

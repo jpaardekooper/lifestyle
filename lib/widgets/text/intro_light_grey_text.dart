@@ -3,12 +3,12 @@ import 'package:flutter/material.dart';
 class IntroLightGreyText extends StatelessWidget {
   const IntroLightGreyText({this.text});
 
-  final String text;
+  final String? text;
 
   @override
   Widget build(BuildContext context) {
     return Text(
-      text,
+      text!,
       style: TextStyle(
         color: const Color(0xFFA2A4A3),
         fontFamily: 'Sofia',

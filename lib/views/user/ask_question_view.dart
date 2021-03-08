@@ -19,7 +19,7 @@ import 'package:lifestylescreening/widgets/transitions/route_transition.dart';
 import 'package:lifestylescreening/widgets/text/lifestyle_text.dart';
 
 class AskQuestionView extends StatefulWidget {
-  AskQuestionView({Key key}) : super(key: key);
+  AskQuestionView({Key? key}) : super(key: key);
 
   @override
   _AskQuestionViewState createState() => _AskQuestionViewState();
@@ -27,18 +27,18 @@ class AskQuestionView extends StatefulWidget {
 
 class _AskQuestionViewState extends State<AskQuestionView> {
   final ChatController _chatController = ChatController();
-  String email;
+  String? email;
 
   Widget showLastSurveyResult() {
     return FutureBuilder<List<SurveyResultModel>>(
       //fetching data from the corresponding questionId
       future: SurveyController().getLastSurveyResult(email),
       builder: (context, snapshot) {
-        if (!snapshot.hasData || snapshot.data.isEmpty) {
+        if (!snapshot.hasData || snapshot.data!.isEmpty) {
           return LifestyleText(
               text: "U heeft nog geen screening test afgenomen");
         } else {
-          final List<SurveyResultModel> _survey = snapshot.data;
+          final List<SurveyResultModel> _survey = snapshot.data!;
 
           return Column(
             mainAxisAlignment: MainAxisAlignment.start,
@@ -65,7 +65,7 @@ class _AskQuestionViewState extends State<AskQuestionView> {
               ListView.builder(
                 physics: NeverScrollableScrollPhysics(),
                 shrinkWrap: true,
-                itemCount: _survey.first.categories.length,
+                itemCount: _survey.first.categories!.length,
                 itemBuilder: (BuildContext ctx, index) {
                   return Row(
                     // mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -73,10 +73,10 @@ class _AskQuestionViewState extends State<AskQuestionView> {
                       SizedBox(
                         width: 200,
                         height: 20,
-                        child: BodyText(text: _survey.first.categories[index]),
+                        child: BodyText(text: _survey.first.categories![index]),
                       ),
                       LifestyleText(
-                          text: "${_survey.first.points_per_category[index]}")
+                          text: "${_survey.first.points_per_category![index]}")
                     ],
                   );
                 },
@@ -95,7 +95,7 @@ class _AskQuestionViewState extends State<AskQuestionView> {
 
   @override
   Widget build(BuildContext context) {
-    final _userData = InheritedDataProvider.of(context);
+    final _userData = InheritedDataProvider.of(context)!;
     email = _userData.data.email;
     Size size = MediaQuery.of(context).size;
     return SingleChildScrollView(
@@ -160,14 +160,14 @@ class _AskQuestionViewState extends State<AskQuestionView> {
                   FutureBuilder<List<AdminModel>>(
                     future: _chatController.getExperts(),
                     builder: (BuildContext context, snapshot) {
-                      List<AdminModel> _adminList = snapshot.data;
+                      List<AdminModel>? _adminList = snapshot.data;
                       if (!snapshot.hasData) {
                         return Center(child: CircularProgressIndicator());
                       } else {
                         return ListView.builder(
                           physics: NeverScrollableScrollPhysics(),
                           shrinkWrap: true,
-                          itemCount: _adminList.length,
+                          itemCount: _adminList!.length,
                           itemBuilder: (BuildContext context, index) {
                             AdminModel _adminModel = _adminList[index];
                             return ExpertOptions(
@@ -191,8 +191,8 @@ class _AskQuestionViewState extends State<AskQuestionView> {
 class ExpertOptions extends StatelessWidget {
   ExpertOptions({this.adminModel, this.email});
 
-  final AdminModel adminModel;
-  final String email;
+  final AdminModel? adminModel;
+  final String? email;
 
   @override
   Widget build(BuildContext context) {
@@ -200,7 +200,7 @@ class ExpertOptions extends StatelessWidget {
       margin: EdgeInsets.symmetric(vertical: 10, horizontal: 0),
       padding: EdgeInsets.all(25),
       decoration: BoxDecoration(
-        color: adminModel.medical
+        color: adminModel!.medical!
             ? const Color(0xFFEFFAF6)
             : const Color(0xFFFFF4E6),
         borderRadius: BorderRadius.circular(20),
@@ -213,19 +213,19 @@ class ExpertOptions extends StatelessWidget {
               CircleAvatar(
                 // backgroundImage: NetworkImage(adminModel.image),
                 child: Icon(Icons.person),
-                backgroundColor: adminModel.medical
+                backgroundColor: adminModel!.medical!
                     ? const Color(0xFFA1CFBE)
                     : const Color(0xFFFFDFB9),
               ),
               SizedBox(height: 15),
               IntroGreyText(
-                text: adminModel.name,
+                text: adminModel!.name,
               ),
-              BodyText(text: adminModel.profession),
+              BodyText(text: adminModel!.profession),
             ],
           ),
           Spacer(),
-          adminModel.medical
+          adminModel!.medical!
               ? GhostGreyButton(
                   text: "Chat",
                   onTap: () => {

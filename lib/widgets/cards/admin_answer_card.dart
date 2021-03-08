@@ -9,7 +9,7 @@ import 'package:lifestylescreening/widgets/text/body_text.dart';
 
 class AdminAnswerCard extends StatelessWidget {
   AdminAnswerCard(
-      {Key key, @required this.category, @required this.questionModel})
+      {Key? key, required this.category, required this.questionModel})
       : super(key: key);
   final CategoryModel category;
   final QuestionModel questionModel;
@@ -47,13 +47,10 @@ class AdminAnswerCard extends StatelessWidget {
     switch (answer.type) {
       case open:
         return Text("open");
-        break;
       case closed:
         return Text("gesloten");
-        break;
       case multipleChoice:
         return Text("meerkeuze");
-        break;
       default:
         return Text("");
     }

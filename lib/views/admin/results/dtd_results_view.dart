@@ -9,7 +9,7 @@ import 'package:intl/intl.dart';
 import 'package:lifestylescreening/widgets/text/lifestyle_text.dart';
 
 class DtdResultView extends StatefulWidget {
-  DtdResultView({@required this.result});
+  DtdResultView({required this.result});
   final DtdModel result;
 
   @override
@@ -34,7 +34,7 @@ class _DtdResultViewState extends State<DtdResultView> {
           ),
           title: H1Text(
             text: DateFormat("yyy-MM-dd HH:mm")
-                .format(widget.result.date.toDate()),
+                .format(widget.result.date!.toDate()),
           ),
         ),
         body: FutureBuilder<List<DtdAwnserModel>>(
@@ -43,7 +43,7 @@ class _DtdResultViewState extends State<DtdResultView> {
             if (!snapshot.hasData) {
               return Center(child: Text("Geen data gevonden"));
             } else {
-              final List<DtdAwnserModel> _dtdList = snapshot.data;
+              final List<DtdAwnserModel> _dtdList = snapshot.data!;
 
               return Container(
                 padding: EdgeInsets.all(20),
@@ -63,7 +63,7 @@ class _DtdResultViewState extends State<DtdResultView> {
                           height: 10,
                         ),
                         LifestyleText(
-                          text: (_dtdList[index].answer).replaceAll(',', ', '),
+                          text: _dtdList[index].answer!.replaceAll(',', ', '),
                         ),
                         SizedBox(
                           height: 20,

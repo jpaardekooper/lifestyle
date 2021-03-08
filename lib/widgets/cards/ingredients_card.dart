@@ -10,20 +10,20 @@ import '../text/body_text.dart';
 
 // ignore: must_be_immutable
 class IngredientsStream extends StatelessWidget {
-  IngredientsStream({@required this.recipeId, this.userNewRecipe});
+  IngredientsStream({required this.recipeId, this.userNewRecipe});
 
-  final String recipeId;
-  final bool userNewRecipe;
+  final String? recipeId;
+  final bool? userNewRecipe;
 
   final FoodPreparationController _foodPreparationController =
       FoodPreparationController();
 
-  List<IngredientsModel> _ingredientsList;
-  String role;
+  late List<IngredientsModel> _ingredientsList;
+  String? role;
 
   @override
   Widget build(BuildContext context) {
-    final _userData = InheritedDataProvider.of(context);
+    final _userData = InheritedDataProvider.of(context)!;
     role = _userData.data.role;
     return StreamBuilder<QuerySnapshot>(
       stream: _foodPreparationController.streamIngredients(recipeId),
@@ -56,14 +56,14 @@ class IngredientsStream extends StatelessWidget {
 
 class IngredientsCard extends StatelessWidget {
   IngredientsCard(
-      {@required this.recipeId,
-      @required this.ingredient,
-      @required this.role,
+      {required this.recipeId,
+      required this.ingredient,
+      required this.role,
       this.userNewRecipe});
-  final String recipeId;
+  final String? recipeId;
   final IngredientsModel ingredient;
-  final String role;
-  final bool userNewRecipe;
+  final String? role;
+  final bool? userNewRecipe;
   final FoodPreparationController _foodPreparationController =
       FoodPreparationController();
 

@@ -9,14 +9,14 @@ import '../text/body_text.dart';
 
 // ignore: must_be_immutable
 class NutrionStream extends StatelessWidget {
-  NutrionStream({@required this.recipeId, this.userNewRecipe});
+  NutrionStream({required this.recipeId, this.userNewRecipe});
 
-  final String recipeId;
-  final bool userNewRecipe;
+  final String? recipeId;
+  final bool? userNewRecipe;
   final FoodPreparationController _foodPreparationController =
       FoodPreparationController();
 
-  List<NutritionalValueModel> _nutritionalValueList;
+  late List<NutritionalValueModel> _nutritionalValueList;
 
   @override
   Widget build(BuildContext context) {
@@ -52,12 +52,12 @@ class NutrionStream extends StatelessWidget {
 // ignore: must_be_immutable
 class NutritionalValueCard extends StatelessWidget {
   NutritionalValueCard({
-    @required this.recipeId,
-    @required this.nutritionalValue,
+    required this.recipeId,
+    required this.nutritionalValue,
     this.userNewRecipe,
   });
-  final String recipeId;
-  final bool userNewRecipe;
+  final String? recipeId;
+  final bool? userNewRecipe;
   final NutritionalValueModel nutritionalValue;
   final FoodPreparationController _foodPreparationController =
       FoodPreparationController();
@@ -83,11 +83,11 @@ class NutritionalValueCard extends StatelessWidget {
     );
   }
 
-  String role;
+  String? role;
 
   @override
   Widget build(BuildContext context) {
-    final _userData = InheritedDataProvider.of(context);
+    final _userData = InheritedDataProvider.of(context)!;
     role = _userData.data.role;
     return Padding(
       padding: const EdgeInsets.only(top: 8, bottom: 8),
@@ -95,9 +95,9 @@ class NutritionalValueCard extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           BodyText(
-            text: "- " + nutritionalValue.name,
+            text: "- " + nutritionalValue.name!,
           ),
-          BodyText(text: nutritionalValue.amount + " " + nutritionalValue.unit),
+          BodyText(text: nutritionalValue.amount! + " " + nutritionalValue.unit!),
           role == 'user' && userNewRecipe == false
               ? Container()
               : Row(

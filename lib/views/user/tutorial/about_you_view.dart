@@ -8,7 +8,7 @@ import 'package:lifestylescreening/widgets/text/h2_text.dart';
 import 'package:lifestylescreening/widgets/transitions/route_transition.dart';
 
 class AboutYouView extends StatefulWidget {
-  AboutYouView({Key key}) : super(key: key);
+  AboutYouView({Key? key}) : super(key: key);
 
   @override
   _AboutYouViewState createState() => _AboutYouViewState();
@@ -20,7 +20,7 @@ class _AboutYouViewState extends State<AboutYouView> {
   final _formKey = GlobalKey<FormState>();
 
   void validateName() {
-    if (_formKey.currentState.validate()) {
+    if (_formKey.currentState!.validate()) {
       //removes existing keyboard
       FocusScope.of(context).unfocus();
 
@@ -50,7 +50,7 @@ class _AboutYouViewState extends State<AboutYouView> {
     final size = MediaQuery.of(context).size;
 
     return Scaffold(
-      appBar: introductionAppBar(context, 0.2, false),
+      appBar: introductionAppBar(context, 0.2, false) as PreferredSizeWidget?,
       body: Column(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         crossAxisAlignment: CrossAxisAlignment.start,

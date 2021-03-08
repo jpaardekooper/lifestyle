@@ -12,14 +12,14 @@ import 'package:lifestylescreening/widgets/logo/bottom_navigation_logo.dart';
 final ValueNotifier<int> counter = ValueNotifier<int>(0);
 
 class Home extends StatefulWidget {
-  Home({Key key}) : super(key: key);
+  Home({Key? key}) : super(key: key);
 
   @override
   _HomeState createState() => _HomeState();
 }
 
 class _HomeState extends State<Home> {
-  List<Widget> _widgetOptions;
+  late List<Widget> _widgetOptions;
 
   @override
   void initState() {
@@ -44,7 +44,7 @@ class _HomeState extends State<Home> {
       onWillPop: () => Future.value(false),
       child: Scaffold(
         body: ValueListenableBuilder(
-          builder: (BuildContext context, int value, Widget child) {
+          builder: (BuildContext context, int value, Widget? child) {
             // This builder will only get called when the counter
             // is updated.
             return _widgetOptions.elementAt(counter.value);
@@ -53,7 +53,7 @@ class _HomeState extends State<Home> {
         ),
         bottomNavigationBar: ValueListenableBuilder(
             valueListenable: counter,
-            builder: (BuildContext context, int value, Widget child) {
+            builder: (BuildContext context, int value, Widget? child) {
               return BottomNavigationBar(
                 iconSize: MediaQuery.of(context).size.width * 0.05,
                 selectedItemColor: Colors.white,

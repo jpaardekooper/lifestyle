@@ -16,7 +16,7 @@ class ResultView extends StatefulWidget {
 class _ResultViewState extends State<ResultView> {
   final ResultController _resultController = ResultController();
 
-  StreamSubscription<QuerySnapshot> _currentSubscription;
+  StreamSubscription<QuerySnapshot>? _currentSubscription;
   bool _isLoading = true;
   List<ResultModel> _results = <ResultModel>[];
 

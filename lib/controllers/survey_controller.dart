@@ -15,19 +15,19 @@ class SurveyController {
     return _surveyRepository.getSurveyList(snapshot);
   }
 
-  Future<void> updateSurvey(String id, Map data, bool newItem) {
+  Future<void> updateSurvey(String? id, Map data, bool? newItem) {
     return _surveyRepository.updateSurvey(id, data, newItem);
   }
 
-  Future<void> removeSurvey(String id) {
+  Future<void> removeSurvey(String? id) {
     return _surveyRepository.removeSurvey(id);
   }
 
-  Future<void> removeCategory(String id, String data) {
+  Future<void> removeCategory(String? id, String data) {
     return _surveyRepository.removeCategory(id, data);
   }
 
-  Future<List<SurveyResultModel>> getLastSurveyResult(String email) {
+  Future<List<SurveyResultModel>> getLastSurveyResult(String? email) {
     return _surveyRepository.getLastSurveyResult(email);
   }
 }

@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 
 class FadeInTransition extends StatefulWidget {
-  FadeInTransition({@required this.child});
+  FadeInTransition({required this.child});
   final Widget child;
 
   @override
@@ -10,8 +10,8 @@ class FadeInTransition extends StatefulWidget {
 
 class _FadeInTransitionState extends State<FadeInTransition>
     with SingleTickerProviderStateMixin {
-  AnimationController _controller;
-  Animation _animation;
+  late AnimationController _controller;
+  late Animation _animation;
 
   @override
   void initState() {
@@ -36,7 +36,7 @@ class _FadeInTransitionState extends State<FadeInTransition>
   Widget build(BuildContext context) {
     _controller.forward();
     return FadeTransition(
-      opacity: _animation,
+      opacity: _animation as Animation<double>,
       child: widget.child,
     );
   }

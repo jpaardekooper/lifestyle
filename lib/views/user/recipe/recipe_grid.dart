@@ -8,9 +8,9 @@ import 'package:lifestylescreening/widgets/transitions/fade_transition.dart';
 
 class RecipeGrid extends StatelessWidget {
   const RecipeGrid(
-      {Key key,
-      @required List<RecipeModel> recipeList,
-      @required AppUser userData,
+      {Key? key,
+      required List<RecipeModel>? recipeList,
+      required AppUser userData,
       this.userRecipe,
       this.onTap,
       this.function})
@@ -18,11 +18,11 @@ class RecipeGrid extends StatelessWidget {
         _userData = userData,
         super(key: key);
 
-  final List<RecipeModel> _recipeList;
-  final VoidCallback onTap;
+  final List<RecipeModel>? _recipeList;
+  final VoidCallback? onTap;
   final AppUser _userData;
-  final bool userRecipe;
-  final Function(RecipeModel) function;
+  final bool? userRecipe;
+  final Function(RecipeModel?)? function;
 
   @override
   Widget build(BuildContext context) {
@@ -30,11 +30,11 @@ class RecipeGrid extends StatelessWidget {
       padding: EdgeInsets.all(20.0),
       //  physics: AlwaysScrollableScrollPhysics(),
       shrinkWrap: true,
-      itemCount: _recipeList.length,
+      itemCount: _recipeList!.length,
       gridDelegate:
           SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2),
       itemBuilder: (BuildContext context, int index) {
-        final RecipeModel _recipe = _recipeList[index];
+        final RecipeModel _recipe = _recipeList![index];
         return FadeInTransition(
           child: GestureDetector(
             onTap: () => Navigator.push(

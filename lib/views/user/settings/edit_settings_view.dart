@@ -13,7 +13,7 @@ import 'package:lifestylescreening/widgets/text/h2_text.dart';
 class EditSettingsView extends StatefulWidget {
   EditSettingsView({this.user});
 
-  final AppUser user;
+  final AppUser? user;
 
   @override
   _EditSettingsViewState createState() => _EditSettingsViewState();
@@ -29,16 +29,16 @@ class _EditSettingsViewState extends State<EditSettingsView> {
 
   final AuthController _auth = AuthController();
 
-  String _gender;
+  String? _gender;
   int height = 170;
 
   @override
   void initState() {
-    _gender = widget.user.gender;
-    _userNameController.text = widget.user.userName;
-    _ageController.text = widget.user.age.toString();
-    _weightController.text = widget.user.weight.toString();
-    _heightController.text = widget.user.height.toString();
+    _gender = widget.user!.gender;
+    _userNameController.text = widget.user!.userName!;
+    _ageController.text = widget.user!.age.toString();
+    _weightController.text = widget.user!.weight.toString();
+    _heightController.text = widget.user!.height.toString();
 
     super.initState();
   }
@@ -172,16 +172,16 @@ class _EditSettingsViewState extends State<EditSettingsView> {
   }
 
   saveSettings() {
-    if (_formKey.currentState.validate()) {
+    if (_formKey.currentState!.validate()) {
       BMI bmi = BMI(
         age: int.parse(_ageController.text),
         height: int.parse(_heightController.text),
         weight: int.parse(_weightController.text),
         gender: _gender,
       );
-      _auth.updateUserData(widget.user.id, _userNameController.text, bmi).then(
+      _auth.updateUserData(widget.user!.id, _userNameController.text, bmi).then(
         (value) {
-          _scaffoldKey.currentState.showSnackBar(
+          _scaffoldKey.currentState!.showSnackBar(
             SnackBar(
               duration: const Duration(seconds: 2),
               backgroundColor: ColorTheme.lightOrange,

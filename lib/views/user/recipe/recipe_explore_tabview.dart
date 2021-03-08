@@ -29,7 +29,7 @@ class _RecipeExploreViewState extends State<RecipeExploreView> {
   TextEditingController _difficultyController = TextEditingController();
   final _key = GlobalKey<ScaffoldState>();
 
-  File _imageFile;
+  File? _imageFile;
 
   final _picker = ImagePicker();
 
@@ -40,7 +40,7 @@ class _RecipeExploreViewState extends State<RecipeExploreView> {
   bool loading = false;
 
   List<String> _locations = ['Moeilijk', 'Middel', 'Makkelijk']; // Option 2
-  String _selectedLocation;
+  String? _selectedLocation;
 
   Future checkCameraPermission() async {
     if (!(await Permission.storage.status.isGranted))
@@ -49,7 +49,7 @@ class _RecipeExploreViewState extends State<RecipeExploreView> {
     final pickedFile = await _picker.getImage(source: ImageSource.camera);
 
     setState(() {
-      _imageFile = File(pickedFile.path);
+      _imageFile = File(pickedFile!.path);
     });
   }
 
@@ -60,7 +60,7 @@ class _RecipeExploreViewState extends State<RecipeExploreView> {
     final pickedFile = await _picker.getImage(source: ImageSource.gallery);
 
     setState(() {
-      _imageFile = File(pickedFile.path);
+      _imageFile = File(pickedFile!.path);
     });
   }
 
@@ -107,7 +107,7 @@ class _RecipeExploreViewState extends State<RecipeExploreView> {
                 height: 200,
                 width: 175,
                 child: FittedBox(
-                    fit: BoxFit.contain, child: Image.file(_imageFile)))
+                    fit: BoxFit.contain, child: Image.file(_imageFile!)))
             : RaisedButton(
                 child: Text(
                   "Kies een foto",
@@ -152,10 +152,10 @@ class _RecipeExploreViewState extends State<RecipeExploreView> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        CustomAnswerFormField(
-          keyboardType: TextInputType.name,
-          textcontroller: _difficultyController,
-        ),
+        // CustomAnswerFormField(
+        //   keyboardType: TextInputType.name,
+        //   textcontroller: _difficultyController,
+        // ),
         Container(
           decoration: BoxDecoration(
             color: Colors.white,
@@ -166,7 +166,7 @@ class _RecipeExploreViewState extends State<RecipeExploreView> {
             dropdownColor: ColorTheme.extraLightGreen,
             hint: BodyText(text: 'Selecteer de moeilijkheidsgraad'),
             value: _selectedLocation,
-            onChanged: (newValue) {
+            onChanged: (dynamic newValue) {
               setState(() {
                 _selectedLocation = newValue;
                 _difficultyController.text = newValue;
@@ -240,14 +240,14 @@ class _RecipeExploreViewState extends State<RecipeExploreView> {
   }
 
   saveRecipeChanges(context) {
-    if (_formKey.currentState.validate()) {
+    if (_formKey.currentState!.validate()) {
       setState(() {
         loading = true;
       });
       FocusScope.of(context).unfocus();
       Map<String, dynamic> data = {
         "title": _recipenameController.text,
-        "url": basename(_imageFile.path),
+        "url": basename(_imageFile!.path),
         "duration": int.parse(_durationController.text),
         "difficulty": _difficultyController.text,
         "published": false,
@@ -258,7 +258,7 @@ class _RecipeExploreViewState extends State<RecipeExploreView> {
       _recipeController.uploadImage(_imageFile).then((value) =>
           _recipeController.updateUserRecipe(recipe.id, data, true).then(
             (value) {
-              _key.currentState.showSnackBar(
+              _key.currentState!.showSnackBar(
                 SnackBar(
                   duration: const Duration(seconds: 1),
                   backgroundColor: ColorTheme.lightOrange,

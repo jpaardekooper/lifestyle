@@ -5,10 +5,10 @@ import 'package:lifestylescreening/widgets/forms/custom_textformfield.dart';
 
 class EditIngredient extends StatefulWidget {
   EditIngredient(
-      {@required this.recipeId, @required this.ingredient, this.newIngredient});
-  final String recipeId;
+      {required this.recipeId, required this.ingredient, this.newIngredient});
+  final String? recipeId;
   final IngredientsModel ingredient;
-  final bool newIngredient;
+  final bool? newIngredient;
 
   @override
   _EditIngredientState createState() => _EditIngredientState();
@@ -34,7 +34,7 @@ class _EditIngredientState extends State<EditIngredient> {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: widget.newIngredient
+      title: widget.newIngredient!
           ? Text("Voeg een ingrediënt toe")
           : Text(
               "ID: ${widget.ingredient.product}",
@@ -97,7 +97,7 @@ class _EditIngredientState extends State<EditIngredient> {
   }
 
   void saveIngredientChanges(BuildContext context) {
-    if (_formKey.currentState.validate()) {
+    if (_formKey.currentState!.validate()) {
       Map<String, String> data = {
         "amount": _amountController.text,
         "product": _productController.text,

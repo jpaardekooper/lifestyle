@@ -10,14 +10,14 @@ abstract class IResultRepository {
 
   List<ResultModel> getResultList(QuerySnapshot snapshot);
 
-  Stream<QuerySnapshot> streamResultUsers(String surveyId);
+  Stream<QuerySnapshot> streamResultUsers(String? surveyId);
 
   List<DtdModel> getDtdUserList(QuerySnapshot snapshot);
 
   List<SurveyResultModel> getSurveyUserList(QuerySnapshot snapshot);
 
-  Future<List<DtdAwnserModel>> getDtdAnswers(String dtdId);
+  Future<List<DtdAwnserModel>> getDtdAnswers(String? dtdId);
 
   Future<List<SurveyAnswerModel>> getSurveyAnswers(
-      String surveyId, String category);
+      String? surveyId, String? category);
 }

@@ -15,7 +15,7 @@ import 'package:lifestylescreening/widgets/text/h1_text.dart';
 import 'package:lifestylescreening/widgets/text/h2_text.dart';
 
 class QuestionView extends StatefulWidget {
-  const QuestionView({@required this.categoryModel});
+  const QuestionView({required this.categoryModel});
   final CategoryModel categoryModel;
 
   @override
@@ -26,7 +26,7 @@ class _QuestionViewState extends State<QuestionView> {
   final QuestionnaireController _questionnaireController =
       QuestionnaireController();
 
-  StreamSubscription<QuerySnapshot> _currentSubscription;
+  StreamSubscription<QuerySnapshot>? _currentSubscription;
 
   bool _isLoading = true;
   List<QuestionModel> _questionList = [];
@@ -147,7 +147,7 @@ class _QuestionViewState extends State<QuestionView> {
               ? Row(
                   children: [
                     Text("Afbeelding: "),
-                    Text(question.url),
+                    Text(question.url!),
                   ],
                 )
               : Container(),
@@ -230,7 +230,7 @@ class _QuestionViewState extends State<QuestionView> {
         title: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text(widget.categoryModel.category),
+            Text(widget.categoryModel.category!),
             Text(_questionList.length.toString())
           ],
         ),

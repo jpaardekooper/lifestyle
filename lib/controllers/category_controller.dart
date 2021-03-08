@@ -14,11 +14,11 @@ class CategoryController {
     return _categoryRepository.fetchCategories(snapshot);
   }
 
-  Future<void> updateCategory(String id, Map data, bool newItem) {
+  Future<void> updateCategory(String? id, Map data, bool? newItem) {
     return _categoryRepository.updateCategory(id, data, newItem);
   }
 
-  Future<void> removeCategory(String id) {
+  Future<void> removeCategory(String? id) {
     return _categoryRepository.removeCategory(id);
   }
 }

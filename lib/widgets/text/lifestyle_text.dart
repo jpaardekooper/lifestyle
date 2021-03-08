@@ -3,12 +3,12 @@ import 'package:flutter/material.dart';
 class LifestyleText extends StatelessWidget {
   const LifestyleText({this.text});
 
-  final String text;
+  final String? text;
 
   @override
   Widget build(BuildContext context) {
     return Text(
-      text,
+      text!,
       style: TextStyle(
           color: const Color(0xFF253635),
           fontFamily: 'Sofia',

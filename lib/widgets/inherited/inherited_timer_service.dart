@@ -3,8 +3,8 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 
 class TimerService extends ChangeNotifier {
-  Stopwatch _watch;
-  Timer _timer;
+  late Stopwatch _watch;
+  Timer? _timer;
 
   Duration get currentDuration => _currentDuration;
   Duration _currentDuration = Duration.zero;
@@ -48,19 +48,19 @@ class TimerService extends ChangeNotifier {
     notifyListeners();
   }
 
-  static TimerService of(BuildContext context) {
+  static TimerService? of(BuildContext context) {
     var provider =
-        context.dependOnInheritedWidgetOfExactType<TimerServiceProvider>();
+        context.dependOnInheritedWidgetOfExactType<TimerServiceProvider>()!;
 
     return provider.service;
   }
 }
 
 class TimerServiceProvider extends InheritedWidget {
-  const TimerServiceProvider({Key key, this.service, Widget child})
+  const TimerServiceProvider({Key? key, this.service, required Widget child})
       : super(key: key, child: child);
 
-  final TimerService service;
+  final TimerService? service;
 
   @override
   // ignore: avoid_renaming_method_parameters

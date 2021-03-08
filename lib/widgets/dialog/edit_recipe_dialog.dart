@@ -12,11 +12,11 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:path/path.dart';
 
 class EditRecipe extends StatefulWidget {
-  EditRecipe({@required this.recipe, @required this.isNewRecipe, this.role});
+  EditRecipe({required this.recipe, required this.isNewRecipe, this.role});
 
   final RecipeModel recipe;
   final bool isNewRecipe;
-  final String role;
+  final String? role;
 
   @override
   _EditRecipeState createState() => _EditRecipeState();
@@ -28,7 +28,7 @@ class _EditRecipeState extends State<EditRecipe> {
   TextEditingController _urlController = TextEditingController();
   TextEditingController _durationController = TextEditingController();
   TextEditingController _difficultyController = TextEditingController();
-  bool _published;
+  bool? _published;
 
   List<String> _locations = [
     'Selecteer de moeilijkheidsgraad',
@@ -36,10 +36,10 @@ class _EditRecipeState extends State<EditRecipe> {
     'Middel',
     'Makkelijk'
   ]; // Option 2
-  String _selectedLocation;
+  String? _selectedLocation;
 
   final _formKey = GlobalKey<FormState>();
-  File _imageFile;
+  File? _imageFile;
 
   @override
   void initState() {
@@ -64,7 +64,7 @@ class _EditRecipeState extends State<EditRecipe> {
     final pickedFile = await _picker.getImage(source: ImageSource.camera);
 
     setState(() {
-      _imageFile = File(pickedFile.path);
+      _imageFile = File(pickedFile!.path);
     });
   }
 
@@ -75,7 +75,7 @@ class _EditRecipeState extends State<EditRecipe> {
     final pickedFile = await _picker.getImage(source: ImageSource.gallery);
 
     setState(() {
-      _imageFile = File(pickedFile.path);
+      _imageFile = File(pickedFile!.path);
     });
   }
 
@@ -108,7 +108,7 @@ class _EditRecipeState extends State<EditRecipe> {
                 height: 200,
                 width: 175,
                 child: FittedBox(
-                    fit: BoxFit.contain, child: Image.file(_imageFile)))
+                    fit: BoxFit.contain, child: Image.file(_imageFile!)))
             : RaisedButton(
                 child: Text(
                   "Kies een foto",
@@ -167,7 +167,7 @@ class _EditRecipeState extends State<EditRecipe> {
             dropdownColor: ColorTheme.extraLightGreen,
             hint: BodyText(text: 'Selecteer de moeilijkheidsgraad'),
             value: _selectedLocation,
-            onChanged: (newValue) {
+            onChanged: (dynamic newValue) {
               setState(() {
                 if (newValue == _locations[0]) {
                   _selectedLocation = _locations[1];
@@ -175,7 +175,7 @@ class _EditRecipeState extends State<EditRecipe> {
                   _selectedLocation = newValue;
                 }
 
-                _difficultyController.text = _selectedLocation;
+                _difficultyController.text = _selectedLocation!;
               });
             },
             items: _locations.map((location) {
@@ -208,7 +208,7 @@ class _EditRecipeState extends State<EditRecipe> {
 
   void toggle() {
     setState(() {
-      _published = !_published;
+      _published = !_published!;
     });
   }
 
@@ -219,7 +219,7 @@ class _EditRecipeState extends State<EditRecipe> {
       children: [
         Flexible(child: Text("Is het gepubliceerd")),
         Switch(
-            value: _published,
+            value: _published!,
             onChanged: (val) {
               toggle();
             }),
@@ -267,10 +267,10 @@ class _EditRecipeState extends State<EditRecipe> {
   }
 
   void saveRecipeChanges(context) {
-    if (_formKey.currentState.validate()) {
+    if (_formKey.currentState!.validate()) {
       var test;
       if (_imageFile != null) {
-        test = basename(_imageFile.path);
+        test = basename(_imageFile!.path);
       } else {
         test = _urlController.text;
       }

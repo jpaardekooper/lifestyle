@@ -13,13 +13,13 @@ class LandingPageApp extends StatelessWidget {
   final GlobalKey<ScaffoldState> _drawerKey = GlobalKey();
 
   void openDrawer() {
-    _drawerKey.currentState.openDrawer();
+    _drawerKey.currentState!.openDrawer();
   }
 
   final snackBar = SnackBar(content: Text('Bedankt voor het abonneren!'));
 
   void subscribe(BuildContext context) {
-    _drawerKey.currentState.showSnackBar(snackBar);
+    _drawerKey.currentState!.showSnackBar(snackBar);
     //when dart sdk has been updated
     //ScaffoldMessenger.of(context).showSnackBar(snackBar);
   }
@@ -156,7 +156,7 @@ class LandingPageApp extends StatelessWidget {
 }
 
 class Body extends StatelessWidget {
-  Body({@required this.function});
+  Body({required this.function});
   final Function(BuildContext) function;
   @override
   Widget build(BuildContext context) {
@@ -168,7 +168,7 @@ class Body extends StatelessWidget {
 }
 
 class LargeChild extends StatelessWidget {
-  LargeChild({@required this.function});
+  LargeChild({required this.function});
   final Function(BuildContext) function;
   @override
   Widget build(BuildContext context) {
@@ -236,7 +236,7 @@ class LargeChild extends StatelessWidget {
 }
 
 class SmallChild extends StatelessWidget {
-  SmallChild({@required this.function});
+  SmallChild({required this.function});
   final Function(BuildContext) function;
   @override
   Widget build(BuildContext context) {

@@ -8,7 +8,7 @@ analyzer:
     test_types_in_equals: error
     unnecessary_statements: error
     unsafe_html: error
-    avoid_as: warning
+    avoid_as: ignore
     avoid_catches_without_on_clauses: warning
     avoid_double_and_int_checks: warning
     avoid_init_to_null: error

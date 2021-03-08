@@ -4,7 +4,7 @@ import 'package:lifestylescreening/widgets/web/info_text.dart';
 
 class BottomBar extends StatelessWidget {
   const BottomBar({
-    Key key,
+    Key? key,
   }) : super(key: key);
 
   @override

@@ -5,21 +5,21 @@ import 'package:lifestylescreening/models/goals_model.dart';
 import 'package:lifestylescreening/models/interest_model.dart';
 
 abstract class IAuthRepository {
-  Future signInWithEmailAndPassword(String email, String password);
+  Future signInWithEmailAndPassword(String? email, String? password);
 
   Future signUpWithEmailAndPassword(
       String email,
       String username,
       String password,
-      BMI bmi,
-      List<InterestModel> interestList,
+      BMI? bmi,
+      List<InterestModel>? interestList,
       List<GoalsModel> goalsList);
 
-  Future updateUserData(String userId, String userName, BMI bmi);
+  Future updateUserData(String? userId, String userName, BMI bmi);
 
   Future signOut(BuildContext context);
 
-  saveUserDetailsOnLogin(AppUser user, String password, bool rememberMe);
+  saveUserDetailsOnLogin(AppUser user, String password, bool? rememberMe);
 
   Future resetPass(String email);
 

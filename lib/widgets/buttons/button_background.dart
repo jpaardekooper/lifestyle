@@ -4,11 +4,11 @@ class ButtonBackground extends StatelessWidget {
   const ButtonBackground(
       {this.text, this.size, this.onTap, this.colorbackground, this.dark});
 
-  final String text;
-  final double size;
-  final VoidCallback onTap;
-  final Color colorbackground;
-  final bool dark;
+  final String? text;
+  final double? size;
+  final VoidCallback? onTap;
+  final Color? colorbackground;
+  final bool? dark;
 
   @override
   Widget build(BuildContext context) {
@@ -22,11 +22,11 @@ class ButtonBackground extends StatelessWidget {
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(40),
               border: Border.all(
-                  color: dark ? colorbackground : Colors.white, width: 2),
+                  color: dark! ? colorbackground! : Colors.white, width: 2),
             ),
             alignment: Alignment.center,
             child: Text(
-              text,
+              text!,
               style: TextStyle(fontSize: size),
             ),
           ),

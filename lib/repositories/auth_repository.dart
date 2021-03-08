@@ -12,10 +12,10 @@ import 'package:lifestylescreening/views/user/tutorial/startup.dart';
 class AuthRepository extends IAuthRepository {
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
-  Future<AppUser> userFromFirebaseUser(
-    User user,
+  Future<AppUser?> userFromFirebaseUser(
+    User? user,
   ) async {
-    AppUser _appUser;
+    AppUser? _appUser;
 
     if (user != null) {
       QuerySnapshot snapshot = await FirebaseFirestore.instance
@@ -34,11 +34,11 @@ class AuthRepository extends IAuthRepository {
   }
 
   @override
-  Future signInWithEmailAndPassword(String email, String password) async {
+  Future signInWithEmailAndPassword(String? email, String? password) async {
     try {
       UserCredential authResult = await _auth.signInWithEmailAndPassword(
-          email: email, password: password);
-      User firebaseUser = authResult.user;
+          email: email!, password: password!);
+      User? firebaseUser = authResult.user;
 
       return userFromFirebaseUser(firebaseUser);
     } on FirebaseAuthException catch (e) {
@@ -59,8 +59,8 @@ class AuthRepository extends IAuthRepository {
     String email,
     String username,
     String password,
-    BMI bmi,
-    List<InterestModel> interestList,
+    BMI? bmi,
+    List<InterestModel>? interestList,
     List<GoalsModel> goalsList,
   ) async {
     try {
@@ -73,8 +73,8 @@ class AuthRepository extends IAuthRepository {
         "userName": username,
         "email": email,
         "role": "user",
-        "uid": _appUser.user.uid,
-        "age": bmi.age,
+        "uid": _appUser.user!.uid,
+        "age": bmi!.age,
         "height": bmi.height,
         "weight": bmi.weight,
         "gender": bmi.gender,
@@ -87,7 +87,7 @@ class AuthRepository extends IAuthRepository {
           .catchError((e) {
         //   print(e);
       }).then((value) async {
-        for (int i = 0; i < interestList.length; i++) {
+        for (int i = 0; i < interestList!.length; i++) {
           Map<String, dynamic> interestsInfo = {
             "interest": interestList[i].interest,
           };
@@ -118,7 +118,7 @@ class AuthRepository extends IAuthRepository {
         await HelperFunctions.saveUserRoleSharedPreference("user");
       });
 
-      User firebaseUser = _appUser.user;
+      User? firebaseUser = _appUser.user;
 
       return userFromFirebaseUser(firebaseUser);
     } on FirebaseAuthException catch (e) {
@@ -133,7 +133,7 @@ class AuthRepository extends IAuthRepository {
   }
 
   @override
-  Future updateUserData(String userId, String userName, BMI bmi) async {
+  Future updateUserData(String? userId, String userName, BMI bmi) async {
     await FirebaseFirestore.instance.collection("users").doc(userId).update({
       'userName': userName,
       "age": bmi.age,
@@ -158,12 +158,13 @@ class AuthRepository extends IAuthRepository {
   }
 
   @override
-  saveUserDetailsOnLogin(AppUser user, String password, bool rememberMe) async {
-    if (rememberMe) {
+  saveUserDetailsOnLogin(
+      AppUser user, String password, bool? rememberMe) async {
+    if (rememberMe!) {
       await HelperFunctions.saveUserLoggedInSharedPreference(rememberMe);
 
-      await HelperFunctions.saveUserNameSharedPreference(user.userName);
-      await HelperFunctions.saveUserEmailSharedPreference(user.email);
+      await HelperFunctions.saveUserNameSharedPreference(user.userName!);
+      await HelperFunctions.saveUserEmailSharedPreference(user.email!);
       await HelperFunctions.saveUserPasswordSharedPreference(password);
     }
   }
@@ -181,6 +182,9 @@ class AuthRepository extends IAuthRepository {
 
   @override
   Future<void> subscribeToLifestyle(Map data) async {
-    await FirebaseFirestore.instance.collection("subscribers").doc().set(data);
+    await FirebaseFirestore.instance
+        .collection("subscribers")
+        .doc()
+        .set(data as Map<String, dynamic>);
   }
 }

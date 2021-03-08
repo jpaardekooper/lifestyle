@@ -10,14 +10,14 @@ class FoodPreparationRepository extends IFoodPreparationRepository {
   @override
   List<IngredientsModel> fetchIngredients(
       AsyncSnapshot<QuerySnapshot> snapshot) {
-    return snapshot.data.docs.map((DocumentSnapshot doc) {
+    return snapshot.data!.docs.map((DocumentSnapshot doc) {
       return IngredientsModel.fromSnapshot(doc);
     }).toList();
   }
 
   @override
   List<MethodModel> fetchMethod(AsyncSnapshot<QuerySnapshot> snapshot) {
-    return snapshot.data.docs.map((DocumentSnapshot doc) {
+    return snapshot.data!.docs.map((DocumentSnapshot doc) {
       return MethodModel.fromSnapshot(doc);
     }).toList();
   }
@@ -25,13 +25,13 @@ class FoodPreparationRepository extends IFoodPreparationRepository {
   @override
   List<NutritionalValueModel> fetchNutritionalValue(
       AsyncSnapshot<QuerySnapshot> snapshot) {
-    return snapshot.data.docs.map((DocumentSnapshot doc) {
+    return snapshot.data!.docs.map((DocumentSnapshot doc) {
       return NutritionalValueModel.fromSnapshot(doc);
     }).toList();
   }
 
   @override
-  Stream<QuerySnapshot> streamIngredients(String recipeId) {
+  Stream<QuerySnapshot> streamIngredients(String? recipeId) {
     return FirebaseFirestore.instance
         .collection("recipes")
         .doc(recipeId)
@@ -40,7 +40,7 @@ class FoodPreparationRepository extends IFoodPreparationRepository {
   }
 
   @override
-  Stream<QuerySnapshot> streamMethod(String recipeId) {
+  Stream<QuerySnapshot> streamMethod(String? recipeId) {
     return FirebaseFirestore.instance
         .collection("recipes")
         .doc(recipeId)
@@ -50,7 +50,7 @@ class FoodPreparationRepository extends IFoodPreparationRepository {
   }
 
   @override
-  Stream<QuerySnapshot> streamNutritionalValue(String recipeId) {
+  Stream<QuerySnapshot> streamNutritionalValue(String? recipeId) {
     return FirebaseFirestore.instance
         .collection("recipes")
         .doc(recipeId)
@@ -59,15 +59,15 @@ class FoodPreparationRepository extends IFoodPreparationRepository {
   }
 
   @override
-  Future<void> updateIngredient(String recipeId, String ingredientId, Map data,
-      bool newIngriendient) async {
-    if (newIngriendient) {
+  Future<void> updateIngredient(String? recipeId, String? ingredientId, Map data,
+      bool? newIngriendient) async {
+    if (newIngriendient!) {
       await FirebaseFirestore.instance
           .collection("recipes")
           .doc(recipeId)
           .collection('ingredients')
           .doc()
-          .set(data)
+          .set(data as Map<String, dynamic>)
           .catchError((e) {});
     } else {
       await FirebaseFirestore.instance
@@ -75,21 +75,21 @@ class FoodPreparationRepository extends IFoodPreparationRepository {
           .doc(recipeId)
           .collection('ingredients')
           .doc(ingredientId)
-          .set(data)
+          .set(data as Map<String, dynamic>)
           .catchError((e) {});
     }
   }
 
   @override
   Future<void> updateMethod(
-      String recipeId, String methodId, Map data, bool newMethod) async {
-    if (newMethod) {
+      String? recipeId, String? methodId, Map data, bool? newMethod) async {
+    if (newMethod!) {
       await FirebaseFirestore.instance
           .collection("recipes")
           .doc(recipeId)
           .collection('method')
           .doc()
-          .set(data)
+          .set(data as Map<String, dynamic>)
           .catchError((e) {});
     } else {
       await FirebaseFirestore.instance
@@ -97,21 +97,21 @@ class FoodPreparationRepository extends IFoodPreparationRepository {
           .doc(recipeId)
           .collection('method')
           .doc(methodId)
-          .set(data)
+          .set(data as Map<String, dynamic>)
           .catchError((e) {});
     }
   }
 
   @override
-  Future<void> updateNutritionalValue(String recipeId, String nutritionalId,
-      Map data, bool newNutritional) async {
-    if (newNutritional) {
+  Future<void> updateNutritionalValue(String? recipeId, String? nutritionalId,
+      Map data, bool? newNutritional) async {
+    if (newNutritional!) {
       await FirebaseFirestore.instance
           .collection("recipes")
           .doc(recipeId)
           .collection('nutritionalValue')
           .doc()
-          .set(data)
+          .set(data as Map<String, dynamic>)
           .catchError((e) {});
     } else {
       await FirebaseFirestore.instance
@@ -119,13 +119,13 @@ class FoodPreparationRepository extends IFoodPreparationRepository {
           .doc(recipeId)
           .collection('nutritionalValue')
           .doc(nutritionalId)
-          .set(data)
+          .set(data as Map<String, dynamic>)
           .catchError((e) {});
     }
   }
 
   @override
-  Future<void> deleteIngredient(String recipeId, String ingredientId) async {
+  Future<void> deleteIngredient(String? recipeId, String? ingredientId) async {
     await FirebaseFirestore.instance
         .collection("recipes")
         .doc(recipeId)
@@ -136,7 +136,7 @@ class FoodPreparationRepository extends IFoodPreparationRepository {
   }
 
   @override
-  Future<void> deleteMethod(String recipeId, String methodId) async {
+  Future<void> deleteMethod(String? recipeId, String? methodId) async {
     await FirebaseFirestore.instance
         .collection("recipes")
         .doc(recipeId)
@@ -148,7 +148,7 @@ class FoodPreparationRepository extends IFoodPreparationRepository {
 
   @override
   Future<void> deleteNutritrionalValue(
-      String recipeId, String nutritionalId) async {
+      String? recipeId, String? nutritionalId) async {
     await FirebaseFirestore.instance
         .collection("recipes")
         .doc(recipeId)

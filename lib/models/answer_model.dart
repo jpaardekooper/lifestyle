@@ -12,28 +12,27 @@ class AnswerModel {
       this.type,
       this.lastAnswer})
       : reference = null;
-  final String id;
-  final int next;
-  final String option;
-  final bool optionTypeIsNumber;
-  final int order;
-  final int points;
-  final int pointsCalculator;
-  final String type;
-  final String lastAnswer;
+  final String? id;
+  final int? next;
+  final String? option;
+  final bool? optionTypeIsNumber;
+  final int? order;
+  final int? points;
+  final int? pointsCalculator;
+  final String? type;
+  final String? lastAnswer;
 
-  final DocumentReference reference;
+  final DocumentReference? reference;
 
   AnswerModel.fromSnapshot(DocumentSnapshot snapshot)
-      : assert(snapshot != null),
-        id = snapshot.id,
-        next = snapshot.data()['next'],
-        option = snapshot.data()['option'],
-        optionTypeIsNumber = snapshot.data()['option_type_is_number'],
-        order = snapshot.data()['order'],
-        points = snapshot.data()['points'],
-        pointsCalculator = snapshot.data()['pointsCalculator'],
-        type = snapshot.data()['type'],
-        lastAnswer = snapshot.data()['lastAnswer'] ?? "",
+      : id = snapshot.id,
+        next = snapshot.data()!['next'],
+        option = snapshot.data()!['option'],
+        optionTypeIsNumber = snapshot.data()!['option_type_is_number'],
+        order = snapshot.data()!['order'],
+        points = snapshot.data()!['points'],
+        pointsCalculator = snapshot.data()!['pointsCalculator'],
+        type = snapshot.data()!['type'],
+        lastAnswer = snapshot.data()!['lastAnswer'] ?? "",
         reference = snapshot.reference;
 }

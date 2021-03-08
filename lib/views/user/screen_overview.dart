@@ -13,7 +13,7 @@ import 'package:lifestylescreening/widgets/text/h1_text.dart';
 import 'package:lifestylescreening/views/user/home_view.dart' as tabscreen;
 
 class ScreenOverview extends StatelessWidget {
-  ScreenOverview({Key key}) : super(key: key);
+  ScreenOverview({Key? key}) : super(key: key);
 
   void updatecounterToSettings() {
     tabscreen.counter.value = 3;
@@ -45,7 +45,7 @@ class ScreenOverview extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final _userData = InheritedDataProvider.of(context);
+    final _userData = InheritedDataProvider.of(context)!;
     final size = MediaQuery.of(context).size;
 
     return SingleChildScrollView(

@@ -20,7 +20,7 @@ class RecipeRepository implements IRecipeRepository {
   }
 
   @override
-  Future<void> removeRecipe(String recipeId, String url) async {
+  Future<void> removeRecipe(String? recipeId, String? url) async {
     await FirebaseFirestore.instance
         .collection("recipes")
         .doc(recipeId)
@@ -31,7 +31,7 @@ class RecipeRepository implements IRecipeRepository {
   }
 
   @override
-  Future<void> removeUserRecipe(String recipeId, String url) async {
+  Future<void> removeUserRecipe(String? recipeId, String? url) async {
     await FirebaseFirestore.instance
         .collection("createdRecipes")
         .doc(recipeId)
@@ -43,12 +43,12 @@ class RecipeRepository implements IRecipeRepository {
 
   @override
   Future<void> updateUserRecipe(
-      String recipeId, Map data, bool newRecipe) async {
+      String? recipeId, Map data, bool newRecipe) async {
     if (newRecipe) {
       await FirebaseFirestore.instance
           .collection("createdRecipes")
           .doc(recipeId)
-          .set(data)
+          .set(data as Map<String, dynamic>)
           .catchError((e) {
         //    print(e);
       });
@@ -56,7 +56,7 @@ class RecipeRepository implements IRecipeRepository {
       await FirebaseFirestore.instance
           .collection("createdRecipes")
           .doc(recipeId)
-          .set(data)
+          .set(data as Map<String, dynamic>)
           .catchError((e) {
         //    print(e);
       });
@@ -64,12 +64,12 @@ class RecipeRepository implements IRecipeRepository {
   }
 
   @override
-  Future<void> updateRecipe(String recipeId, Map data, bool newRecipe) async {
+  Future<void> updateRecipe(String? recipeId, Map data, bool newRecipe) async {
     if (newRecipe) {
       await FirebaseFirestore.instance
           .collection("recipes")
           .doc(recipeId)
-          .set(data)
+          .set(data as Map<String, dynamic>)
           .catchError((e) {
         //    print(e);
       });
@@ -77,7 +77,7 @@ class RecipeRepository implements IRecipeRepository {
       await FirebaseFirestore.instance
           .collection("recipes")
           .doc(recipeId)
-          .set(data)
+          .set(data as Map<String, dynamic>)
           .catchError((e) {
         //    print(e);
       });
@@ -97,7 +97,7 @@ class RecipeRepository implements IRecipeRepository {
   }
 
   @override
-  Future<List<RecipeModel>> getUserRecipes(String userId) async {
+  Future<List<RecipeModel>> getUserRecipes(String? userId) async {
     var snapshot = await FirebaseFirestore.instance
         .collection('createdRecipes')
         .where("userId", isEqualTo: userId)
@@ -109,7 +109,7 @@ class RecipeRepository implements IRecipeRepository {
   }
 
   @override
-  Future<List<RecipeModel>> getUserFavoriteRecipe(String userId) async {
+  Future<List<RecipeModel>> getUserFavoriteRecipe(String? userId) async {
     List<RecipeModel> returnList = [];
     List<dynamic> favRecipeList = [];
     int recipeId;
@@ -119,7 +119,7 @@ class RecipeRepository implements IRecipeRepository {
 
     var recipes = await FirebaseFirestore.instance.collection('recipes').get();
 
-    favRecipeList = List.from(snapshot.data()['favorite_recipes']);
+    favRecipeList = List.from(snapshot.data()!['favorite_recipes']);
 
     for (var ids in favRecipeList) {
       recipeId = recipes.docs.indexWhere((element) => element.id == ids);
@@ -133,14 +133,14 @@ class RecipeRepository implements IRecipeRepository {
   }
 
   @override
-  Future<bool> checkFavoriteRecipe(String recipeId, String userId) async {
+  Future<bool> checkFavoriteRecipe(String? recipeId, String? userId) async {
     List<dynamic> favRecipeList = [];
     var snapshot = await FirebaseFirestore.instance
         .collection('users')
         .doc(userId)
         .get();
 
-    favRecipeList = List.from(snapshot.data()['favorite_recipes']);
+    favRecipeList = List.from(snapshot.data()!['favorite_recipes']);
 
     for (var ids in favRecipeList) {
       if (ids == recipeId) {
@@ -151,14 +151,14 @@ class RecipeRepository implements IRecipeRepository {
   }
 
   @override
-  Future<void> addFavoriteRecipe(String userId, String recipeId) async {
+  Future<void> addFavoriteRecipe(String? userId, String? recipeId) async {
     await FirebaseFirestore.instance.collection('users').doc(userId).update({
       'favorite_recipes': FieldValue.arrayUnion([recipeId]),
     });
   }
 
   @override
-  Future<void> removeFavoriteRecipe(String userId, String recipeId) async {
+  Future<void> removeFavoriteRecipe(String? userId, String? recipeId) async {
     await FirebaseFirestore.instance.collection('users').doc(userId).update({
       'favorite_recipes': FieldValue.arrayRemove([recipeId]),
     });
@@ -174,8 +174,8 @@ class RecipeRepository implements IRecipeRepository {
   }
 
   @override
-  Future<void> uploadImage(File img) async {
-    String fileName = basename(img.path);
+  Future<void> uploadImage(File? img) async {
+    String fileName = basename(img!.path);
     Reference storageRef =
         FirebaseStorage.instance.ref().child('recipeImages/$fileName');
     UploadTask uploadTask = storageRef.putFile(img);
@@ -184,7 +184,7 @@ class RecipeRepository implements IRecipeRepository {
   }
 
   @override
-  Future<String> getImage(String image) async {
+  Future<String> getImage(String? image) async {
     String imageUrl = await FirebaseStorage.instance
         .ref()
         .child('recipeImages/$image')
@@ -193,7 +193,7 @@ class RecipeRepository implements IRecipeRepository {
     return imageUrl;
   }
 
-  Future<void> deleteImage(String image) async {
+  Future<void> deleteImage(String? image) async {
     await FirebaseStorage.instance.ref().child('recipeImages/$image').delete();
   }
 }

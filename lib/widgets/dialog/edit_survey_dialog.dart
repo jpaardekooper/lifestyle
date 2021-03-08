@@ -10,8 +10,8 @@ import 'package:lifestylescreening/widgets/text/h2_text.dart';
 
 class EditSurveyView extends StatefulWidget {
   const EditSurveyView({this.surveyInfo, this.newItem});
-  final SurveyModel surveyInfo;
-  final bool newItem;
+  final SurveyModel? surveyInfo;
+  final bool? newItem;
 
   @override
   _EditSurveyViewState createState() => _EditSurveyViewState();
@@ -26,8 +26,8 @@ class _EditSurveyViewState extends State<EditSurveyView> {
 
   void initState() {
     super.initState();
-    reorderCategoryList = widget.surveyInfo.category ?? [];
-    _surveyNameController.text = widget.surveyInfo.title ?? "";
+    reorderCategoryList = widget.surveyInfo!.category ?? [];
+    _surveyNameController.text = widget.surveyInfo!.title ?? "";
   }
 
   Widget showTitle(BuildContext context) {
@@ -60,7 +60,7 @@ class _EditSurveyViewState extends State<EditSurveyView> {
         ),
         SelectCategory(
           selectedCategory: _selectedCategory,
-          callBack: (val) => setState(() => _selectedCategory = val),
+          callBack: (val) => setState(() => _selectedCategory = val!),
         ),
         SizedBox(
           height: 10,
@@ -126,12 +126,12 @@ class _EditSurveyViewState extends State<EditSurveyView> {
       leading: Text("#${index + 1}"),
       trailing: InkWell(
         onTap: () {
-          if (widget.newItem) {
+          if (widget.newItem!) {
             setState(() {
               reorderCategoryList.removeAt(index);
             });
           } else {
-            _surveyController.removeCategory(widget.surveyInfo.id, item);
+            _surveyController.removeCategory(widget.surveyInfo!.id, item);
 
             setState(() {
               reorderCategoryList.removeAt(index);
@@ -170,10 +170,10 @@ class _EditSurveyViewState extends State<EditSurveyView> {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: widget.newItem
+      title: widget.newItem!
           ? Text("Nieuwe survey")
           : Text(
-              "ID: ${widget.surveyInfo.id}",
+              "ID: ${widget.surveyInfo!.id}",
               style: TextStyle(fontSize: 11),
             ),
       content: Container(
@@ -214,14 +214,14 @@ class _EditSurveyViewState extends State<EditSurveyView> {
   }
 
   void saveSurveyChanges(BuildContext context) {
-    if (_formKey.currentState.validate()) {
+    if (_formKey.currentState!.validate()) {
       Map<String, dynamic> data = {
         "title": _surveyNameController.text,
         "category": reorderCategoryList,
       };
 
       _surveyController
-          .updateSurvey(widget.surveyInfo.id, data, widget.newItem)
+          .updateSurvey(widget.surveyInfo!.id, data, widget.newItem)
           .then((value) => Navigator.pop(context));
     }
   }

@@ -9,10 +9,10 @@ class ConfirmOrangeButton extends StatelessWidget {
     this.bottomColor,
   });
 
-  final String text;
-  final VoidCallback onTap;
-  final Color color;
-  final Color bottomColor;
+  final String? text;
+  final VoidCallback? onTap;
+  final Color? color;
+  final Color? bottomColor;
 
   @override
   Widget build(BuildContext context) {
@@ -42,7 +42,7 @@ class ConfirmOrangeButton extends StatelessWidget {
               maxHeight: 55.0), // min sizes for Material buttons
           alignment: Alignment.center,
           child: Text(
-            text,
+            text!,
             style: TextStyle(
                 color: Colors.white,
                 fontSize: 20,

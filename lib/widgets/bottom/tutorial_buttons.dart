@@ -7,15 +7,15 @@ import 'package:flutter/foundation.dart' show kIsWeb;
 class TutorialButtons extends StatelessWidget {
   const TutorialButtons(
       {this.onPressedBack,
-      @required this.onPressedNext,
-      @required this.canGoBack,
+      required this.onPressedNext,
+      required this.canGoBack,
       this.enabled,
       this.spacing});
-  final VoidCallback onPressedBack;
+  final VoidCallback? onPressedBack;
   final VoidCallback onPressedNext;
   final bool canGoBack;
-  final bool enabled;
-  final bool spacing;
+  final bool? enabled;
+  final bool? spacing;
 
   @override
   Widget build(BuildContext context) {

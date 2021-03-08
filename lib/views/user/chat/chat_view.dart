@@ -16,10 +16,10 @@ import '../../../healthpoint_icons.dart';
 
 class ChatScreen extends StatefulWidget {
   const ChatScreen(
-      {@required this.ref, @required this.model, @required this.email});
-  final AdminModel model;
+      {required this.ref, required this.model, required this.email});
+  final AdminModel? model;
   final UserMessageModel ref;
-  final String email;
+  final String? email;
 
   @override
   _ChatScreen createState() => _ChatScreen();
@@ -29,7 +29,7 @@ class _ChatScreen extends State<ChatScreen> {
   ChatController _chatController = ChatController();
   final TextEditingController messageController = TextEditingController();
 
-  StreamSubscription<QuerySnapshot> _currentSubscription;
+  StreamSubscription<QuerySnapshot>? _currentSubscription;
 
   List<MessageModel> messageList = <MessageModel>[];
   bool loading = true;
@@ -62,16 +62,16 @@ class _ChatScreen extends State<ChatScreen> {
         title: ListTile(
           visualDensity:
               VisualDensity(horizontal: VisualDensity.maximumDensity),
-          title: H2Text(text: widget.model.name),
+          title: H2Text(text: widget.model!.name),
           subtitle: BodyText(
-            text: widget.model.profession,
+            text: widget.model!.profession,
           ),
           leading: Transform.scale(
             scale: 1.2,
             child: CircleAvatar(
               // backgroundImage: NetworkImage(widget.model.image),
               child: Icon(Icons.person),
-              backgroundColor: widget.model.medical
+              backgroundColor: widget.model!.medical!
                   ? const Color(0xFFA1CFBE)
                   : const Color(0xFFFFDFB9),
             ),
@@ -81,7 +81,7 @@ class _ChatScreen extends State<ChatScreen> {
         centerTitle: true,
         leading: IconButton(
           icon: Icon(HealthpointIcons.arrowLeftIcon),
-          color: widget.model.medical
+          color: widget.model!.medical!
               ? Theme.of(context).primaryColor
               : Theme.of(context).accentColor,
           onPressed: () =>
@@ -89,7 +89,7 @@ class _ChatScreen extends State<ChatScreen> {
         ),
         bottom: PreferredSize(
             child: Container(
-              color: widget.model.medical
+              color: widget.model!.medical!
                   ? Theme.of(context).primaryColor
                   : Theme.of(context).accentColor,
               height: 4.0,
@@ -141,7 +141,7 @@ class _ChatScreen extends State<ChatScreen> {
                               ),
                               enabledBorder: OutlineInputBorder(
                                 borderSide: BorderSide(
-                                    color: Colors.grey[500], width: 1.0),
+                                    color: Colors.grey[500]!, width: 1.0),
                                 borderRadius: BorderRadius.circular(23),
                               ),
                               focusedBorder: OutlineInputBorder(
@@ -179,13 +179,13 @@ class _ChatScreen extends State<ChatScreen> {
   sendMessage() {
     if (messageController.text.isNotEmpty) {
       Map<String, dynamic> chatMessage = {
-        'description': messageController.text ?? "",
+        'description': messageController.text,
         'sender': true,
         'timestamp': DateTime.now(),
       };
 
       _chatController.sendMessageData(
-          widget.email, chatMessage, widget.model.expert_email, widget.ref.id);
+          widget.email, chatMessage, widget.model!.expert_email, widget.ref.id);
 
       setState(() {
         messageController.clear();

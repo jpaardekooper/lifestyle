@@ -4,9 +4,9 @@ import 'package:lifestylescreening/models/interest_model.dart';
 
 class SelectedInterestCard extends StatefulWidget {
   SelectedInterestCard({
-    Key key,
-    @required this.onTap,
-    @required this.interest,
+    Key? key,
+    required this.onTap,
+    required this.interest,
   }) : super(key: key);
 
   final InterestModel interest;
@@ -43,7 +43,7 @@ class _SelectedInterestCardState extends State<SelectedInterestCard> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(widget.interest.interest),
+                  Text(widget.interest.interest!),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     crossAxisAlignment: CrossAxisAlignment.center,
@@ -61,6 +61,7 @@ class _SelectedInterestCardState extends State<SelectedInterestCard> {
                           scale: 1.5,
                           child: Checkbox(
                             autofocus: false,
+                            // ignore: avoid_returning_null_for_void
                             onChanged: (value) => null,
                             activeColor: Theme.of(context).primaryColor,
                             value: selected,

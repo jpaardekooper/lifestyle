@@ -12,15 +12,15 @@ import 'package:lifestylescreening/widgets/logo/lifestyle_logo.dart';
 
 class SignUp extends StatefulWidget {
   SignUp(
-      {Key key,
-      @required this.username,
-      @required this.bmi,
-      @required this.selectedInterest,
-      @required this.goalsList})
+      {Key? key,
+      required this.username,
+      required this.bmi,
+      required this.selectedInterest,
+      required this.goalsList})
       : super(key: key);
-  final String username;
-  final BMI bmi;
-  final List<InterestModel> selectedInterest;
+  final String? username;
+  final BMI? bmi;
+  final List<InterestModel>? selectedInterest;
   final List<GoalsModel> goalsList;
 
   @override
@@ -58,7 +58,7 @@ class _SignUpState extends State<SignUp> {
   }
 
   void registerAccount() {
-    if (_formKey.currentState.validate()) {
+    if (_formKey.currentState!.validate()) {
       setState(() {
         isLoading = true;
       });
@@ -98,7 +98,7 @@ class _SignUpState extends State<SignUp> {
     setState(() {
       isLoading = false;
 
-      _key.currentState.showSnackBar(
+      _key.currentState!.showSnackBar(
         SnackBar(
           duration: const Duration(seconds: 1),
           backgroundColor: Theme.of(context).accentColor,
@@ -127,7 +127,7 @@ class _SignUpState extends State<SignUp> {
     final size = MediaQuery.of(context).size;
     // Scaffold is used to utilize all the material widgets
     return Scaffold(
-      appBar: introductionAppBar(context, 1, false),
+      appBar: introductionAppBar(context, 1, false) as PreferredSizeWidget?,
       key: _key,
       body: Center(
         child: Form(

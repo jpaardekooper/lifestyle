@@ -3,16 +3,15 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 class MethodModel {
   MethodModel({this.id, this.step, this.instruction}) : reference = null;
 
-  final String id;
-  final int step;
-  final String instruction;
+  final String? id;
+  final int? step;
+  final String? instruction;
 
-  final DocumentReference reference;
+  final DocumentReference? reference;
 
   MethodModel.fromSnapshot(DocumentSnapshot snapshot)
-      : assert(snapshot != null),
-        id = snapshot.id,
-        step = snapshot.data()['step'],
-        instruction = snapshot.data()['instruction'],
+      : id = snapshot.id,
+        step = snapshot.data()!['step'],
+        instruction = snapshot.data()!['instruction'],
         reference = snapshot.reference;
 }

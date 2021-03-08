@@ -5,9 +5,9 @@ import 'package:lifestylescreening/widgets/colors/color_theme.dart';
 class BottomNavigationLogo extends StatelessWidget {
   BottomNavigationLogo({this.bottomAppIcon, this.bottomAppName, this.visible});
 
-  final IconData bottomAppIcon;
-  final String bottomAppName;
-  final bool visible;
+  final IconData? bottomAppIcon;
+  final String? bottomAppName;
+  final bool? visible;
 
   @override
   Widget build(BuildContext context) {
@@ -19,7 +19,7 @@ class BottomNavigationLogo extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 14),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(10),
-        color: visible ? Theme.of(context).primaryColor : Colors.transparent,
+        color: visible! ? Theme.of(context).primaryColor : Colors.transparent,
       ),
       child: Column(
         // mainAxisSize: MainAxisSize.min,
@@ -28,16 +28,16 @@ class BottomNavigationLogo extends StatelessWidget {
         children: [
           Icon(
             bottomAppIcon,
-            color: visible ? Colors.white : ColorTheme.green,
+            color: visible! ? Colors.white : ColorTheme.green,
           ),
           SizedBox(
             height: 5,
           ),
           Text(
-            bottomAppName,
+            bottomAppName!,
             style: TextStyle(
               fontSize: 12,
-              color: visible ? Colors.white : ColorTheme.green,
+              color: visible! ? Colors.white : ColorTheme.green,
             ),
           ),
         ],

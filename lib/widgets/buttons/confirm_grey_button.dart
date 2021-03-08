@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 class ConfirmGreyButton extends StatelessWidget {
   const ConfirmGreyButton({this.text, this.onTap});
 
-  final String text;
-  final VoidCallback onTap;
+  final String? text;
+  final VoidCallback? onTap;
 
   @override
   Widget build(BuildContext context) {
@@ -32,7 +32,7 @@ class ConfirmGreyButton extends StatelessWidget {
               maxHeight: 55.0), // min sizes for Material buttons
           alignment: Alignment.center,
           child: Text(
-            text,
+            text!,
             style: TextStyle(
                 color: Colors.white,
                 fontSize: 20,

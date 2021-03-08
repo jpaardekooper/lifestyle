@@ -10,21 +10,21 @@ class ChatController {
 
   //stream chat for user client
   Future<List<UserMessageModel>> getUserChatRef(
-      String email, String expert_email) {
+      String? email, String? expert_email) {
     return _chatController.getUserChatRef(email, expert_email);
   }
 
   //stream chat for user client
-  Stream<QuerySnapshot> streamUserChat(String ref) {
+  Stream<QuerySnapshot> streamUserChat(String? ref) {
     return _chatController.streamUserChat(ref);
   }
 
   //stream chat for admin client
-  Stream<QuerySnapshot> streamAdminChat(String userId) {
+  Stream<QuerySnapshot> streamAdminChat(String? userId) {
     return _chatController.streamAdminChat(userId);
   }
 
-  Stream<QuerySnapshot> streamUserMessage(String email) {
+  Stream<QuerySnapshot> streamUserMessage(String? email) {
     return _chatController.streamUserMessage(email);
   }
 
@@ -41,12 +41,12 @@ class ChatController {
   }
 
   Future<void> sendMessageData(
-      String email, Map chatMessage, String expert_email, String ref) {
+      String? email, Map chatMessage, String? expert_email, String? ref) {
     return _chatController.sendMessageData(
         email, chatMessage, expert_email, ref);
   }
 
-  Future<void> sendMessageDataAsAdmin(String id, Map chatMessage) {
+  Future<void> sendMessageDataAsAdmin(String? id, Map chatMessage) {
     return _chatController.sendMessageDataAsAdmin(id, chatMessage);
   }
 

@@ -13,14 +13,14 @@ class CustomAnswerFormField extends StatelessWidget {
       this.suffixText,
       this.answerModel});
 
-  final TextInputType keyboardType;
-  final TextEditingController textcontroller;
-  final String errorMessage;
-  final int validator;
-  final String hintText;
-  final Function(AnswerModel, String) function;
-  final AnswerModel answerModel;
-  final String suffixText;
+  final TextInputType? keyboardType;
+  final TextEditingController? textcontroller;
+  final String? errorMessage;
+  final int? validator;
+  final String? hintText;
+  final Function(AnswerModel, String)? function;
+  final AnswerModel? answerModel;
+  final String? suffixText;
 
   inputDecoration(BuildContext context) {
     return InputDecoration(
@@ -72,7 +72,7 @@ class CustomAnswerFormField extends StatelessWidget {
   bool validateEmail(String value) {
     Pattern pattern =
         r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
-    RegExp regex = RegExp(pattern);
+    RegExp regex = RegExp(pattern as String);
     return (!regex.hasMatch(value)) ? false : true;
   }
 
@@ -96,26 +96,20 @@ class CustomAnswerFormField extends StatelessWidget {
         validator: (val) {
           switch (validator) {
             case 1:
-              if (function != null) {
-                function(answerModel, val);
-              }
+              function!(answerModel!, val!);
 
               return val.isEmpty ? errorMessage : null;
-              break;
             case 2:
-              if (double.tryParse(val) != null) {
-                if (function != null) {
-                  function(answerModel, val);
-                }
+              if (double.tryParse(val!) != null) {
+                function!(answerModel!, val);
 
                 return null;
               } else {
                 return errorMessage;
               }
-              break;
 
             default:
-              return val.isEmpty ? errorMessage : null;
+              return val!.isEmpty ? errorMessage : null;
           }
         },
       ),

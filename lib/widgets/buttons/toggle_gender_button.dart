@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class ToggleGenderButton extends StatefulWidget {
-  ToggleGenderButton({Key key, @required this.onTap}) : super(key: key);
+  ToggleGenderButton({Key? key, required this.onTap}) : super(key: key);
   final Function(String) onTap;
 
   @override
@@ -9,7 +9,7 @@ class ToggleGenderButton extends StatefulWidget {
 }
 
 class _ToggleGenderButtonState extends State<ToggleGenderButton> {
-  List<bool> isSelected;
+  late List<bool> isSelected;
 
   @override
   void initState() {

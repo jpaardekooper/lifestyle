@@ -16,7 +16,7 @@ class RecipeView extends StatefulWidget {
 class _RecipeViewState extends State<RecipeView> {
   final RecipeController _recipeController = RecipeController();
 
-  StreamSubscription<QuerySnapshot> _currentSubscription;
+  StreamSubscription<QuerySnapshot>? _currentSubscription;
   List<RecipeModel> _recipes = <RecipeModel>[];
 
   @override
@@ -39,7 +39,7 @@ class _RecipeViewState extends State<RecipeView> {
     });
   }
 
-  void _addNewRecipe(String role) {
+  void _addNewRecipe(String? role) {
     showDialog(
       barrierDismissible: false,
       context: context,
@@ -59,7 +59,7 @@ class _RecipeViewState extends State<RecipeView> {
 
     return Scaffold(
       floatingActionButton: FloatingActionButton(
-        onPressed: () => _addNewRecipe(_userData.data.role),
+        onPressed: () => _addNewRecipe(_userData!.data.role),
         child: Icon(Icons.add),
       ),
       body: GridView.builder(
@@ -76,7 +76,7 @@ class _RecipeViewState extends State<RecipeView> {
               context,
               MaterialPageRoute(
                 builder: (context) => InheritedDataProvider(
-                  data: _userData.data,
+                  data: _userData!.data,
                   child: FoodPreparationView(
                     recipe: _recipe,
                     userNewRecipe: false,
@@ -85,7 +85,7 @@ class _RecipeViewState extends State<RecipeView> {
               ),
             ),
             child: RecipeCard(
-                recipe: _recipe, user: _userData.data, userRecipe: false),
+                recipe: _recipe, user: _userData!.data, userRecipe: false),
           );
         },
       ),

@@ -9,8 +9,8 @@ import 'package:lifestylescreening/views/user/chat/first_message_view.dart';
 class ChatTab extends StatefulWidget {
   ChatTab({this.model, this.email});
 
-  final AdminModel model;
-  final String email;
+  final AdminModel? model;
+  final String? email;
 
   @override
   _ChatTabState createState() => _ChatTabState();
@@ -19,22 +19,22 @@ class ChatTab extends StatefulWidget {
 class _ChatTabState extends State<ChatTab> {
   final ChatController _chatController = ChatController();
 
-  List<UserMessageModel> _userMessageModelList = [];
+  List<UserMessageModel>? _userMessageModelList = [];
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<List<UserMessageModel>>(
       future: _chatController.getUserChatRef(
-          widget.email, widget.model.expert_email),
+          widget.email, widget.model!.expert_email),
       builder: (context, snapshot) {
         _userMessageModelList = snapshot.data;
-        if (_userMessageModelList == null || _userMessageModelList.isEmpty) {
+        if (_userMessageModelList == null || _userMessageModelList!.isEmpty) {
           return FirstMessageScreen(
             model: widget.model,
             email: widget.email,
             hallo: hallo,
           );
         } else {
-          UserMessageModel _userRef = _userMessageModelList[0];
+          UserMessageModel _userRef = _userMessageModelList![0];
           return ChatScreen(
             ref: _userRef,
             model: widget.model,
