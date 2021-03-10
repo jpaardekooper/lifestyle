@@ -38,6 +38,14 @@ class _EditRecipeState extends State<EditRecipe> {
   ]; // Option 2
   String? _selectedLocation;
 
+  List<String> _tags = [
+    'Lactosevrij',
+    'Laag in calorieën',
+    'Vetarm',
+    'Vegetarisch',
+  ];
+  List<String>? _selectedTags;
+
   final _formKey = GlobalKey<FormState>();
   File? _imageFile;
 
@@ -51,6 +59,8 @@ class _EditRecipeState extends State<EditRecipe> {
     _selectedLocation = _difficultyController.text.isEmpty
         ? _locations[0]
         : _difficultyController.text;
+
+    _selectedTags = widget.recipe.tags ?? [];
 
     super.initState();
   }
@@ -109,12 +119,14 @@ class _EditRecipeState extends State<EditRecipe> {
                 width: 175,
                 child: FittedBox(
                     fit: BoxFit.contain, child: Image.file(_imageFile!)))
-            : RaisedButton(
+            : OutlinedButton(
                 child: Text(
                   "Kies een foto",
                   style: TextStyle(color: Colors.white),
                 ),
-                color: Theme.of(context).primaryColor,
+                style: ButtonStyle(
+                    backgroundColor: MaterialStateProperty.all<Color>(
+                        Theme.of(context).primaryColor)),
                 onPressed: () => showDialog(
                   barrierDismissible: false,
                   context: context,
@@ -126,13 +138,13 @@ class _EditRecipeState extends State<EditRecipe> {
                       content: Row(
                         mainAxisAlignment: MainAxisAlignment.end,
                         children: [
-                          FlatButton(
+                          TextButton(
                               child: Text("Camera"),
                               onPressed: () {
                                 checkCameraPermission();
                                 Navigator.of(context).pop();
                               }),
-                          FlatButton(
+                          TextButton(
                             child: Text("Gallerij"),
                             onPressed: () {
                               checkStoragePermission();
@@ -151,7 +163,7 @@ class _EditRecipeState extends State<EditRecipe> {
 
   Widget showRecipeDifficulty(BuildContext context) {
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         CustomAnswerFormField(
           keyboardType: TextInputType.name,
@@ -227,6 +239,56 @@ class _EditRecipeState extends State<EditRecipe> {
     );
   }
 
+  Widget showRecipeTags(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        BodyText(
+          text: "Tags:",
+        ),
+        SizedBox(
+          height: 10,
+        ),
+        Container(
+          height: 250,
+          width: MediaQuery.of(context).size.width,
+          child: ListView.separated(
+            separatorBuilder: (context, index) => Divider(
+              height: 0.0,
+              color: Colors.black,
+            ),
+            shrinkWrap: true,
+            itemCount: _tags.length,
+            itemBuilder: (BuildContext context, int index) {
+              return ListTile(
+                selected: _selectedTags!.contains(_tags[index]),
+                onTap: () {
+                  if (_selectedTags!.contains(_tags[index])) {
+                    setState(() {
+                      _selectedTags!.removeWhere((val) => val == _tags[index]);
+                    });
+                  } else {
+                    setState(() {
+                      _selectedTags!.add(_tags[index]);
+                    });
+                  }
+                },
+                title: Text(_tags[index]),
+                trailing: Icon(
+                    _selectedTags!.contains(_tags[index])
+                        ? Icons.check_box
+                        : Icons.check_box_outline_blank,
+                    color: _selectedTags!.contains(_tags[index])
+                        ? Theme.of(context).primaryColor
+                        : Colors.grey),
+              );
+            },
+          ),
+        ),
+      ],
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
@@ -248,17 +310,19 @@ class _EditRecipeState extends State<EditRecipe> {
               SizedBox(height: 25),
               showRecipeDuration(context),
               SizedBox(height: 25),
-              showRecipeDifficulty(context)
+              showRecipeDifficulty(context),
+              SizedBox(height: 25),
+              showRecipeTags(context),
             ],
           ),
         ),
       ),
       actions: <Widget>[
-        FlatButton(
+        TextButton(
           child: Text('CANCEL'),
           onPressed: () => Navigator.pop(context, null),
         ),
-        RaisedButton(
+        TextButton(
           child: Text('Opslaan'),
           onPressed: () => saveRecipeChanges(context),
         )
@@ -268,18 +332,20 @@ class _EditRecipeState extends State<EditRecipe> {
 
   void saveRecipeChanges(context) {
     if (_formKey.currentState!.validate()) {
-      var test;
+      var img;
       if (_imageFile != null) {
-        test = basename(_imageFile!.path);
+        img = basename(_imageFile!.path);
       } else {
-        test = _urlController.text;
+        img = _urlController.text;
       }
       Map<String, dynamic> data = {
         "title": _recipenameController.text,
-        "url": test,
+        "url": img,
         "duration": int.parse(_durationController.text),
         "difficulty": _difficultyController.text,
         "published": _published,
+        "date": DateTime.now(),
+        "tags": _selectedTags,
       };
       if (widget.role == "user") {
         _recipeController

@@ -33,17 +33,6 @@ class _RecipeCardState extends State<RecipeCard> {
   bool? alreadySaved = false;
   String? imageUrl;
 
-  @override
-  void initState() {
-    // checkFavoriteRecipes();
-    super.initState();
-  }
-
-  // checkFavoriteRecipes() async {
-  //   alreadySaved = await _recipeController.checkFavoriteRecipe(
-  //       widget._recipe.id, widget._user.id);
-  // }
-
   void _editRecipeName(RecipeModel recipe, String? role) {
     showDialog(
         barrierDismissible: false,
@@ -133,7 +122,6 @@ class _RecipeCardState extends State<RecipeCard> {
                                 color: alreadySaved! ? Colors.red : null,
                               ),
                               onPressed: () async {
-                                //     await checkFavoriteRecipes();
                                 if (alreadySaved!) {
                                   await _recipeController.removeFavoriteRecipe(
                                       widget._user.id, widget._recipe.id);

@@ -42,6 +42,14 @@ class _RecipeExploreViewState extends State<RecipeExploreView> {
   List<String> _locations = ['Moeilijk', 'Middel', 'Makkelijk']; // Option 2
   String? _selectedLocation;
 
+  List<String> _tags = [
+    'Lactosevrij',
+    'Laag in calorieën',
+    'Vetarm',
+    'Vegetarisch',
+  ];
+  List<String> _selectedTags = [];
+
   Future checkCameraPermission() async {
     if (!(await Permission.storage.status.isGranted))
       await Permission.storage.request();
@@ -150,12 +158,12 @@ class _RecipeExploreViewState extends State<RecipeExploreView> {
 
   Widget showRecipeDifficulty(BuildContext context) {
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        // CustomAnswerFormField(
-        //   keyboardType: TextInputType.name,
-        //   textcontroller: _difficultyController,
-        // ),
+        CustomAnswerFormField(
+          keyboardType: TextInputType.name,
+          textcontroller: _difficultyController,
+        ),
         Container(
           decoration: BoxDecoration(
             color: Colors.white,
@@ -200,6 +208,56 @@ class _RecipeExploreViewState extends State<RecipeExploreView> {
     );
   }
 
+  Widget showRecipeTags(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        BodyText(
+          text: "Tags:",
+        ),
+        SizedBox(
+          height: 10,
+        ),
+        Container(
+          height: 200,
+          width: MediaQuery.of(context).size.width,
+          child: ListView.separated(
+            separatorBuilder: (context, index) => Divider(
+              height: 0.0,
+              color: Colors.black,
+            ),
+            shrinkWrap: true,
+            itemCount: _tags.length,
+            itemBuilder: (BuildContext context, int index) {
+              return ListTile(
+                selected: _selectedTags.contains(_tags[index]),
+                onTap: () {
+                  if (_selectedTags.contains(_tags[index])) {
+                    setState(() {
+                      _selectedTags.removeWhere((val) => val == _tags[index]);
+                    });
+                  } else {
+                    setState(() {
+                      _selectedTags.add(_tags[index]);
+                    });
+                  }
+                },
+                title: Text(_tags[index]),
+                trailing: Icon(
+                    _selectedTags.contains(_tags[index])
+                        ? Icons.check_box
+                        : Icons.check_box_outline_blank,
+                    color: _selectedTags.contains(_tags[index])
+                        ? Theme.of(context).primaryColor
+                        : Colors.grey),
+              );
+            },
+          ),
+        ),
+      ],
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -220,7 +278,9 @@ class _RecipeExploreViewState extends State<RecipeExploreView> {
                   showRecipeDuration(context),
                   SizedBox(height: 25),
                   showRecipeDifficulty(context),
-                  SizedBox(height: 75),
+                  SizedBox(height: 30),
+                  showRecipeTags(context),
+                  SizedBox(height: 30),
                   loading
                       ? Center(child: LinearProgressIndicator())
                       : Row(
@@ -252,7 +312,8 @@ class _RecipeExploreViewState extends State<RecipeExploreView> {
         "difficulty": _difficultyController.text,
         "published": false,
         "userId": widget.user.data.id,
-        "role": widget.user.data.role
+        "role": widget.user.data.role,
+        "tags": _selectedTags,
       };
 
       _recipeController.uploadImage(_imageFile).then((value) =>
