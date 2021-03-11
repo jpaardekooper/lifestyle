@@ -65,7 +65,8 @@ class _RecipeExploreViewState extends State<RecipeExploreView> {
     if (!(await Permission.storage.status.isGranted))
       await Permission.storage.request();
 
-    final pickedFile = await _picker.getImage(source: ImageSource.gallery);
+    final PickedFile? pickedFile =
+        (await _picker.getImage(source: ImageSource.gallery));
 
     setState(() {
       _imageFile = File(pickedFile!.path);
@@ -94,7 +95,7 @@ class _RecipeExploreViewState extends State<RecipeExploreView> {
         CustomTextFormField(
           keyboardType: TextInputType.name,
           textcontroller: _recipenameController,
-          errorMessage: "Geen geldige recept",
+          errorMessage: "Geen geldig recept",
           validator: 1,
           secureText: false,
         ),
@@ -307,7 +308,8 @@ class _RecipeExploreViewState extends State<RecipeExploreView> {
       FocusScope.of(context).unfocus();
       Map<String, dynamic> data = {
         "title": _recipenameController.text,
-        "url": basename(_imageFile!.path),
+        "url":
+            _imageFile == null ? "placeholder.png" : basename(_imageFile!.path),
         "duration": int.parse(_durationController.text),
         "difficulty": _difficultyController.text,
         "published": false,
@@ -316,26 +318,48 @@ class _RecipeExploreViewState extends State<RecipeExploreView> {
         "tags": _selectedTags,
       };
 
-      _recipeController.uploadImage(_imageFile).then((value) =>
-          _recipeController.updateUserRecipe(recipe.id, data, true).then(
-            (value) {
-              _key.currentState!.showSnackBar(
-                SnackBar(
-                  duration: const Duration(seconds: 1),
-                  backgroundColor: ColorTheme.lightOrange,
-                  content: Text(
-                    "Uw recept is toegevoegd",
-                    style: TextStyle(
-                        color: Theme.of(context).primaryColor, fontSize: 18),
+      if (_imageFile != null) {
+        _recipeController.uploadImage(_imageFile).then((value) =>
+            _recipeController.updateUserRecipe(recipe.id, data, true).then(
+              (value) {
+                _key.currentState!.showSnackBar(
+                  SnackBar(
+                    duration: const Duration(seconds: 1),
+                    backgroundColor: ColorTheme.lightOrange,
+                    content: Text(
+                      "Uw recept is toegevoegd",
+                      style: TextStyle(
+                          color: Theme.of(context).primaryColor, fontSize: 18),
+                    ),
                   ),
-                ),
-              );
+                );
 
-              Future.delayed(Duration(milliseconds: 1500), () {
-                Navigator.pop(context);
-              });
-            },
-          ));
+                Future.delayed(Duration(milliseconds: 1500), () {
+                  Navigator.pop(context);
+                });
+              },
+            ));
+      } else {
+        _recipeController.updateUserRecipe(recipe.id, data, true).then(
+          (value) {
+            _key.currentState!.showSnackBar(
+              SnackBar(
+                duration: const Duration(seconds: 1),
+                backgroundColor: ColorTheme.lightOrange,
+                content: Text(
+                  "Uw recept is toegevoegd",
+                  style: TextStyle(
+                      color: Theme.of(context).primaryColor, fontSize: 18),
+                ),
+              ),
+            );
+
+            Future.delayed(Duration(milliseconds: 1500), () {
+              Navigator.pop(context);
+            });
+          },
+        );
+      }
     } else {
       setState(() {
         loading = false;

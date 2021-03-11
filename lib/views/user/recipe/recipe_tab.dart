@@ -49,7 +49,7 @@ class _RecipeTabState extends State<RecipeTab>
           physics: NeverScrollableScrollPhysics(),
           tabs: [
             Tab(text: 'Feed'),
-            Tab(icon: Icon(Icons.add)),
+            Tab(text: 'Eigen recepten'),
             Tab(text: 'Favorieten'),
           ],
         ),

@@ -28,7 +28,7 @@ class RecipeModel {
   RecipeModel.fromSnapshot(DocumentSnapshot snapshot)
       : id = snapshot.id,
         title = snapshot.data()!['title'],
-        url = snapshot.data()!['url'],
+        url = snapshot.data()!['url'] ?? "",
         difficulty = snapshot.data()!['difficulty'],
         duration = snapshot.data()!['duration'],
         review = snapshot.data()!['review'],

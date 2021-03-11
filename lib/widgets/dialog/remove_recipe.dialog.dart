@@ -4,10 +4,9 @@ import 'package:lifestylescreening/models/recipe_model.dart';
 import 'package:lifestylescreening/widgets/colors/color_theme.dart';
 
 class RemoveRecipe extends StatelessWidget {
-  RemoveRecipe({this.recipe, this.role, this.function});
+  RemoveRecipe({this.recipe, this.role,});
   final RecipeModel? recipe;
   final String? role;
-  final Function(RecipeModel?)? function;
 
   final RecipeController _recipeController = RecipeController();
 
@@ -38,7 +37,6 @@ class RemoveRecipe extends StatelessWidget {
               await _recipeController.removeUserRecipe(recipe!.id, recipe!.url);
 
               Navigator.pop(context);
-              function!(recipe);
             } else {
               await _recipeController.removeRecipe(recipe!.id, recipe!.url);
               Navigator.pop(context);

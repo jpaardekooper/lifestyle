@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:lifestylescreening/controllers/recipe_controller.dart';
+import 'package:lifestylescreening/models/firebase_user.dart';
 import 'package:lifestylescreening/models/recipe_model.dart';
 import 'package:lifestylescreening/widgets/colors/color_theme.dart';
 import 'package:lifestylescreening/widgets/forms/custom_answerfield.dart';
@@ -12,11 +13,11 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:path/path.dart';
 
 class EditRecipe extends StatefulWidget {
-  EditRecipe({required this.recipe, required this.isNewRecipe, this.role});
+  EditRecipe({required this.recipe, required this.isNewRecipe, this.user});
 
   final RecipeModel recipe;
   final bool isNewRecipe;
-  final String? role;
+  final AppUser? user;
 
   @override
   _EditRecipeState createState() => _EditRecipeState();
@@ -303,7 +304,9 @@ class _EditRecipeState extends State<EditRecipe> {
           key: _formKey,
           child: Column(
             children: [
-              widget.role == "user" ? Container() : isRecipePublished(context),
+              widget.user!.role == "user"
+                  ? Container()
+                  : isRecipePublished(context),
               showRecipeName(context),
               SizedBox(height: 25),
               showRecipeUrl(context),
@@ -346,8 +349,9 @@ class _EditRecipeState extends State<EditRecipe> {
         "published": _published,
         "date": DateTime.now(),
         "tags": _selectedTags,
+        "userId": widget.user!.id,
       };
-      if (widget.role == "user") {
+      if (widget.user!.role == "user") {
         _recipeController
             .updateUserRecipe(widget.recipe.id, data, widget.isNewRecipe)
             .then((value) => Navigator.pop(context));
