@@ -7,14 +7,13 @@ import 'package:lifestylescreening/widgets/colors/color_theme.dart';
 import 'package:lifestylescreening/widgets/dialog/edit_recipe_dialog.dart';
 
 class RecipeCard extends StatefulWidget {
-  const RecipeCard(
-      {Key? key,
-      required recipe,
-      required user,
-      this.on_Tap,
-      this.userRecipe,
-      this.function})
-      : _recipe = recipe,
+  const RecipeCard({
+    Key? key,
+    required recipe,
+    required user,
+    this.on_Tap,
+    this.userRecipe,
+  })  : _recipe = recipe,
         _user = user,
         super(key: key);
 
@@ -22,7 +21,6 @@ class RecipeCard extends StatefulWidget {
   final AppUser _user;
   final VoidCallback? on_Tap;
   final bool? userRecipe;
-  final Function(RecipeModel?)? function;
 
   @override
   _RecipeCardState createState() => _RecipeCardState();
@@ -184,7 +182,9 @@ class _RecipeCardState extends State<RecipeCard> {
                             ),
                             onPressed: () {
                               _editRecipeName(
-                                  widget._recipe, widget._user.role);
+                                widget._recipe,
+                                widget._user.role,
+                              );
                             },
                             constraints: const BoxConstraints(
                                 minWidth: 30.0, minHeight: 30.0),

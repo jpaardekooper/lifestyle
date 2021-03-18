@@ -3,8 +3,10 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:lifestylescreening/controllers/recipe_controller.dart';
+import 'package:lifestylescreening/controllers/tags_controller.dart';
 import 'package:lifestylescreening/models/firebase_user.dart';
 import 'package:lifestylescreening/models/recipe_model.dart';
+import 'package:lifestylescreening/models/tags_model.dart';
 import 'package:lifestylescreening/widgets/colors/color_theme.dart';
 import 'package:lifestylescreening/widgets/forms/custom_answerfield.dart';
 import 'package:lifestylescreening/widgets/forms/custom_textformfield.dart';
@@ -25,6 +27,8 @@ class EditRecipe extends StatefulWidget {
 
 class _EditRecipeState extends State<EditRecipe> {
   final RecipeController _recipeController = RecipeController();
+  final TagsController _tagsController = TagsController();
+
   TextEditingController _recipenameController = TextEditingController();
   TextEditingController _urlController = TextEditingController();
   TextEditingController _durationController = TextEditingController();
@@ -39,12 +43,7 @@ class _EditRecipeState extends State<EditRecipe> {
   ]; // Option 2
   String? _selectedLocation;
 
-  List<String> _tags = [
-    'Lactosevrij',
-    'Laag in calorieën',
-    'Vetarm',
-    'Vegetarisch',
-  ];
+  List<TagsModel> _tags = [];
   List<String>? _selectedTags;
 
   final _formKey = GlobalKey<FormState>();
@@ -75,7 +74,7 @@ class _EditRecipeState extends State<EditRecipe> {
     final pickedFile = await _picker.getImage(source: ImageSource.camera);
 
     setState(() {
-      _imageFile = File(pickedFile!.path);
+      _imageFile = pickedFile != null ? File(pickedFile.path) : null;
     });
   }
 
@@ -86,7 +85,7 @@ class _EditRecipeState extends State<EditRecipe> {
     final pickedFile = await _picker.getImage(source: ImageSource.gallery);
 
     setState(() {
-      _imageFile = File(pickedFile!.path);
+      _imageFile = pickedFile != null ? File(pickedFile.path) : null;
     });
   }
 
@@ -241,6 +240,7 @@ class _EditRecipeState extends State<EditRecipe> {
   }
 
   Widget showRecipeTags(BuildContext context) {
+    getTags();
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -262,24 +262,25 @@ class _EditRecipeState extends State<EditRecipe> {
             itemCount: _tags.length,
             itemBuilder: (BuildContext context, int index) {
               return ListTile(
-                selected: _selectedTags!.contains(_tags[index]),
+                selected: _selectedTags!.contains(_tags[index].tag),
                 onTap: () {
-                  if (_selectedTags!.contains(_tags[index])) {
+                  if (_selectedTags!.contains(_tags[index].tag!)) {
                     setState(() {
-                      _selectedTags!.removeWhere((val) => val == _tags[index]);
+                      _selectedTags!
+                          .removeWhere((val) => val == _tags[index].tag!);
                     });
                   } else {
                     setState(() {
-                      _selectedTags!.add(_tags[index]);
+                      _selectedTags!.add(_tags[index].tag!);
                     });
                   }
                 },
-                title: Text(_tags[index]),
+                title: Text(_tags[index].tag!),
                 trailing: Icon(
-                    _selectedTags!.contains(_tags[index])
+                    _selectedTags!.contains(_tags[index].tag)
                         ? Icons.check_box
                         : Icons.check_box_outline_blank,
-                    color: _selectedTags!.contains(_tags[index])
+                    color: _selectedTags!.contains(_tags[index].tag)
                         ? Theme.of(context).primaryColor
                         : Colors.grey),
               );
@@ -288,6 +289,15 @@ class _EditRecipeState extends State<EditRecipe> {
         ),
       ],
     );
+  }
+
+  getTags() async {
+    await _tagsController.getTagsList().then((value) {
+      if (!mounted) return;
+      setState(() {
+        _tags = value;
+      });
+    });
   }
 
   @override
@@ -327,7 +337,9 @@ class _EditRecipeState extends State<EditRecipe> {
         ),
         TextButton(
           child: Text('Opslaan'),
-          onPressed: () => saveRecipeChanges(context),
+          onPressed: () {
+            saveRecipeChanges(context);
+          },
         )
       ],
     );
@@ -335,37 +347,29 @@ class _EditRecipeState extends State<EditRecipe> {
 
   void saveRecipeChanges(context) {
     if (_formKey.currentState!.validate()) {
-      var img;
-      if (_imageFile != null) {
-        img = basename(_imageFile!.path);
-      } else {
-        img = _urlController.text;
-      }
       Map<String, dynamic> data = {
         "title": _recipenameController.text,
-        "url": img,
+        "url": _imageFile == null
+            ? _urlController.text
+            : basename(_imageFile!.path),
         "duration": int.parse(_durationController.text),
         "difficulty": _difficultyController.text,
         "published": _published,
-        "date": DateTime.now(),
+        "date": widget.isNewRecipe ? DateTime.now() : widget.recipe.date,
         "tags": _selectedTags,
         "userId": widget.user!.id,
       };
+
       if (widget.user!.role == "user") {
-        _recipeController
-            .updateUserRecipe(widget.recipe.id, data, widget.isNewRecipe)
-            .then((value) => Navigator.pop(context));
+        _recipeController.uploadImage(_imageFile, widget.recipe.url).then(
+            (value) => _recipeController
+                .updateUserRecipe(widget.recipe.id, data, widget.isNewRecipe)
+                .then((value) => Navigator.pop(context)));
       } else {
-        if (_imageFile != null) {
-          _recipeController.uploadImage(_imageFile).then((value) =>
-              _recipeController
-                  .updateRecipe(widget.recipe.id, data, widget.isNewRecipe)
-                  .then((value) => Navigator.pop(context)));
-        } else {
-          _recipeController
-              .updateRecipe(widget.recipe.id, data, widget.isNewRecipe)
-              .then((value) => Navigator.pop(context));
-        }
+        _recipeController.uploadImage(_imageFile, widget.recipe.url).then(
+            (value) => _recipeController
+                .updateRecipe(widget.recipe.id, data, widget.isNewRecipe)
+                .then((value) => Navigator.pop(context)));
       }
     }
   }

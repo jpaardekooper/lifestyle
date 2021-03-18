@@ -8,13 +8,17 @@ abstract class IRecipeRepository {
 
   Stream<QuerySnapshot> streamAllRecipes();
 
-  Future<List<RecipeModel>> getUserRecipes(String? userId);
+  Stream<QuerySnapshot> streamUserRecipes(String? userId);
+
+  List<RecipeModel> getUserRecipeList(QuerySnapshot snapshot);
 
   List<RecipeModel> getRecipeList(QuerySnapshot snapshot);
 
-  Future<void> updateUserRecipe(String? recipeId, Map data, bool newItem);
+  Future<void> updateUserRecipe(
+      String? recipeId, Map data, bool newItem);
 
-  Future<void> updateRecipe(String? recipeId, Map data, bool newItem);
+  Future<void> updateRecipe(
+      String? recipeId, Map data, bool newItem);
 
   Future<void> removeRecipe(String? recipeId, String? url);
 
@@ -28,7 +32,7 @@ abstract class IRecipeRepository {
 
   Future<bool> checkFavoriteRecipe(String? markerId, String? userId);
 
-  Future<void> uploadImage(File? img);
+  Future<void> uploadImage(File? img, String? oldImg);
 
   Future<String> getImage(String? image);
 }

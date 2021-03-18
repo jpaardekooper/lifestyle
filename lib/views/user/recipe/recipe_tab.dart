@@ -1,8 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:lifestylescreening/views/user/recipe/recipe_explore_tabview.dart';
+import 'package:lifestylescreening/views/user/recipe/new_user_recipe.dart';
 import 'package:lifestylescreening/views/user/recipe/recipe_feed_tabview.dart';
 import 'package:lifestylescreening/views/user/recipe/recipe_saved_tabview.dart';
+import 'package:lifestylescreening/views/user/recipe/recipe_search.dart';
 import 'package:lifestylescreening/views/user/recipe/recipe_user_recipes.dart';
 import 'package:lifestylescreening/widgets/inherited/inherited_widget.dart';
 
@@ -15,7 +16,7 @@ class RecipeTab extends StatefulWidget {
 
 class _RecipeTabState extends State<RecipeTab>
     with SingleTickerProviderStateMixin {
-  TabController? _tabController;
+  late TabController _tabController;
   int? active;
 
   @override
@@ -24,14 +25,14 @@ class _RecipeTabState extends State<RecipeTab>
     _tabController = TabController(length: 3, vsync: this)
       ..addListener(() {
         setState(() {
-          active = _tabController!.index;
+          active = _tabController.index;
         });
       });
     super.initState();
   }
 
   void dispose() {
-    _tabController!.dispose();
+    _tabController.dispose();
     super.dispose();
   }
 
@@ -44,6 +45,20 @@ class _RecipeTabState extends State<RecipeTab>
         automaticallyImplyLeading: false,
         centerTitle: true,
         title: Text('Recepten'),
+        actions: [
+          active == 0
+              ? IconButton(
+                  icon: Icon(
+                    Icons.search,
+                    color: Colors.white,
+                  ),
+                  onPressed: () {
+                    showSearch(
+                        context: context,
+                        delegate: RecipeSearch(user: _userData.data));
+                  })
+              : Container(),
+        ],
         bottom: TabBar(
           controller: _tabController,
           physics: NeverScrollableScrollPhysics(),
@@ -66,7 +81,7 @@ class _RecipeTabState extends State<RecipeTab>
                   context,
                   MaterialPageRoute(
                       builder: (context) =>
-                          RecipeExploreView(user: _userData))),
+                          NewUserRecipeView(user: _userData))),
             )
           : null,
       body: InheritedDataProvider(
@@ -74,8 +89,8 @@ class _RecipeTabState extends State<RecipeTab>
         child: TabBarView(
           children: [
             RecipeFeedView(),
-            RecipeUserRecipes(),
-            RecipeFavoritesView(userId: _userData.data.id),
+            RecipeUserRecipes(user: _userData.data),
+            RecipeFavoritesView(),
           ],
           controller: _tabController,
         ),

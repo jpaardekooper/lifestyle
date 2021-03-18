@@ -24,7 +24,7 @@ class _RecipeViewState extends State<RecipeView> {
   void initState() {
     super.initState();
     _currentSubscription =
-        _recipeController.streamRecipes().listen(_updateSurveyList);
+        _recipeController.streamRecipes().listen(_updateRecipeList);
   }
 
   @override
@@ -34,7 +34,7 @@ class _RecipeViewState extends State<RecipeView> {
     _recipes.clear();
   }
 
-  void _updateSurveyList(QuerySnapshot snapshot) {
+  void _updateRecipeList(QuerySnapshot snapshot) {
     setState(() {
       _recipes = _recipeController.getRecipeList(snapshot);
     });

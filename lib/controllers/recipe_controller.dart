@@ -16,15 +16,21 @@ class RecipeController {
     return _recipeRepository.getRecipeList(snapshot);
   }
 
-  Future<List<RecipeModel>> getUserRecipes(String? userId) {
-    return _recipeRepository.getUserRecipes(userId);
+  Stream<QuerySnapshot> streamUserRecipes(String? userId) {
+    return _recipeRepository.streamUserRecipes(userId);
   }
 
-  Future<void> updateUserRecipe(String? recipeId, Map data, bool newItem) {
+  List<RecipeModel> getUserRecipeList(QuerySnapshot snapshot) {
+    return _recipeRepository.getUserRecipeList(snapshot);
+  }
+
+  Future<void> updateUserRecipe(
+      String? recipeId, Map data, bool newItem) {
     return _recipeRepository.updateUserRecipe(recipeId, data, newItem);
   }
 
-  Future<void> updateRecipe(String? recipeId, Map data, bool newItem) {
+  Future<void> updateRecipe(
+      String? recipeId, Map data, bool newItem) {
     return _recipeRepository.updateRecipe(recipeId, data, newItem);
   }
 
@@ -32,7 +38,7 @@ class RecipeController {
     return _recipeRepository.removeRecipe(recipeId, url);
   }
 
-  Future<void> removeUserRecipe(String? recipeId, String? url){
+  Future<void> removeUserRecipe(String? recipeId, String? url) {
     return _recipeRepository.removeUserRecipe(recipeId, url);
   }
 
@@ -56,8 +62,8 @@ class RecipeController {
     return _recipeRepository.removeFavoriteRecipe(userId, recipeId);
   }
 
-  Future<void> uploadImage(File? img) {
-    return _recipeRepository.uploadImage(img);
+  Future<void> uploadImage(File? img, String? oldImg) {
+    return _recipeRepository.uploadImage(img, oldImg);
   }
 
   Future<String> getImage(String? image) {

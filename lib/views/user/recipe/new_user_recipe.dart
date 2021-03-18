@@ -2,7 +2,9 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:lifestylescreening/controllers/recipe_controller.dart';
+import 'package:lifestylescreening/controllers/tags_controller.dart';
 import 'package:lifestylescreening/models/recipe_model.dart';
+import 'package:lifestylescreening/models/tags_model.dart';
 import 'package:lifestylescreening/widgets/buttons/confirm_orange_button.dart';
 import 'package:lifestylescreening/widgets/colors/color_theme.dart';
 import 'package:lifestylescreening/widgets/forms/custom_answerfield.dart';
@@ -12,19 +14,20 @@ import 'package:image_picker/image_picker.dart';
 import 'package:path/path.dart';
 import 'package:permission_handler/permission_handler.dart';
 
-class RecipeExploreView extends StatefulWidget {
-  RecipeExploreView({this.user});
+class NewUserRecipeView extends StatefulWidget {
+  NewUserRecipeView({this.user});
 
   final user;
 
   @override
-  _RecipeExploreViewState createState() => _RecipeExploreViewState();
+  _NewUserRecipeViewState createState() => _NewUserRecipeViewState();
 }
 
-class _RecipeExploreViewState extends State<RecipeExploreView> {
+class _NewUserRecipeViewState extends State<NewUserRecipeView> {
   final RecipeController _recipeController = RecipeController();
+  final TagsController _tagsController = TagsController();
+
   TextEditingController _recipenameController = TextEditingController();
-  TextEditingController _urlController = TextEditingController();
   TextEditingController _durationController = TextEditingController();
   TextEditingController _difficultyController = TextEditingController();
   final _key = GlobalKey<ScaffoldState>();
@@ -42,12 +45,7 @@ class _RecipeExploreViewState extends State<RecipeExploreView> {
   List<String> _locations = ['Moeilijk', 'Middel', 'Makkelijk']; // Option 2
   String? _selectedLocation;
 
-  List<String> _tags = [
-    'Lactosevrij',
-    'Laag in calorieën',
-    'Vetarm',
-    'Vegetarisch',
-  ];
+  List<TagsModel> _tags = [];
   List<String> _selectedTags = [];
 
   Future checkCameraPermission() async {
@@ -81,7 +79,6 @@ class _RecipeExploreViewState extends State<RecipeExploreView> {
   @override
   void dispose() {
     _recipenameController.dispose();
-    _urlController.dispose();
     _durationController.dispose();
     _difficultyController.dispose();
     super.dispose();
@@ -210,6 +207,7 @@ class _RecipeExploreViewState extends State<RecipeExploreView> {
   }
 
   Widget showRecipeTags(BuildContext context) {
+    getTags();
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -231,24 +229,25 @@ class _RecipeExploreViewState extends State<RecipeExploreView> {
             itemCount: _tags.length,
             itemBuilder: (BuildContext context, int index) {
               return ListTile(
-                selected: _selectedTags.contains(_tags[index]),
+                selected: _selectedTags.contains(_tags[index].tag),
                 onTap: () {
-                  if (_selectedTags.contains(_tags[index])) {
+                  if (_selectedTags.contains(_tags[index].tag)) {
                     setState(() {
-                      _selectedTags.removeWhere((val) => val == _tags[index]);
+                      _selectedTags
+                          .removeWhere((val) => val == _tags[index].tag);
                     });
                   } else {
                     setState(() {
-                      _selectedTags.add(_tags[index]);
+                      _selectedTags.add(_tags[index].tag!);
                     });
                   }
                 },
-                title: Text(_tags[index]),
+                title: Text(_tags[index].tag!),
                 trailing: Icon(
-                    _selectedTags.contains(_tags[index])
+                    _selectedTags.contains(_tags[index].tag)
                         ? Icons.check_box
                         : Icons.check_box_outline_blank,
-                    color: _selectedTags.contains(_tags[index])
+                    color: _selectedTags.contains(_tags[index].tag)
                         ? Theme.of(context).primaryColor
                         : Colors.grey),
               );
@@ -257,6 +256,15 @@ class _RecipeExploreViewState extends State<RecipeExploreView> {
         ),
       ],
     );
+  }
+
+  getTags() async {
+    await _tagsController.getTagsList().then((value) {
+      if (!mounted) return;
+      setState(() {
+        _tags = value;
+      });
+    });
   }
 
   @override
@@ -314,52 +322,31 @@ class _RecipeExploreViewState extends State<RecipeExploreView> {
         "difficulty": _difficultyController.text,
         "published": false,
         "userId": widget.user.data.id,
+        "date": DateTime.now(),
         "role": widget.user.data.role,
         "tags": _selectedTags,
       };
 
-      if (_imageFile != null) {
-        _recipeController.uploadImage(_imageFile).then((value) =>
-            _recipeController.updateUserRecipe(recipe.id, data, true).then(
-              (value) {
-                _key.currentState!.showSnackBar(
-                  SnackBar(
-                    duration: const Duration(seconds: 1),
-                    backgroundColor: ColorTheme.lightOrange,
-                    content: Text(
-                      "Uw recept is toegevoegd",
-                      style: TextStyle(
-                          color: Theme.of(context).primaryColor, fontSize: 18),
-                    ),
+      _recipeController.uploadImage(_imageFile, recipe.url).then((value) =>
+          _recipeController.updateUserRecipe(recipe.id, data, true).then(
+            (value) {
+              _key.currentState!.showSnackBar(
+                SnackBar(
+                  duration: const Duration(seconds: 1),
+                  backgroundColor: ColorTheme.lightOrange,
+                  content: Text(
+                    "Uw recept is toegevoegd",
+                    style: TextStyle(
+                        color: Theme.of(context).primaryColor, fontSize: 18),
                   ),
-                );
-
-                Future.delayed(Duration(milliseconds: 1500), () {
-                  Navigator.pop(context);
-                });
-              },
-            ));
-      } else {
-        _recipeController.updateUserRecipe(recipe.id, data, true).then(
-          (value) {
-            _key.currentState!.showSnackBar(
-              SnackBar(
-                duration: const Duration(seconds: 1),
-                backgroundColor: ColorTheme.lightOrange,
-                content: Text(
-                  "Uw recept is toegevoegd",
-                  style: TextStyle(
-                      color: Theme.of(context).primaryColor, fontSize: 18),
                 ),
-              ),
-            );
+              );
 
-            Future.delayed(Duration(milliseconds: 1500), () {
-              Navigator.pop(context);
-            });
-          },
-        );
-      }
+              Future.delayed(Duration(milliseconds: 1500), () {
+                Navigator.pop(context);
+              });
+            },
+          ));
     } else {
       setState(() {
         loading = false;
