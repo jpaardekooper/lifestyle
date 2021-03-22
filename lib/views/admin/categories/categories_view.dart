@@ -149,7 +149,7 @@ class _CategoriesViewState extends State<CategoriesView> {
               : _categoryList.isNotEmpty
                   ? showCategories()
                   : Center(
-                      child: Text('Geen categorieEn gevonden'),
+                      child: Text('Geen categorieën gevonden'),
                       //onPressed: _onAddRandomRecipesPressed,
                     ),
         ),

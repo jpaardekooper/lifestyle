@@ -2,7 +2,9 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:lifestylescreening/controllers/recipe_controller.dart';
+import 'package:lifestylescreening/controllers/tags_controller.dart';
 import 'package:lifestylescreening/models/recipe_model.dart';
+import 'package:lifestylescreening/models/tags_model.dart';
 import 'package:lifestylescreening/widgets/buttons/confirm_orange_button.dart';
 import 'package:lifestylescreening/widgets/colors/color_theme.dart';
 import 'package:lifestylescreening/widgets/forms/custom_answerfield.dart';
@@ -12,19 +14,20 @@ import 'package:image_picker/image_picker.dart';
 import 'package:path/path.dart';
 import 'package:permission_handler/permission_handler.dart';
 
-class RecipeExploreView extends StatefulWidget {
-  RecipeExploreView({this.user});
+class NewUserRecipeView extends StatefulWidget {
+  NewUserRecipeView({this.user});
 
   final user;
 
   @override
-  _RecipeExploreViewState createState() => _RecipeExploreViewState();
+  _NewUserRecipeViewState createState() => _NewUserRecipeViewState();
 }
 
-class _RecipeExploreViewState extends State<RecipeExploreView> {
+class _NewUserRecipeViewState extends State<NewUserRecipeView> {
   final RecipeController _recipeController = RecipeController();
+  final TagsController _tagsController = TagsController();
+
   TextEditingController _recipenameController = TextEditingController();
-  TextEditingController _urlController = TextEditingController();
   TextEditingController _durationController = TextEditingController();
   TextEditingController _difficultyController = TextEditingController();
   final _key = GlobalKey<ScaffoldState>();
@@ -42,6 +45,9 @@ class _RecipeExploreViewState extends State<RecipeExploreView> {
   List<String> _locations = ['Moeilijk', 'Middel', 'Makkelijk']; // Option 2
   String? _selectedLocation;
 
+  List<TagsModel> _tags = [];
+  List<String> _selectedTags = [];
+
   Future checkCameraPermission() async {
     if (!(await Permission.storage.status.isGranted))
       await Permission.storage.request();
@@ -57,7 +63,8 @@ class _RecipeExploreViewState extends State<RecipeExploreView> {
     if (!(await Permission.storage.status.isGranted))
       await Permission.storage.request();
 
-    final pickedFile = await _picker.getImage(source: ImageSource.gallery);
+    final PickedFile? pickedFile =
+        (await _picker.getImage(source: ImageSource.gallery));
 
     setState(() {
       _imageFile = File(pickedFile!.path);
@@ -72,7 +79,6 @@ class _RecipeExploreViewState extends State<RecipeExploreView> {
   @override
   void dispose() {
     _recipenameController.dispose();
-    _urlController.dispose();
     _durationController.dispose();
     _difficultyController.dispose();
     super.dispose();
@@ -86,7 +92,7 @@ class _RecipeExploreViewState extends State<RecipeExploreView> {
         CustomTextFormField(
           keyboardType: TextInputType.name,
           textcontroller: _recipenameController,
-          errorMessage: "Geen geldige recept",
+          errorMessage: "Geen geldig recept",
           validator: 1,
           secureText: false,
         ),
@@ -150,12 +156,12 @@ class _RecipeExploreViewState extends State<RecipeExploreView> {
 
   Widget showRecipeDifficulty(BuildContext context) {
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        // CustomAnswerFormField(
-        //   keyboardType: TextInputType.name,
-        //   textcontroller: _difficultyController,
-        // ),
+        CustomAnswerFormField(
+          keyboardType: TextInputType.name,
+          textcontroller: _difficultyController,
+        ),
         Container(
           decoration: BoxDecoration(
             color: Colors.white,
@@ -200,6 +206,67 @@ class _RecipeExploreViewState extends State<RecipeExploreView> {
     );
   }
 
+  Widget showRecipeTags(BuildContext context) {
+    getTags();
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        BodyText(
+          text: "Tags:",
+        ),
+        SizedBox(
+          height: 10,
+        ),
+        Container(
+          height: 200,
+          width: MediaQuery.of(context).size.width,
+          child: ListView.separated(
+            separatorBuilder: (context, index) => Divider(
+              height: 0.0,
+              color: Colors.black,
+            ),
+            shrinkWrap: true,
+            itemCount: _tags.length,
+            itemBuilder: (BuildContext context, int index) {
+              return ListTile(
+                selected: _selectedTags.contains(_tags[index].tag),
+                onTap: () {
+                  if (_selectedTags.contains(_tags[index].tag)) {
+                    setState(() {
+                      _selectedTags
+                          .removeWhere((val) => val == _tags[index].tag);
+                    });
+                  } else {
+                    setState(() {
+                      _selectedTags.add(_tags[index].tag!);
+                    });
+                  }
+                },
+                title: Text(_tags[index].tag!),
+                trailing: Icon(
+                    _selectedTags.contains(_tags[index].tag)
+                        ? Icons.check_box
+                        : Icons.check_box_outline_blank,
+                    color: _selectedTags.contains(_tags[index].tag)
+                        ? Theme.of(context).primaryColor
+                        : Colors.grey),
+              );
+            },
+          ),
+        ),
+      ],
+    );
+  }
+
+  getTags() async {
+    await _tagsController.getTagsList().then((value) {
+      if (!mounted) return;
+      setState(() {
+        _tags = value;
+      });
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -220,7 +287,9 @@ class _RecipeExploreViewState extends State<RecipeExploreView> {
                   showRecipeDuration(context),
                   SizedBox(height: 25),
                   showRecipeDifficulty(context),
-                  SizedBox(height: 75),
+                  SizedBox(height: 30),
+                  showRecipeTags(context),
+                  SizedBox(height: 30),
                   loading
                       ? Center(child: LinearProgressIndicator())
                       : Row(
@@ -247,15 +316,18 @@ class _RecipeExploreViewState extends State<RecipeExploreView> {
       FocusScope.of(context).unfocus();
       Map<String, dynamic> data = {
         "title": _recipenameController.text,
-        "url": basename(_imageFile!.path),
+        "url":
+            _imageFile == null ? "placeholder.png" : basename(_imageFile!.path),
         "duration": int.parse(_durationController.text),
         "difficulty": _difficultyController.text,
         "published": false,
         "userId": widget.user.data.id,
-        "role": widget.user.data.role
+        "date": DateTime.now(),
+        "role": widget.user.data.role,
+        "tags": _selectedTags,
       };
 
-      _recipeController.uploadImage(_imageFile).then((value) =>
+      _recipeController.uploadImage(_imageFile, recipe.url).then((value) =>
           _recipeController.updateUserRecipe(recipe.id, data, true).then(
             (value) {
               _key.currentState!.showSnackBar(

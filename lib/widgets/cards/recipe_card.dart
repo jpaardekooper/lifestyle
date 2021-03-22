@@ -3,18 +3,17 @@ import 'package:flutter/material.dart';
 import 'package:lifestylescreening/controllers/recipe_controller.dart';
 import 'package:lifestylescreening/models/firebase_user.dart';
 import 'package:lifestylescreening/models/recipe_model.dart';
+import 'package:lifestylescreening/widgets/colors/color_theme.dart';
 import 'package:lifestylescreening/widgets/dialog/edit_recipe_dialog.dart';
-import 'package:lifestylescreening/widgets/dialog/remove_recipe.dialog.dart';
 
 class RecipeCard extends StatefulWidget {
-  const RecipeCard(
-      {Key? key,
-      required recipe,
-      required user,
-      this.on_Tap,
-      this.userRecipe,
-      this.function})
-      : _recipe = recipe,
+  const RecipeCard({
+    Key? key,
+    required recipe,
+    required user,
+    this.on_Tap,
+    this.userRecipe,
+  })  : _recipe = recipe,
         _user = user,
         super(key: key);
 
@@ -22,7 +21,6 @@ class RecipeCard extends StatefulWidget {
   final AppUser _user;
   final VoidCallback? on_Tap;
   final bool? userRecipe;
-  final Function(RecipeModel?)? function;
 
   @override
   _RecipeCardState createState() => _RecipeCardState();
@@ -33,17 +31,6 @@ class _RecipeCardState extends State<RecipeCard> {
   bool? alreadySaved = false;
   String? imageUrl;
 
-  @override
-  void initState() {
-    // checkFavoriteRecipes();
-    super.initState();
-  }
-
-  // checkFavoriteRecipes() async {
-  //   alreadySaved = await _recipeController.checkFavoriteRecipe(
-  //       widget._recipe.id, widget._user.id);
-  // }
-
   void _editRecipeName(RecipeModel recipe, String? role) {
     showDialog(
         barrierDismissible: false,
@@ -52,34 +39,19 @@ class _RecipeCardState extends State<RecipeCard> {
           return EditRecipe(
             recipe: recipe,
             isNewRecipe: false,
-            role: role,
+            user: widget._user,
           );
         });
   }
 
-  void _removeRecipe(RecipeModel recipe, String? role) {
-    showDialog(
-      context: context,
-      barrierDismissible: false,
-      builder: (BuildContext context) {
-        return RemoveRecipe(
-            recipe: recipe, role: role, function: widget.function);
-      },
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
-    Color cardColor = Color(0xffEFFAF6);
-    Color recipeTitleColor = Color(0xff456A67);
-    Color recipeTextColor = Color(0xff253635);
-
     return Card(
-      color: cardColor,
+      color: ColorTheme.extraLightGreen,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(10.0),
       ),
-      //  clipBehavior: Clip.antiAliasWithSaveLayer,
+      clipBehavior: Clip.antiAliasWithSaveLayer,
       elevation: 4,
       margin: EdgeInsets.all(10),
       child: Column(
@@ -87,7 +59,7 @@ class _RecipeCardState extends State<RecipeCard> {
           Stack(
             children: [
               SizedBox(
-                height: 75,
+                height: MediaQuery.of(context).size.height / 6,
                 width: MediaQuery.of(context).size.width,
                 child: FutureBuilder<String>(
                   future: _recipeController.getImage(widget._recipe.url),
@@ -114,9 +86,53 @@ class _RecipeCardState extends State<RecipeCard> {
                   },
                 ),
               ),
-              Align(
-                alignment: Alignment.topRight,
-                child: widget.userRecipe == false && widget._user.role == "user"
+            ],
+          ),
+          Container(
+            padding: EdgeInsets.only(left: 10, top: 5),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    SizedBox(
+                      width: MediaQuery.of(context).size.width / 3.5,
+                      child: Text(
+                        widget._recipe.title!,
+                        style: TextStyle(
+                          color: Theme.of(context).primaryColor,
+                          fontWeight: FontWeight.bold,
+                          fontSize: MediaQuery.of(context).size.height * 0.025,
+                        ),
+                        overflow: TextOverflow.ellipsis,
+                        maxLines: 1,
+                      ),
+                    ),
+                    widget._recipe.tags!.isEmpty
+                        ? Container()
+                        : Container(
+                            margin: const EdgeInsets.only(top: 2.0),
+                            padding: const EdgeInsets.all(5.0),
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(5.0),
+                                border: Border.all(
+                                    color: Theme.of(context).primaryColor)),
+                            child: Text(
+                              widget._recipe.tags!.first,
+                              style: TextStyle(
+                                color: ColorTheme.grey,
+                                fontSize:
+                                    MediaQuery.of(context).size.height * 0.012,
+                              ),
+                            ),
+                          )
+                  ],
+                ),
+                Spacer(
+                  flex: 1,
+                ),
+                widget.userRecipe == false && widget._user.role == "user"
                     ? FutureBuilder<bool>(
                         future: _recipeController.checkFavoriteRecipe(
                             widget._recipe.id, widget._user.id),
@@ -130,10 +146,12 @@ class _RecipeCardState extends State<RecipeCard> {
                                 alreadySaved!
                                     ? Icons.favorite
                                     : Icons.favorite_border,
-                                color: alreadySaved! ? Colors.red : null,
+                                color: alreadySaved!
+                                    ? Colors.red
+                                    : Theme.of(context).primaryColor,
+                                size: 30,
                               ),
                               onPressed: () async {
-                                //     await checkFavoriteRecipes();
                                 if (alreadySaved!) {
                                   await _recipeController.removeFavoriteRecipe(
                                       widget._user.id, widget._recipe.id);
@@ -153,73 +171,31 @@ class _RecipeCardState extends State<RecipeCard> {
                           }
                         },
                       )
-                    : Container(),
-              ),
-            ],
-          ),
-          Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: <Widget>[
-              Text(
-                widget._recipe.title!,
-                style: TextStyle(
-                  color: recipeTitleColor,
-                  fontFamily: 'Sofia Pro Regular Az',
-                ),
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  Icon(
-                    Icons.access_time,
-                    size: 15,
-                  ),
-                  Text(
-                    '${widget._recipe.duration.toString()} min',
-                    style: TextStyle(
-                      color: recipeTextColor,
-                      fontFamily: 'Sofia Pro Regular Az',
-                    ),
-                  ),
-                ],
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                crossAxisAlignment: CrossAxisAlignment.end,
-                children: [
-                  RawMaterialButton(
-                    child: Icon(
-                      Icons.edit,
-                      color: Colors.black,
-                    ),
-                    onPressed: () {
-                      _editRecipeName(widget._recipe, widget._user.role);
-                    },
-                    constraints:
-                        const BoxConstraints(minWidth: 30.0, minHeight: 30.0),
-                    elevation: 2.0,
-                    fillColor: Colors.white,
-                    shape: CircleBorder(),
-                  ),
-                  RawMaterialButton(
-                    child: Icon(
-                      Icons.delete,
-                      color: Colors.red,
-                    ),
-                    onPressed: () async {
-                      _removeRecipe(widget._recipe, widget._user.role);
-                    },
-                    constraints:
-                        const BoxConstraints(minWidth: 30.0, minHeight: 30.0),
-                    elevation: 2.0,
-                    fillColor: Colors.white,
-                    shape: CircleBorder(),
-                  ),
-                ],
-              ),
-            ],
+                    : Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          RawMaterialButton(
+                            child: Icon(
+                              Icons.edit,
+                              color: ColorTheme.grey,
+                            ),
+                            onPressed: () {
+                              _editRecipeName(
+                                widget._recipe,
+                                widget._user.role,
+                              );
+                            },
+                            constraints: const BoxConstraints(
+                                minWidth: 30.0, minHeight: 30.0),
+                            elevation: 2.0,
+                            fillColor: Colors.white,
+                            shape: CircleBorder(),
+                          ),
+                        ],
+                      ),
+              ],
+            ),
           ),
         ],
       ),

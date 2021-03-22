@@ -8,7 +8,9 @@ class RecipeModel {
       this.difficulty,
       this.duration,
       this.review,
-      this.published})
+      this.published,
+      this.date,
+      this.tags})
       : reference = null;
 
   final String? id;
@@ -18,17 +20,20 @@ class RecipeModel {
   final int? duration;
   final int? review;
   final bool? published;
+  final Timestamp? date;
+  final List<String>? tags;
 
   final DocumentReference? reference;
 
   RecipeModel.fromSnapshot(DocumentSnapshot snapshot)
-      : assert(snapshot != null),
-        id = snapshot.id,
+      : id = snapshot.id,
         title = snapshot.data()!['title'],
-        url = snapshot.data()!['url'],
+        url = snapshot.data()!['url'] ?? "",
         difficulty = snapshot.data()!['difficulty'],
         duration = snapshot.data()!['duration'],
         review = snapshot.data()!['review'],
         published = snapshot.data()!['published'],
+        date = snapshot.data()!['date'],
+        tags = List.from(snapshot.data()!['tags']),
         reference = snapshot.reference;
 }

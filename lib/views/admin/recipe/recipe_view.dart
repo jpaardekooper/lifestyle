@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:lifestylescreening/controllers/recipe_controller.dart';
+import 'package:lifestylescreening/models/firebase_user.dart';
 import 'package:lifestylescreening/models/recipe_model.dart';
 import 'package:lifestylescreening/views/user/food_preparation_view.dart';
 import 'package:lifestylescreening/widgets/cards/recipe_card.dart';
@@ -23,7 +24,7 @@ class _RecipeViewState extends State<RecipeView> {
   void initState() {
     super.initState();
     _currentSubscription =
-        _recipeController.streamRecipes().listen(_updateSurveyList);
+        _recipeController.streamRecipes().listen(_updateRecipeList);
   }
 
   @override
@@ -33,13 +34,13 @@ class _RecipeViewState extends State<RecipeView> {
     _recipes.clear();
   }
 
-  void _updateSurveyList(QuerySnapshot snapshot) {
+  void _updateRecipeList(QuerySnapshot snapshot) {
     setState(() {
       _recipes = _recipeController.getRecipeList(snapshot);
     });
   }
 
-  void _addNewRecipe(String? role) {
+  void _addNewRecipe(AppUser? user) {
     showDialog(
       barrierDismissible: false,
       context: context,
@@ -47,7 +48,7 @@ class _RecipeViewState extends State<RecipeView> {
         return EditRecipe(
           recipe: RecipeModel(),
           isNewRecipe: true,
-          role: role,
+          user: user,
         );
       },
     );
@@ -59,7 +60,7 @@ class _RecipeViewState extends State<RecipeView> {
 
     return Scaffold(
       floatingActionButton: FloatingActionButton(
-        onPressed: () => _addNewRecipe(_userData!.data.role),
+        onPressed: () => _addNewRecipe(_userData!.data),
         child: Icon(Icons.add),
       ),
       body: GridView.builder(

@@ -13,8 +13,10 @@ import 'package:lifestylescreening/widgets/colors/color_theme.dart';
 import 'package:lifestylescreening/widgets/dialog/edit_ingredient_dialog.dart';
 import 'package:lifestylescreening/widgets/dialog/edit_method_dialog.dart';
 import 'package:lifestylescreening/widgets/dialog/edit_nutritional_dialog.dart';
+import 'package:lifestylescreening/widgets/dialog/remove_recipe.dialog.dart';
 import 'package:lifestylescreening/widgets/inherited/inherited_widget.dart';
 import 'package:lifestylescreening/widgets/painter/bottom_large_wave_painter.dart';
+import 'package:lifestylescreening/widgets/text/body_text.dart';
 
 import '../../widgets/text/h1_text.dart';
 import '../../widgets/text/h2_text.dart';
@@ -84,6 +86,75 @@ class _FoodPreparationViewState extends State<FoodPreparationView> {
     );
   }
 
+  Widget headerOverview() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.start,
+      children: [
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: [
+                Icon(
+                  Icons.timer,
+                  color: Theme.of(context).primaryColor,
+                ),
+                BodyText(text: widget.recipe.duration.toString() + " minuten"),
+              ],
+            ),
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: [
+                Icon(
+                  Icons.signal_cellular_alt,
+                  color: Theme.of(context).primaryColor,
+                ),
+                BodyText(
+                  text: widget.recipe.difficulty,
+                ),
+              ],
+            ),
+          ],
+        ),
+        SizedBox(width: 20),
+        Expanded(
+          child: Wrap(
+            spacing: 10,
+            runSpacing: 10,
+            alignment: WrapAlignment.end,
+            direction: Axis.horizontal,
+            children: getTagWidgets(),
+          ),
+        )
+      ],
+    );
+  }
+
+  List<Widget> getTagWidgets() {
+    List<Widget> widgetList = [];
+
+    for (var i = 0; i < widget.recipe.tags!.length; i++) {
+      widgetList.add(
+        Container(
+          margin: const EdgeInsets.only(top: 2.0),
+          padding: const EdgeInsets.all(5.0),
+          decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(5.0),
+              border: Border.all(color: Theme.of(context).primaryColor)),
+          child: Text(
+            widget.recipe.tags![i],
+            style: TextStyle(
+              color: ColorTheme.grey,
+              fontSize: MediaQuery.of(context).size.height * 0.025,
+            ),
+          ),
+        ),
+      );
+    }
+    return widgetList;
+  }
+
   Widget headerIngredients() {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -124,9 +195,19 @@ class _FoodPreparationViewState extends State<FoodPreparationView> {
             : IconButton(
                 icon: Icon(Icons.add),
                 onPressed: addNutritionalData,
-              )
+              ),
       ],
     );
+  }
+
+  void _removeRecipe(RecipeModel recipe, String? role) {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return RemoveRecipe(recipe: recipe, role: role);
+      },
+    ).then((Navigator.of(context).pop));
   }
 
   String? role;
@@ -153,6 +234,22 @@ class _FoodPreparationViewState extends State<FoodPreparationView> {
                     Navigator.of(context).pop();
                   },
                 ),
+                actions: [
+                  widget.userNewRecipe == false && role == "user"
+                      ? Container()
+                      : RawMaterialButton(
+                          child:
+                              Icon(Icons.delete, color: Colors.red, size: 35),
+                          onPressed: () async {
+                            _removeRecipe(widget.recipe, role);
+                          },
+                          constraints: const BoxConstraints(
+                              minWidth: 1.0, minHeight: 1.0),
+                          elevation: 2.0,
+                          fillColor: ColorTheme.extraLightGreen,
+                          shape: CircleBorder(),
+                        ),
+                ],
                 expandedHeight: 250.0,
                 floating: false,
                 pinned: true,
@@ -162,6 +259,7 @@ class _FoodPreparationViewState extends State<FoodPreparationView> {
                   title: Container(
                     padding: EdgeInsets.symmetric(
                       horizontal: 8,
+                      vertical: 2,
                     ),
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(8.0),
@@ -201,6 +299,14 @@ class _FoodPreparationViewState extends State<FoodPreparationView> {
                   child: Column(
                     mainAxisSize: MainAxisSize.max,
                     children: [
+                      headerOverview(),
+                      SizedBox(
+                        height: 50,
+                        child: Divider(
+                          thickness: 2.0,
+                          color: Colors.black,
+                        ),
+                      ),
                       headerIngredients(),
                       InheritedDataProvider(
                         data: _userData.data,
@@ -245,43 +351,6 @@ class _FoodPreparationViewState extends State<FoodPreparationView> {
               ),
             ],
           ),
-          // CustomScrollView(
-          //   slivers: [
-          //     SliverAppBar(
-          //       leading: IconButton(
-          //           icon: Icon(Icons.filter_1),
-          //           onPressed: () {
-          //             // Do something
-          //           }),
-          //       expandedHeight: 220.0,
-          //       floating: true,
-          //       pinned: true,
-          //       snap: true,
-          //       elevation: 50,
-          //       backgroundColor: Colors.pink,
-          //       flexibleSpace: FlexibleSpaceBar(
-          //         centerTitle: true,
-          //         title: Text('Title',
-          //             style: TextStyle(
-          //               color: Colors.white,
-          //               fontSize: 16.0,
-          //             )),
-          //         background: imageUrl == null
-          //             ? Image.network(
-          //                 "https://firebasestorage.googleapis.com/v0/b/lifestyle-screening.appspot.com/o/recipeImages%2Fplaceholder.png?alt=media&token=f8dabc81-d175-4d86-91e0-83442488bd6e",
-          //                 fit: BoxFit.cover,
-          //               )
-          //             : Image.network(
-          //                 imageUrl,
-          //                 fit: BoxFit.cover,
-          //               ),
-          //       ),
-          //     ),
-          //     SliverList(
-          //       delegate: SliverChildListDelegate(_buildlist(_userData)),
-          //     )
-          //   ],
-          // ),
         ),
       ),
     );

@@ -3,7 +3,10 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:lifestylescreening/controllers/recipe_controller.dart';
+import 'package:lifestylescreening/controllers/tags_controller.dart';
+import 'package:lifestylescreening/models/firebase_user.dart';
 import 'package:lifestylescreening/models/recipe_model.dart';
+import 'package:lifestylescreening/models/tags_model.dart';
 import 'package:lifestylescreening/widgets/colors/color_theme.dart';
 import 'package:lifestylescreening/widgets/forms/custom_answerfield.dart';
 import 'package:lifestylescreening/widgets/forms/custom_textformfield.dart';
@@ -12,11 +15,11 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:path/path.dart';
 
 class EditRecipe extends StatefulWidget {
-  EditRecipe({required this.recipe, required this.isNewRecipe, this.role});
+  EditRecipe({required this.recipe, required this.isNewRecipe, this.user});
 
   final RecipeModel recipe;
   final bool isNewRecipe;
-  final String? role;
+  final AppUser? user;
 
   @override
   _EditRecipeState createState() => _EditRecipeState();
@@ -24,6 +27,8 @@ class EditRecipe extends StatefulWidget {
 
 class _EditRecipeState extends State<EditRecipe> {
   final RecipeController _recipeController = RecipeController();
+  final TagsController _tagsController = TagsController();
+
   TextEditingController _recipenameController = TextEditingController();
   TextEditingController _urlController = TextEditingController();
   TextEditingController _durationController = TextEditingController();
@@ -37,6 +42,9 @@ class _EditRecipeState extends State<EditRecipe> {
     'Makkelijk'
   ]; // Option 2
   String? _selectedLocation;
+
+  List<TagsModel> _tags = [];
+  List<String>? _selectedTags;
 
   final _formKey = GlobalKey<FormState>();
   File? _imageFile;
@@ -52,6 +60,8 @@ class _EditRecipeState extends State<EditRecipe> {
         ? _locations[0]
         : _difficultyController.text;
 
+    _selectedTags = widget.recipe.tags ?? [];
+
     super.initState();
   }
 
@@ -64,7 +74,7 @@ class _EditRecipeState extends State<EditRecipe> {
     final pickedFile = await _picker.getImage(source: ImageSource.camera);
 
     setState(() {
-      _imageFile = File(pickedFile!.path);
+      _imageFile = pickedFile != null ? File(pickedFile.path) : null;
     });
   }
 
@@ -75,7 +85,7 @@ class _EditRecipeState extends State<EditRecipe> {
     final pickedFile = await _picker.getImage(source: ImageSource.gallery);
 
     setState(() {
-      _imageFile = File(pickedFile!.path);
+      _imageFile = pickedFile != null ? File(pickedFile.path) : null;
     });
   }
 
@@ -109,12 +119,14 @@ class _EditRecipeState extends State<EditRecipe> {
                 width: 175,
                 child: FittedBox(
                     fit: BoxFit.contain, child: Image.file(_imageFile!)))
-            : RaisedButton(
+            : OutlinedButton(
                 child: Text(
                   "Kies een foto",
                   style: TextStyle(color: Colors.white),
                 ),
-                color: Theme.of(context).primaryColor,
+                style: ButtonStyle(
+                    backgroundColor: MaterialStateProperty.all<Color>(
+                        Theme.of(context).primaryColor)),
                 onPressed: () => showDialog(
                   barrierDismissible: false,
                   context: context,
@@ -126,13 +138,13 @@ class _EditRecipeState extends State<EditRecipe> {
                       content: Row(
                         mainAxisAlignment: MainAxisAlignment.end,
                         children: [
-                          FlatButton(
+                          TextButton(
                               child: Text("Camera"),
                               onPressed: () {
                                 checkCameraPermission();
                                 Navigator.of(context).pop();
                               }),
-                          FlatButton(
+                          TextButton(
                             child: Text("Gallerij"),
                             onPressed: () {
                               checkStoragePermission();
@@ -151,7 +163,7 @@ class _EditRecipeState extends State<EditRecipe> {
 
   Widget showRecipeDifficulty(BuildContext context) {
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         CustomAnswerFormField(
           keyboardType: TextInputType.name,
@@ -227,6 +239,67 @@ class _EditRecipeState extends State<EditRecipe> {
     );
   }
 
+  Widget showRecipeTags(BuildContext context) {
+    getTags();
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        BodyText(
+          text: "Tags:",
+        ),
+        SizedBox(
+          height: 10,
+        ),
+        Container(
+          height: 250,
+          width: MediaQuery.of(context).size.width,
+          child: ListView.separated(
+            separatorBuilder: (context, index) => Divider(
+              height: 0.0,
+              color: Colors.black,
+            ),
+            shrinkWrap: true,
+            itemCount: _tags.length,
+            itemBuilder: (BuildContext context, int index) {
+              return ListTile(
+                selected: _selectedTags!.contains(_tags[index].tag),
+                onTap: () {
+                  if (_selectedTags!.contains(_tags[index].tag!)) {
+                    setState(() {
+                      _selectedTags!
+                          .removeWhere((val) => val == _tags[index].tag!);
+                    });
+                  } else {
+                    setState(() {
+                      _selectedTags!.add(_tags[index].tag!);
+                    });
+                  }
+                },
+                title: Text(_tags[index].tag!),
+                trailing: Icon(
+                    _selectedTags!.contains(_tags[index].tag)
+                        ? Icons.check_box
+                        : Icons.check_box_outline_blank,
+                    color: _selectedTags!.contains(_tags[index].tag)
+                        ? Theme.of(context).primaryColor
+                        : Colors.grey),
+              );
+            },
+          ),
+        ),
+      ],
+    );
+  }
+
+  getTags() async {
+    await _tagsController.getTagsList().then((value) {
+      if (!mounted) return;
+      setState(() {
+        _tags = value;
+      });
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
@@ -241,26 +314,32 @@ class _EditRecipeState extends State<EditRecipe> {
           key: _formKey,
           child: Column(
             children: [
-              widget.role == "user" ? Container() : isRecipePublished(context),
+              widget.user!.role == "user"
+                  ? Container()
+                  : isRecipePublished(context),
               showRecipeName(context),
               SizedBox(height: 25),
               showRecipeUrl(context),
               SizedBox(height: 25),
               showRecipeDuration(context),
               SizedBox(height: 25),
-              showRecipeDifficulty(context)
+              showRecipeDifficulty(context),
+              SizedBox(height: 25),
+              showRecipeTags(context),
             ],
           ),
         ),
       ),
       actions: <Widget>[
-        FlatButton(
+        TextButton(
           child: Text('CANCEL'),
           onPressed: () => Navigator.pop(context, null),
         ),
-        RaisedButton(
+        TextButton(
           child: Text('Opslaan'),
-          onPressed: () => saveRecipeChanges(context),
+          onPressed: () {
+            saveRecipeChanges(context);
+          },
         )
       ],
     );
@@ -268,34 +347,29 @@ class _EditRecipeState extends State<EditRecipe> {
 
   void saveRecipeChanges(context) {
     if (_formKey.currentState!.validate()) {
-      var test;
-      if (_imageFile != null) {
-        test = basename(_imageFile!.path);
-      } else {
-        test = _urlController.text;
-      }
       Map<String, dynamic> data = {
         "title": _recipenameController.text,
-        "url": test,
+        "url": _imageFile == null
+            ? _urlController.text
+            : basename(_imageFile!.path),
         "duration": int.parse(_durationController.text),
         "difficulty": _difficultyController.text,
         "published": _published,
+        "date": widget.isNewRecipe ? DateTime.now() : widget.recipe.date,
+        "tags": _selectedTags,
+        "userId": widget.user!.id,
       };
-      if (widget.role == "user") {
-        _recipeController
-            .updateUserRecipe(widget.recipe.id, data, widget.isNewRecipe)
-            .then((value) => Navigator.pop(context));
+
+      if (widget.user!.role == "user") {
+        _recipeController.uploadImage(_imageFile, widget.recipe.url).then(
+            (value) => _recipeController
+                .updateUserRecipe(widget.recipe.id, data, widget.isNewRecipe)
+                .then((value) => Navigator.pop(context)));
       } else {
-        if (_imageFile != null) {
-          _recipeController.uploadImage(_imageFile).then((value) =>
-              _recipeController
-                  .updateRecipe(widget.recipe.id, data, widget.isNewRecipe)
-                  .then((value) => Navigator.pop(context)));
-        } else {
-          _recipeController
-              .updateRecipe(widget.recipe.id, data, widget.isNewRecipe)
-              .then((value) => Navigator.pop(context));
-        }
+        _recipeController.uploadImage(_imageFile, widget.recipe.url).then(
+            (value) => _recipeController
+                .updateRecipe(widget.recipe.id, data, widget.isNewRecipe)
+                .then((value) => Navigator.pop(context)));
       }
     }
   }

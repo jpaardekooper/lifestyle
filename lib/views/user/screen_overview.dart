@@ -159,7 +159,8 @@ class ScreenOverview extends StatelessWidget {
                     //   height: size.height * 0.1,
                     // ),
 
-                    ShowRecentRecipesTab(onTap: updatecounterToRecipes),
+                    ShowRecentRecipesTab(
+                        onTap: updatecounterToRecipes, user: _userData.data),
 
                     SizedBox(
                       height: size.height * 0.1,

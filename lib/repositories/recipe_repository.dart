@@ -56,7 +56,7 @@ class RecipeRepository implements IRecipeRepository {
       await FirebaseFirestore.instance
           .collection("createdRecipes")
           .doc(recipeId)
-          .set(data as Map<String, dynamic>)
+          .update(data as Map<String, dynamic>)
           .catchError((e) {
         //    print(e);
       });
@@ -77,7 +77,7 @@ class RecipeRepository implements IRecipeRepository {
       await FirebaseFirestore.instance
           .collection("recipes")
           .doc(recipeId)
-          .set(data as Map<String, dynamic>)
+          .update(data as Map<String, dynamic>)
           .catchError((e) {
         //    print(e);
       });
@@ -97,12 +97,14 @@ class RecipeRepository implements IRecipeRepository {
   }
 
   @override
-  Future<List<RecipeModel>> getUserRecipes(String? userId) async {
-    var snapshot = await FirebaseFirestore.instance
+  Stream<QuerySnapshot> streamUserRecipes(String? userId) {
+    return FirebaseFirestore.instance
         .collection('createdRecipes')
-        .where("userId", isEqualTo: userId)
-        .get();
+        .where('userId', isEqualTo: userId)
+        .snapshots();
+  }
 
+  List<RecipeModel> getUserRecipeList(QuerySnapshot snapshot) {
     return snapshot.docs.map((DocumentSnapshot doc) {
       return RecipeModel.fromSnapshot(doc);
     }).toList();
@@ -135,10 +137,8 @@ class RecipeRepository implements IRecipeRepository {
   @override
   Future<bool> checkFavoriteRecipe(String? recipeId, String? userId) async {
     List<dynamic> favRecipeList = [];
-    var snapshot = await FirebaseFirestore.instance
-        .collection('users')
-        .doc(userId)
-        .get();
+    var snapshot =
+        await FirebaseFirestore.instance.collection('users').doc(userId).get();
 
     favRecipeList = List.from(snapshot.data()!['favorite_recipes']);
 
@@ -164,23 +164,18 @@ class RecipeRepository implements IRecipeRepository {
     });
   }
 
-  Future<RecipeModel> getSingleRecipeById(String recipeId) async {
-    var snapshot = await FirebaseFirestore.instance
-        .collection("recipes")
-        .doc(recipeId)
-        .get();
-
-    return RecipeModel.fromSnapshot(snapshot);
-  }
-
   @override
-  Future<void> uploadImage(File? img) async {
-    String fileName = basename(img!.path);
-    Reference storageRef =
-        FirebaseStorage.instance.ref().child('recipeImages/$fileName');
-    UploadTask uploadTask = storageRef.putFile(img);
-    TaskSnapshot taskSnapshot = await uploadTask;
-    await taskSnapshot.ref.getDownloadURL();
+  Future<void> uploadImage(File? img, String? oldImg) async {
+    if (img != null) {
+      String fileName = basename(img.path);
+      Reference storageRef =
+          FirebaseStorage.instance.ref().child('recipeImages/$fileName');
+      UploadTask uploadTask = storageRef.putFile(img);
+      TaskSnapshot taskSnapshot = await uploadTask;
+      await taskSnapshot.ref.getDownloadURL();
+
+      if (oldImg != null) await deleteImage(oldImg);
+    }
   }
 
   @override
@@ -194,6 +189,11 @@ class RecipeRepository implements IRecipeRepository {
   }
 
   Future<void> deleteImage(String? image) async {
-    await FirebaseStorage.instance.ref().child('recipeImages/$image').delete();
+    if (image != "placeholder.png") {
+      await FirebaseStorage.instance
+          .ref()
+          .child('recipeImages/$image')
+          .delete();
+    }
   }
 }

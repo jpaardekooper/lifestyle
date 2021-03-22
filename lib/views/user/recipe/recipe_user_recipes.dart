@@ -1,49 +1,54 @@
+import 'dart:async';
+
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:lifestylescreening/controllers/recipe_controller.dart';
+import 'package:lifestylescreening/models/firebase_user.dart';
 import 'package:lifestylescreening/models/recipe_model.dart';
-import 'package:lifestylescreening/widgets/inherited/inherited_widget.dart';
 import 'package:lifestylescreening/views/user/recipe/recipe_grid.dart';
-import 'package:lifestylescreening/widgets/text/body_text.dart';
 
 class RecipeUserRecipes extends StatefulWidget {
+  final AppUser? user;
+
+  RecipeUserRecipes({this.user});
+
   @override
   _RecipeUserRecipesState createState() => _RecipeUserRecipesState();
 }
 
 class _RecipeUserRecipesState extends State<RecipeUserRecipes> {
   final RecipeController _recipeController = RecipeController();
-  List<RecipeModel>? _recipeList = [];
 
-  void removeData(RecipeModel? recipe) {
-    if (_recipeList!.isNotEmpty && _recipeList!.contains(recipe)) {
-      _recipeList!.remove(recipe);
-      setState(() {});
-    }
+  StreamSubscription<QuerySnapshot>? _currentSubscription;
+  List<RecipeModel> _recipes = <RecipeModel>[];
+
+  @override
+  void initState() {
+    super.initState();
+    _currentSubscription = _recipeController
+        .streamUserRecipes(widget.user!.id)
+        .listen(_updateRecipeList);
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _currentSubscription?.cancel();
+    _recipes.clear();
+  }
+
+  void _updateRecipeList(QuerySnapshot snapshot) {
+    setState(() {
+      _recipes = _recipeController.getUserRecipeList(snapshot);
+    });
   }
 
   @override
   Widget build(BuildContext context) {
-    final _userData = InheritedDataProvider.of(context)!;
-
-    return FutureBuilder<List<RecipeModel>>(
-      future: _recipeController.getUserRecipes(_userData.data.id),
-      builder: (context, snapshot) {
-        _recipeList = snapshot.data;
-        if (_recipeList == null || _recipeList!.isEmpty) {
-          return Center(
-            child: BodyText(
-              text: "Nog geen eigen recepten toegevoegd",
-            ),
-          );
-        } else {
-          return RecipeGrid(
-            recipeList: _recipeList,
-            userData: _userData.data,
-            userRecipe: true,
-            function: removeData,
-          );
-        }
-      },
+    return RecipeGrid(
+      recipeList: _recipes,
+      userData: widget.user!,
+      userRecipe: true,
     );
   }
 }

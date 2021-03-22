@@ -12,24 +12,17 @@ class RecipeFeedView extends StatefulWidget {
 class _RecipeFeedViewState extends State<RecipeFeedView> {
   RecipeController _recipeController = RecipeController();
 
-  Future<void> _refreshData() async {
-    setState(() {
-      // return _recipeController.getRecipeListOnce();
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     final _userData = InheritedDataProvider.of(context);
 
-    return RefreshIndicator(
-      onRefresh: _refreshData,
+    return SingleChildScrollView(
       child: FutureBuilder<List<RecipeModel>>(
         future: _recipeController.getRecipeListOnce(),
         builder: (context, snapshot) {
           final List<RecipeModel>? _recipeList = snapshot.data;
           if (!snapshot.hasData) {
-            return CircularProgressIndicator();
+            return Center(child: CircularProgressIndicator());
           } else {
             return RecipeGrid(
               recipeList: _recipeList,

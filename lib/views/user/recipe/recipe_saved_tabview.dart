@@ -6,9 +6,6 @@ import 'package:lifestylescreening/views/user/recipe/recipe_grid.dart';
 import 'package:lifestylescreening/widgets/text/body_text.dart';
 
 class RecipeFavoritesView extends StatefulWidget {
-  final String? userId;
-
-  RecipeFavoritesView({this.userId});
 
   @override
   _RecipeFavoritesViewState createState() => _RecipeFavoritesViewState();
@@ -38,7 +35,7 @@ class _RecipeFavoritesViewState extends State<RecipeFavoritesView> {
     final _userData = InheritedDataProvider.of(context);
 
     return FutureBuilder<List<RecipeModel>>(
-      future: _recipeController.getUserFavoriteRecipe(widget.userId),
+      future: _recipeController.getUserFavoriteRecipe(_userData!.data.id),
       builder: (context, snapshot) {
         if (!snapshot.hasData) {
           return Center(
@@ -55,7 +52,7 @@ class _RecipeFavoritesViewState extends State<RecipeFavoritesView> {
           } else {
             return RecipeGrid(
                 recipeList: _savedRecipes,
-                userData: _userData!.data,
+                userData: _userData.data,
                 userRecipe: false,
                 onTap: _updateRecipes);
           }
