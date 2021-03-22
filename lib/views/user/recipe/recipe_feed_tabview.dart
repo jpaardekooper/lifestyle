@@ -22,7 +22,7 @@ class _RecipeFeedViewState extends State<RecipeFeedView> {
         builder: (context, snapshot) {
           final List<RecipeModel>? _recipeList = snapshot.data;
           if (!snapshot.hasData) {
-            return CircularProgressIndicator();
+            return Center(child: CircularProgressIndicator());
           } else {
             return RecipeGrid(
               recipeList: _recipeList,
