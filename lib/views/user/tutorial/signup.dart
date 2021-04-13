@@ -32,7 +32,6 @@ class _SignUpState extends State<SignUp> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _passwordChecker = TextEditingController();
-  final _key = GlobalKey<ScaffoldState>();
   final AuthController _authController = AuthController();
   final _formKey = GlobalKey<FormState>();
 
@@ -98,7 +97,7 @@ class _SignUpState extends State<SignUp> {
     setState(() {
       isLoading = false;
 
-      _key.currentState!.showSnackBar(
+      ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           duration: const Duration(seconds: 1),
           backgroundColor: Theme.of(context).accentColor,
@@ -108,17 +107,6 @@ class _SignUpState extends State<SignUp> {
           ),
         ),
       );
-
-      // ScaffoldMessenger.of(context).showSnackBar(
-      //   SnackBar(
-      //     duration: const Duration(seconds: 1),
-      //     backgroundColor: Theme.of(context).accentColor,
-      //     content: Text(
-      //       "Uw email en wachtwoord komen niet overeen",
-      //       style: TextStyle(color: Colors.white, fontSize: 18),
-      //     ),
-      //   ),
-      // );
     });
   }
 
@@ -128,7 +116,6 @@ class _SignUpState extends State<SignUp> {
     // Scaffold is used to utilize all the material widgets
     return Scaffold(
       appBar: introductionAppBar(context, 1, false) as PreferredSizeWidget?,
-      key: _key,
       body: Center(
         child: Form(
           key: _formKey,

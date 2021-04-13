@@ -19,9 +19,7 @@ class LandingPageApp extends StatelessWidget {
   final snackBar = SnackBar(content: Text('Bedankt voor het abonneren!'));
 
   void subscribe(BuildContext context) {
-    _drawerKey.currentState!.showSnackBar(snackBar);
-    //when dart sdk has been updated
-    //ScaffoldMessenger.of(context).showSnackBar(snackBar);
+    ScaffoldMessenger.of(context).showSnackBar(snackBar);
   }
 
   @override
@@ -78,8 +76,12 @@ class LandingPageApp extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      Text("Lifestyle ", style: TextStyle(fontSize: 24)),
-                      Text("Screening", style: TextStyle(fontSize: 24))
+                      Text("Lifestyle ",
+                          style: TextStyle(
+                              fontSize: 24, fontWeight: FontWeight.bold)),
+                      Text("Screening",
+                          style: TextStyle(
+                              fontSize: 24, fontWeight: FontWeight.bold))
                     ],
                   )
                 ],
@@ -90,6 +92,7 @@ class LandingPageApp extends StatelessWidget {
             ),
             ListTile(
               title: Container(
+                padding: EdgeInsets.all(8),
                 decoration: BoxDecoration(
                   gradient: LinearGradient(colors: [
                     ColorTheme.accentOrange,
@@ -110,6 +113,7 @@ class LandingPageApp extends StatelessWidget {
                         style: TextStyle(
                           color: Colors.white,
                           fontSize: 20,
+                          fontWeight: FontWeight.bold,
                         )),
                   ),
                 ),
@@ -125,7 +129,10 @@ class LandingPageApp extends StatelessWidget {
             ListTile(
               title: Text(
                 "Inloggen",
-                style: TextStyle(fontSize: 20),
+                style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
               onTap: () {
                 Navigator.of(context).push(
@@ -138,7 +145,10 @@ class LandingPageApp extends StatelessWidget {
             ListTile(
               title: Text(
                 "Aanmelden",
-                style: TextStyle(fontSize: 20),
+                style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
               onTap: () {
                 Navigator.of(context).push(
@@ -218,6 +228,7 @@ class LargeChild extends StatelessWidget {
                       style: TextStyle(
                         fontSize: 16,
                         color: Colors.black87,
+                         fontWeight: FontWeight.bold
                       ),
                     ),
                   ),
@@ -271,6 +282,7 @@ class SmallChild extends StatelessWidget {
                 style: TextStyle(
                   fontSize: 16,
                   color: Colors.black87,
+                  fontWeight: FontWeight.bold,
                 ),
               ),
             ),

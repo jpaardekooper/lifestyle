@@ -2,16 +2,19 @@ import 'package:flutter/material.dart';
 import 'package:lifestylescreening/controllers/food_preparation_controller.dart';
 import 'package:lifestylescreening/models/nutritional_value_model.dart';
 import 'package:lifestylescreening/widgets/forms/custom_textformfield.dart';
+import 'package:lifestylescreening/widgets/text/intro_grey_text.dart';
 
 class EditNutritional extends StatefulWidget {
   EditNutritional({
     required this.recipeId,
     required this.nutritionalValue,
     this.newNutritional,
+    this.collection,
   });
   final String? recipeId;
   final NutritionalValueModel nutritionalValue;
   final bool? newNutritional;
+  final String? collection;
 
   @override
   _EditNutritionalState createState() => _EditNutritionalState();
@@ -51,11 +54,11 @@ class _EditNutritionalState extends State<EditNutritional> {
               SizedBox(
                 height: 25,
               ),
-              Text("naam van het product:"),
+              Text("Naam van het product:"),
               CustomTextFormField(
                 keyboardType: TextInputType.name,
                 textcontroller: _nameController,
-                errorMessage: "Geen geldige product naamt",
+                errorMessage: "Geen geldige product naam",
                 validator: 1,
                 secureText: false,
               ),
@@ -66,14 +69,14 @@ class _EditNutritionalState extends State<EditNutritional> {
               CustomTextFormField(
                 keyboardType: TextInputType.name,
                 textcontroller: _amountController,
-                errorMessage: "Geen geldige recept getal",
+                errorMessage: "Geen geldig recept getal",
                 validator: 1,
                 secureText: false,
               ),
               SizedBox(
                 height: 25,
               ),
-              Text("type unit (gram, ml, etc..)"),
+              Text("Type unit (gram, ml, etc..)"),
               CustomTextFormField(
                 keyboardType: TextInputType.name,
                 textcontroller: _unitController,
@@ -86,12 +89,21 @@ class _EditNutritionalState extends State<EditNutritional> {
         ),
       ),
       actions: <Widget>[
-        FlatButton(
-          child: Text('Annuleren'),
-          onPressed: () => Navigator.pop(context, null),
+        TextButton(
+          child: IntroGreyText(
+            text: 'Cancel',
+          ),
+          onPressed: () => Navigator.pop(context),
         ),
-        RaisedButton(
-          child: Text('Opslaan'),
+        ElevatedButton(
+          child: Text(
+            'Opslaan',
+            style: TextStyle(
+              fontSize: MediaQuery.of(context).size.height * 0.020,
+            ),
+          ),
+          style:
+              ElevatedButton.styleFrom(primary: Theme.of(context).accentColor),
           onPressed: () => saveIngredientChanges(context),
         )
       ],
@@ -112,6 +124,7 @@ class _EditNutritionalState extends State<EditNutritional> {
             widget.nutritionalValue.id,
             data,
             widget.newNutritional,
+            widget.collection,
           )
           .then((value) => Navigator.pop(context));
     }

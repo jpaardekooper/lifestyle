@@ -21,7 +21,6 @@ class EditSettingsView extends StatefulWidget {
 
 class _EditSettingsViewState extends State<EditSettingsView> {
   final _formKey = GlobalKey<FormState>();
-  final _scaffoldKey = GlobalKey<ScaffoldState>();
   final TextEditingController _userNameController = TextEditingController();
   final TextEditingController _ageController = TextEditingController();
   final TextEditingController _weightController = TextEditingController();
@@ -59,7 +58,6 @@ class _EditSettingsViewState extends State<EditSettingsView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      key: _scaffoldKey,
       appBar: AppBar(
         title: H1Text(text: "Instellingen wijzigen"),
         backgroundColor: Colors.white,
@@ -181,7 +179,7 @@ class _EditSettingsViewState extends State<EditSettingsView> {
       );
       _auth.updateUserData(widget.user!.id, _userNameController.text, bmi).then(
         (value) {
-          _scaffoldKey.currentState!.showSnackBar(
+          ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               duration: const Duration(seconds: 2),
               backgroundColor: ColorTheme.lightOrange,

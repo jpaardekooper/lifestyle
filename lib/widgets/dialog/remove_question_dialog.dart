@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:lifestylescreening/controllers/questionnaire_controller.dart';
 import 'package:lifestylescreening/models/category_model.dart';
 import 'package:lifestylescreening/models/question_model.dart';
+import 'package:lifestylescreening/widgets/text/intro_grey_text.dart';
 
 class RemoveQuestion extends StatelessWidget {
   RemoveQuestion({this.category, this.question, this.totalQuestions});
@@ -31,12 +32,21 @@ class RemoveQuestion extends StatelessWidget {
         ],
       ),
       actions: <Widget>[
-        FlatButton(
-          child: Text('CANCEL'),
-          onPressed: () => Navigator.pop(context, null),
+        TextButton(
+          child: IntroGreyText(
+            text: 'Cancel',
+          ),
+          onPressed: () => Navigator.of(context).pop(false),
         ),
-        RaisedButton(
-          child: Text('Opslaan'),
+        ElevatedButton(
+          child: Text(
+            'Verwijderen',
+            style: TextStyle(
+              fontSize: MediaQuery.of(context).size.height * 0.020,
+            ),
+          ),
+          style:
+              ElevatedButton.styleFrom(primary: Theme.of(context).accentColor),
           onPressed: () => _questionnaireController
               .removeQuestion(category, question!.id, totalQuestions)
               .then((value) => Navigator.of(context).pop()),

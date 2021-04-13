@@ -27,8 +27,7 @@ class SurveyResultModel {
   final DocumentReference? reference;
 
   SurveyResultModel.fromSnapshot(DocumentSnapshot snapshot)
-      : assert(snapshot != null),
-        id = snapshot.id,
+      : id = snapshot.id,
         email = snapshot.data()!['email'],
         index = snapshot.data()!['index'],
         category = snapshot.data()!['category'],

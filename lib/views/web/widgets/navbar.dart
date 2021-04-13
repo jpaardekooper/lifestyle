@@ -39,7 +39,8 @@ class NavBar extends StatelessWidget {
                 style: TextStyle(
                     color: ColorTheme.accentOrange,
                     fontSize: 22,
-                    decoration: TextDecoration.underline),
+                    decoration: TextDecoration.underline,
+                    fontWeight: FontWeight.bold),
               ),
             ),
             onHover: (event) {},
@@ -48,6 +49,7 @@ class NavBar extends StatelessWidget {
               style: TextStyle(
                 color: Colors.black87,
                 fontSize: 22,
+                fontWeight: FontWeight.bold,
               ),
             )),
       );
@@ -80,8 +82,12 @@ class NavBar extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text("Lifestyle ", style: TextStyle(fontSize: 24)),
-                  Text("Screening", style: TextStyle(fontSize: 24))
+                  Text("Lifestyle ",
+                      style:
+                          TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
+                  Text("Screening",
+                      style:
+                          TextStyle(fontSize: 24, fontWeight: FontWeight.bold))
                 ],
               )
             ],
@@ -123,10 +129,10 @@ class NavBar extends StatelessWidget {
                         child: Center(
                           child: Text("Doe de test!",
                               style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 20,
-                                letterSpacing: 1,
-                              )),
+                                  color: Colors.white,
+                                  fontSize: 20,
+                                  letterSpacing: 1,
+                                  fontWeight: FontWeight.bold)),
                         ),
                       ),
                     ),

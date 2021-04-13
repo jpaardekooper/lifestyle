@@ -4,6 +4,7 @@ import 'package:lifestylescreening/controllers/auth_controller.dart';
 import 'package:lifestylescreening/views/admin/categories/categories_view.dart';
 import 'package:lifestylescreening/views/admin/messages/messages_overview.dart';
 import 'package:lifestylescreening/views/admin/recipe/recipe_view.dart';
+import 'package:lifestylescreening/views/admin/recipe/submitted_recipes_view.dart';
 import 'package:lifestylescreening/views/admin/results/result_view.dart';
 import 'package:lifestylescreening/views/admin/survey/survey_view.dart';
 import 'package:lifestylescreening/widgets/inherited/inherited_widget.dart';
@@ -24,7 +25,7 @@ class _DashboardState extends State<Dashboard>
   @override
   void initState() {
     super.initState();
-    tabController = TabController(vsync: this, length: 5, initialIndex: 0)
+    tabController = TabController(vsync: this, length: 6, initialIndex: 0)
       ..addListener(() {
         setState(() {
           active = tabController!.index;
@@ -87,6 +88,9 @@ class _DashboardState extends State<Dashboard>
                         userEmail: _userData.data.email,
                       ),
                       RecipeView(),
+                      SubmittedRecipeView(
+                        user: _userData.data,
+                      ),
                       CategoriesView(),
                       SurveyView(),
                     ],
@@ -107,8 +111,10 @@ class _DashboardState extends State<Dashboard>
   Widget listDrawerItems(bool drawerStatus) {
     return ListView(
       children: <Widget>[
-        FlatButton(
-          color: tabController!.index == 0 ? Colors.grey[100] : Colors.white,
+        ElevatedButton(
+          style: ElevatedButton.styleFrom(
+              primary:
+                  tabController!.index == 0 ? Colors.grey[100] : Colors.white),
           onPressed: () {
             tabController!.animateTo(0);
             if (drawerStatus) {
@@ -137,16 +143,16 @@ class _DashboardState extends State<Dashboard>
             ),
           ),
         ),
-        FlatButton(
-          color: tabController!.index == 1 ? Colors.grey[100] : Colors.white,
-          //color: Colors.grey[100],
+        ElevatedButton(
+          style: ElevatedButton.styleFrom(
+              primary:
+                  tabController!.index == 1 ? Colors.grey[100] : Colors.white),
           onPressed: () {
             tabController!.animateTo(1);
             if (drawerStatus) {
               Navigator.pop(context);
             }
           },
-
           child: Align(
             alignment: Alignment.centerLeft,
             child: Container(
@@ -167,8 +173,10 @@ class _DashboardState extends State<Dashboard>
             ),
           ),
         ),
-        FlatButton(
-          color: tabController!.index == 2 ? Colors.grey[100] : Colors.white,
+        ElevatedButton(
+          style: ElevatedButton.styleFrom(
+              primary:
+                  tabController!.index == 2 ? Colors.grey[100] : Colors.white),
           onPressed: () {
             tabController!.animateTo(2);
             if (drawerStatus) {
@@ -195,10 +203,42 @@ class _DashboardState extends State<Dashboard>
             ),
           ),
         ),
-        FlatButton(
-          color: tabController!.index == 3 ? Colors.grey[100] : Colors.white,
+        ElevatedButton(
+          style: ElevatedButton.styleFrom(
+              primary:
+                  tabController!.index == 3 ? Colors.grey[100] : Colors.white),
           onPressed: () {
             tabController!.animateTo(3);
+            if (drawerStatus) {
+              Navigator.pop(context);
+            }
+          },
+          child: Align(
+            alignment: Alignment.centerLeft,
+            child: Container(
+              padding: EdgeInsets.only(top: 22, bottom: 22, right: 22),
+              child: Row(children: [
+                Icon(Icons.upload_rounded),
+                SizedBox(
+                  width: 8,
+                ),
+                Text(
+                  "Ingediende Recepten",
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontFamily: 'HelveticaNeue',
+                  ),
+                ),
+              ]),
+            ),
+          ),
+        ),
+        ElevatedButton(
+          style: ElevatedButton.styleFrom(
+              primary:
+                  tabController!.index == 4 ? Colors.grey[100] : Colors.white),
+          onPressed: () {
+            tabController!.animateTo(4);
             if (drawerStatus) {
               Navigator.pop(context);
             }
@@ -225,10 +265,12 @@ class _DashboardState extends State<Dashboard>
             ),
           ),
         ),
-        FlatButton(
-          color: tabController!.index == 4 ? Colors.grey[100] : Colors.white,
+        ElevatedButton(
+          style: ElevatedButton.styleFrom(
+              primary:
+                  tabController!.index == 5 ? Colors.grey[100] : Colors.white),
           onPressed: () {
-            tabController!.animateTo(4);
+            tabController!.animateTo(5);
             if (drawerStatus) {
               Navigator.pop(context);
             }

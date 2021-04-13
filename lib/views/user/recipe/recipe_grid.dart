@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:lifestylescreening/models/firebase_user.dart';
 import 'package:lifestylescreening/models/recipe_model.dart';
+import 'package:lifestylescreening/views/admin/recipe/recipe_evaluation_view.dart';
 import 'package:lifestylescreening/views/user/food_preparation_view.dart';
 import 'package:lifestylescreening/widgets/cards/recipe_card.dart';
 import 'package:lifestylescreening/widgets/inherited/inherited_widget.dart';
@@ -26,7 +27,6 @@ class RecipeGrid extends StatelessWidget {
   Widget build(BuildContext context) {
     return GridView.builder(
       padding: EdgeInsets.all(20.0),
-      //  physics: AlwaysScrollableScrollPhysics(),
       shrinkWrap: true,
       itemCount: _recipeList!.length,
       gridDelegate:
@@ -40,10 +40,15 @@ class RecipeGrid extends StatelessWidget {
               MaterialPageRoute(
                 builder: (context) => InheritedDataProvider(
                   data: _userData,
-                  child: FoodPreparationView(
-                    recipe: _recipe,
-                    userNewRecipe: userRecipe,
-                  ),
+                  child: _userData.role == "admin" && userRecipe!
+                      ? RecipeEvaluationView(
+                          recipe: _recipe,
+                          userNewRecipe: userRecipe,
+                        )
+                      : FoodPreparationView(
+                          recipe: _recipe,
+                          userNewRecipe: userRecipe,
+                        ),
                 ),
               ),
             ),

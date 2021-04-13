@@ -6,6 +6,7 @@ import 'package:lifestylescreening/widgets/colors/color_theme.dart';
 import 'package:lifestylescreening/widgets/forms/custom_textformfield.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:lifestylescreening/widgets/text/h2_text.dart';
+import 'package:lifestylescreening/widgets/text/intro_grey_text.dart';
 
 class Formule {
   const Formule(this.id, this.text);
@@ -461,15 +462,24 @@ class _EditAnswerDialogState extends State<EditAnswerDialog> {
       ),
 
       actions: <Widget>[
-        FlatButton(
-          child: Text('CANCEL'),
-          onPressed: () => Navigator.pop(context),
-        ),
+        TextButton(
+              child: IntroGreyText(
+                text: 'Cancel',
+              ),
+              onPressed: () => Navigator.of(context).pop(),
+            ),
         SizedBox(
           width: 30,
         ),
-        RaisedButton(
-          child: Text('Opslaan'),
+        ElevatedButton(
+          child: Text(
+            'Opslaan',
+            style: TextStyle(
+              fontSize: MediaQuery.of(context).size.height * 0.020,
+            ),
+          ),
+          style:
+              ElevatedButton.styleFrom(primary: Theme.of(context).accentColor),
           onPressed: () => saveAnswerChanges(context),
         )
       ],

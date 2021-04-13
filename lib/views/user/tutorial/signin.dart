@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:lifestylescreening/controllers/auth_controller.dart';
 import 'package:lifestylescreening/healthpoint_icons.dart';
@@ -22,7 +20,6 @@ class _SignInState extends State<SignIn> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
-  final _key = GlobalKey<ScaffoldState>();
   AuthController _authController = AuthController();
 
   bool _isLoading = false;
@@ -56,7 +53,6 @@ class _SignInState extends State<SignIn> {
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
     return Scaffold(
-      key: _key,
       body: SingleChildScrollView(
         child: Form(
           key: _formKey,
@@ -201,9 +197,8 @@ class _SignInState extends State<SignIn> {
         _isLoading = true;
       });
       AppUser? result = await (_authController.signInWithEmailAndPassword(
-              _emailController.text, _passwordController.text)
-          // as FutureOr<AppUser?>
-          );
+          _emailController.text, _passwordController.text));
+      // as FutureOr<AppUser>);
       if (result != null) {
         await _authController.saveUserDetailsOnLogin(
             result, _passwordController.text, rememberMe);
@@ -229,7 +224,7 @@ class _SignInState extends State<SignIn> {
     setState(() {
       _isLoading = false;
 
-      _key.currentState!.showSnackBar(
+      ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           duration: const Duration(seconds: 1),
           backgroundColor: ColorTheme.lightOrange,

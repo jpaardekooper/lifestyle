@@ -1,10 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:lifestylescreening/controllers/recipe_controller.dart';
 import 'package:lifestylescreening/models/recipe_model.dart';
-import 'package:lifestylescreening/widgets/colors/color_theme.dart';
+import 'package:lifestylescreening/widgets/text/h1_text.dart';
+import 'package:lifestylescreening/widgets/text/intro_grey_text.dart';
+import 'package:lifestylescreening/widgets/text/lifestyle_text.dart';
 
 class RemoveRecipe extends StatelessWidget {
-  RemoveRecipe({this.recipe, this.role,});
+  RemoveRecipe({
+    this.recipe,
+    this.role,
+  });
   final RecipeModel? recipe;
   final String? role;
 
@@ -13,25 +18,31 @@ class RemoveRecipe extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: Text("Waarschuwing"),
+      title: H1Text(text: "Waarschuwing"),
       content: Column(
         mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text("weet u zeker of u"),
-          Text(recipe!.title!),
-          Text("wilt verwijderen?")
+          LifestyleText(text: "Weet u zeker of u ${recipe!.title}"),
+          LifestyleText(text: "wilt verwijderen?")
         ],
       ),
       actions: [
-        FlatButton(
-          child: Text("Close"),
-          onPressed: () {
-            Navigator.of(context).pop();
-          },
+        TextButton(
+          child: IntroGreyText(
+            text: 'Cancel',
+          ),
+          onPressed: () => Navigator.of(context).pop(false),
         ),
-        FlatButton(
-          color: ColorTheme.accentOrange,
-          child: Text("verwijderen", style: TextStyle(color: Colors.white)),
+        ElevatedButton(
+          child: Text(
+            'Verwijderen',
+            style: TextStyle(
+              fontSize: MediaQuery.of(context).size.height * 0.020,
+            ),
+          ),
+          style:
+              ElevatedButton.styleFrom(primary: Theme.of(context).accentColor),
           onPressed: () async {
             if (role == "user") {
               await _recipeController.removeUserRecipe(recipe!.id, recipe!.url);

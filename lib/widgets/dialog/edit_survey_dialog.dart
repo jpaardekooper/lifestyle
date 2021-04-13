@@ -7,6 +7,7 @@ import 'package:lifestylescreening/widgets/cards/select_category.dart';
 import 'dart:math' as math;
 
 import 'package:lifestylescreening/widgets/text/h2_text.dart';
+import 'package:lifestylescreening/widgets/text/intro_grey_text.dart';
 
 class EditSurveyView extends StatefulWidget {
   const EditSurveyView({this.surveyInfo, this.newItem});
@@ -203,12 +204,22 @@ class _EditSurveyViewState extends State<EditSurveyView> {
         ),
       ),
       actions: <Widget>[
-        FlatButton(
-          child: Text('CANCEL'),
-          onPressed: () => Navigator.pop(context, null),
+        TextButton(
+          child: IntroGreyText(
+            text: 'Cancel',
+          ),
+          onPressed: () => Navigator.of(context).pop(false),
         ),
-        RaisedButton(
-            child: Text('Opslaan'), onPressed: () => saveSurveyChanges(context))
+        ElevatedButton(
+            child: Text(
+              'Opslaan',
+              style: TextStyle(
+                fontSize: MediaQuery.of(context).size.height * 0.020,
+              ),
+            ),
+            style: ElevatedButton.styleFrom(
+                primary: Theme.of(context).accentColor),
+            onPressed: () => saveSurveyChanges(context))
       ],
     );
   }

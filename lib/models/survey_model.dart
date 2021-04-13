@@ -10,8 +10,7 @@ class SurveyModel {
   final DocumentReference? reference;
 
   SurveyModel.fromSnapshot(DocumentSnapshot snapshot)
-      : assert(snapshot != null),
-        id = snapshot.id,
+      : id = snapshot.id,
         title = snapshot.data()!['title'],
         category = List.from(snapshot.data()!['category'] ?? []),
         reference = snapshot.reference;

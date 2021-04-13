@@ -8,9 +8,12 @@ import 'package:lifestylescreening/models/firebase_user.dart';
 import 'package:lifestylescreening/models/recipe_model.dart';
 import 'package:lifestylescreening/models/tags_model.dart';
 import 'package:lifestylescreening/widgets/colors/color_theme.dart';
+import 'package:lifestylescreening/widgets/dialog/remove_recipe.dialog.dart';
 import 'package:lifestylescreening/widgets/forms/custom_answerfield.dart';
 import 'package:lifestylescreening/widgets/forms/custom_textformfield.dart';
 import 'package:lifestylescreening/widgets/text/body_text.dart';
+import 'package:lifestylescreening/widgets/text/h3_orange_text.dart';
+import 'package:lifestylescreening/widgets/text/intro_grey_text.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:path/path.dart';
 
@@ -135,24 +138,21 @@ class _EditRecipeState extends State<EditRecipe> {
                       title: BodyText(
                         text: "Kies een bron:",
                       ),
-                      content: Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: [
-                          TextButton(
-                              child: Text("Camera"),
-                              onPressed: () {
-                                checkCameraPermission();
-                                Navigator.of(context).pop();
-                              }),
-                          TextButton(
-                            child: Text("Gallerij"),
+                      actions: [
+                        TextButton(
+                            child: H3OrangeText(text: "Camera"),
                             onPressed: () {
-                              checkStoragePermission();
+                              checkCameraPermission();
                               Navigator.of(context).pop();
-                            },
-                          ),
-                        ],
-                      ),
+                            }),
+                        TextButton(
+                          child: H3OrangeText(text: "Galerij"),
+                          onPressed: () {
+                            checkStoragePermission();
+                            Navigator.of(context).pop();
+                          },
+                        ),
+                      ],
                     );
                   },
                 ),
@@ -241,6 +241,7 @@ class _EditRecipeState extends State<EditRecipe> {
 
   Widget showRecipeTags(BuildContext context) {
     getTags();
+    setState(() {});
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -250,43 +251,45 @@ class _EditRecipeState extends State<EditRecipe> {
         SizedBox(
           height: 10,
         ),
-        Container(
-          height: 250,
-          width: MediaQuery.of(context).size.width,
-          child: ListView.separated(
-            separatorBuilder: (context, index) => Divider(
-              height: 0.0,
-              color: Colors.black,
-            ),
-            shrinkWrap: true,
-            itemCount: _tags.length,
-            itemBuilder: (BuildContext context, int index) {
-              return ListTile(
-                selected: _selectedTags!.contains(_tags[index].tag),
-                onTap: () {
-                  if (_selectedTags!.contains(_tags[index].tag!)) {
-                    setState(() {
-                      _selectedTags!
-                          .removeWhere((val) => val == _tags[index].tag!);
-                    });
-                  } else {
-                    setState(() {
-                      _selectedTags!.add(_tags[index].tag!);
-                    });
-                  }
-                },
-                title: Text(_tags[index].tag!),
-                trailing: Icon(
-                    _selectedTags!.contains(_tags[index].tag)
-                        ? Icons.check_box
-                        : Icons.check_box_outline_blank,
-                    color: _selectedTags!.contains(_tags[index].tag)
-                        ? Theme.of(context).primaryColor
-                        : Colors.grey),
-              );
-            },
-          ),
-        ),
+        _tags.isEmpty
+            ? Container()
+            : Container(
+                height: 250,
+                width: MediaQuery.of(context).size.width,
+                child: ListView.separated(
+                  separatorBuilder: (context, index) => Divider(
+                    height: 0.0,
+                    color: Colors.black,
+                  ),
+                  shrinkWrap: true,
+                  itemCount: _tags.length,
+                  itemBuilder: (BuildContext context, int index) {
+                    return ListTile(
+                      selected: _selectedTags!.contains(_tags[index].tag),
+                      onTap: () {
+                        if (_selectedTags!.contains(_tags[index].tag!)) {
+                          setState(() {
+                            _selectedTags!
+                                .removeWhere((val) => val == _tags[index].tag!);
+                          });
+                        } else {
+                          setState(() {
+                            _selectedTags!.add(_tags[index].tag!);
+                          });
+                        }
+                      },
+                      title: Text(_tags[index].tag!),
+                      trailing: Icon(
+                          _selectedTags!.contains(_tags[index].tag)
+                              ? Icons.check_box
+                              : Icons.check_box_outline_blank,
+                          color: _selectedTags!.contains(_tags[index].tag)
+                              ? Theme.of(context).primaryColor
+                              : Colors.grey),
+                    );
+                  },
+                ),
+              ),
       ],
     );
   }
@@ -326,17 +329,33 @@ class _EditRecipeState extends State<EditRecipe> {
               showRecipeDifficulty(context),
               SizedBox(height: 25),
               showRecipeTags(context),
+              ElevatedButton(
+                child: Text('Recept verwijderen'),
+                style: ElevatedButton.styleFrom(primary: Colors.red),
+                onPressed: () {
+                  _removeRecipe(widget.recipe, widget.user!.role, context);
+                },
+              )
             ],
           ),
         ),
       ),
       actions: <Widget>[
         TextButton(
-          child: Text('CANCEL'),
+          child: IntroGreyText(
+            text: 'Cancel',
+          ),
           onPressed: () => Navigator.pop(context, null),
         ),
-        TextButton(
-          child: Text('Opslaan'),
+        ElevatedButton(
+          child: Text(
+            'Opslaan',
+            style: TextStyle(
+              fontSize: MediaQuery.of(context).size.height * 0.020,
+            ),
+          ),
+          style:
+              ElevatedButton.styleFrom(primary: Theme.of(context).accentColor),
           onPressed: () {
             saveRecipeChanges(context);
           },
@@ -372,5 +391,15 @@ class _EditRecipeState extends State<EditRecipe> {
                 .then((value) => Navigator.pop(context)));
       }
     }
+  }
+
+  void _removeRecipe(RecipeModel recipe, String? role, context) {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return RemoveRecipe(recipe: recipe, role: role);
+      },
+    ).then((Navigator.of(context).pop));
   }
 }

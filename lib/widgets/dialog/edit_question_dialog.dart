@@ -6,6 +6,7 @@ import 'package:lifestylescreening/models/question_model.dart';
 import 'package:lifestylescreening/widgets/forms/custom_textformfield.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:lifestylescreening/widgets/text/h1_text.dart';
+import 'package:lifestylescreening/widgets/text/intro_grey_text.dart';
 
 class EditQuestionDialog extends StatefulWidget {
   const EditQuestionDialog({
@@ -187,15 +188,24 @@ class _EditQuestionDialogState extends State<EditQuestionDialog> {
         );
       }),
       actions: <Widget>[
-        FlatButton(
-          child: Text('CANCEL'),
-          onPressed: () => Navigator.pop(context),
-        ),
+        TextButton(
+              child: IntroGreyText(
+                text: 'Cancel',
+              ),
+              onPressed: () => Navigator.of(context).pop(),
+            ),
         SizedBox(
           width: 30,
         ),
-        RaisedButton(
-            child: Text('Opslaan'),
+        ElevatedButton(
+          child: Text(
+            'Opslaan',
+            style: TextStyle(
+              fontSize: MediaQuery.of(context).size.height * 0.020,
+            ),
+          ),
+          style:
+              ElevatedButton.styleFrom(primary: Theme.of(context).accentColor),
             onPressed: () => saveQuestionChanges(context))
       ],
     );

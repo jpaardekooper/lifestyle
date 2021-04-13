@@ -6,9 +6,7 @@ class InheritedDataProvider extends InheritedWidget {
     Key? key,
     required this.data,
     required Widget child,
-  })  : assert(data != null),
-        assert(child != null),
-        super(key: key, child: child);
+  })  : super(key: key, child: child);
 
   final AppUser data;
 

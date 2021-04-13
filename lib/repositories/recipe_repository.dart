@@ -5,6 +5,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:path/path.dart';
 import 'package:lifestylescreening/models/recipe_model.dart';
 import 'package:lifestylescreening/repositories/recipe_repository_interface.dart';
+// import 'package:firebase/firebase.dart' as fb;
 
 class RecipeRepository implements IRecipeRepository {
   @override
@@ -22,23 +23,107 @@ class RecipeRepository implements IRecipeRepository {
   @override
   Future<void> removeRecipe(String? recipeId, String? url) async {
     await FirebaseFirestore.instance
-        .collection("recipes")
+        .collection('recipes')
         .doc(recipeId)
-        .delete()
-        .catchError((e) {
-      //    print(e);
-    }).then((value) => deleteImage(url));
+        .collection('ingredients')
+        .get()
+        .then(
+      (snapshot) {
+        for (DocumentSnapshot ds in snapshot.docs) {
+          ds.reference.delete();
+        }
+        ;
+      },
+    ).whenComplete(() async {
+      await FirebaseFirestore.instance
+          .collection('recipes')
+          .doc(recipeId)
+          .collection('method')
+          .get()
+          .then(
+        (snapshot) {
+          for (DocumentSnapshot ds in snapshot.docs) {
+            ds.reference.delete();
+          }
+          ;
+        },
+      );
+    }).whenComplete(() async {
+      await FirebaseFirestore.instance
+          .collection('recipes')
+          .doc(recipeId)
+          .collection('nutritionalValue')
+          .get()
+          .then(
+        (snapshot) {
+          for (DocumentSnapshot ds in snapshot.docs) {
+            ds.reference.delete();
+          }
+          ;
+        },
+      );
+    }).whenComplete(() async {
+      await FirebaseFirestore.instance
+          .collection("recipes")
+          .doc(recipeId)
+          .delete()
+          .catchError((e) {
+        //    print(e);
+      }).then((value) => deleteImage(url));
+    });
   }
 
   @override
   Future<void> removeUserRecipe(String? recipeId, String? url) async {
     await FirebaseFirestore.instance
-        .collection("createdRecipes")
+        .collection('createdRecipes')
         .doc(recipeId)
-        .delete()
-        .catchError((e) {
-      //    print(e);
-    }).then((value) => deleteImage(url));
+        .collection('ingredients')
+        .get()
+        .then(
+      (snapshot) {
+        for (DocumentSnapshot ds in snapshot.docs) {
+          ds.reference.delete();
+        }
+        ;
+      },
+    ).whenComplete(() async {
+      await FirebaseFirestore.instance
+          .collection('createdRecipes')
+          .doc(recipeId)
+          .collection('method')
+          .get()
+          .then(
+        (snapshot) {
+          for (DocumentSnapshot ds in snapshot.docs) {
+            ds.reference.delete();
+          }
+          ;
+        },
+      );
+    }).whenComplete(() async {
+      await FirebaseFirestore.instance
+          .collection('createdRecipes')
+          .doc(recipeId)
+          .collection('nutritionalValue')
+          .get()
+          .then(
+        (snapshot) {
+          for (DocumentSnapshot ds in snapshot.docs) {
+            ds.reference.delete();
+          }
+          ;
+        },
+      );
+    }).whenComplete(() async {
+      await FirebaseFirestore.instance
+          .collection("createdRecipes")
+          .doc(recipeId)
+          .delete()
+          .catchError((e) {
+        //    print(e);
+      }).then((value) => deleteImage(url));
+    });
   }
 
   @override
@@ -88,7 +173,19 @@ class RecipeRepository implements IRecipeRepository {
   Future<List<RecipeModel>> getRecipeListOnce() async {
     var snapshot = await FirebaseFirestore.instance
         .collection('recipes')
-        // .where('published', isEqualTo: 1)
+        .where('published', isEqualTo: true)
+        .get();
+
+    return snapshot.docs.map((DocumentSnapshot doc) {
+      return RecipeModel.fromSnapshot(doc);
+    }).toList();
+  }
+
+  @override
+  Future<List<RecipeModel>> getSubmittedRecipeListOnce() async {
+    var snapshot = await FirebaseFirestore.instance
+        .collection('createdRecipes')
+        .where('submitted', isEqualTo: true)
         .get();
 
     return snapshot.docs.map((DocumentSnapshot doc) {

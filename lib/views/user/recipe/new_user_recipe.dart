@@ -11,6 +11,7 @@ import 'package:lifestylescreening/widgets/forms/custom_answerfield.dart';
 import 'package:lifestylescreening/widgets/forms/custom_textformfield.dart';
 import 'package:lifestylescreening/widgets/text/body_text.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:lifestylescreening/widgets/text/h3_orange_text.dart';
 import 'package:path/path.dart';
 import 'package:permission_handler/permission_handler.dart';
 
@@ -30,7 +31,6 @@ class _NewUserRecipeViewState extends State<NewUserRecipeView> {
   TextEditingController _recipenameController = TextEditingController();
   TextEditingController _durationController = TextEditingController();
   TextEditingController _difficultyController = TextEditingController();
-  final _key = GlobalKey<ScaffoldState>();
 
   File? _imageFile;
 
@@ -114,12 +114,13 @@ class _NewUserRecipeViewState extends State<NewUserRecipeView> {
                 width: 175,
                 child: FittedBox(
                     fit: BoxFit.contain, child: Image.file(_imageFile!)))
-            : RaisedButton(
+            : ElevatedButton(
                 child: Text(
                   "Kies een foto",
                   style: TextStyle(color: Colors.white),
                 ),
-                color: Theme.of(context).primaryColor,
+                style: ElevatedButton.styleFrom(
+                    primary: Theme.of(context).primaryColor),
                 onPressed: () => showDialog(
                   barrierDismissible: false,
                   context: context,
@@ -128,24 +129,21 @@ class _NewUserRecipeViewState extends State<NewUserRecipeView> {
                       title: BodyText(
                         text: "Kies een bron:",
                       ),
-                      content: Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: [
-                          FlatButton(
-                              child: Text("Camera"),
-                              onPressed: () {
-                                checkCameraPermission();
-                                Navigator.of(context).pop();
-                              }),
-                          FlatButton(
-                            child: Text("Gallerij"),
+                      actions: [
+                        TextButton(
+                            child: H3OrangeText(text: "Camera"),
                             onPressed: () {
-                              checkStoragePermission();
+                              checkCameraPermission();
                               Navigator.of(context).pop();
-                            },
-                          ),
-                        ],
-                      ),
+                            }),
+                        TextButton(
+                          child: H3OrangeText(text: "Galerij"),
+                          onPressed: () {
+                            checkStoragePermission();
+                            Navigator.of(context).pop();
+                          },
+                        ),
+                      ],
                     );
                   },
                 ),
@@ -260,17 +258,17 @@ class _NewUserRecipeViewState extends State<NewUserRecipeView> {
 
   getTags() async {
     await _tagsController.getTagsList().then((value) {
-      if (!mounted) return;
-      setState(() {
-        _tags = value;
-      });
+      if (mounted) {
+        setState(() {
+          _tags = value;
+        });
+      }
     });
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        key: _key,
         appBar: AppBar(title: Text("Nieuw recept toevoegen")),
         body: SingleChildScrollView(
           child: Container(
@@ -321,6 +319,7 @@ class _NewUserRecipeViewState extends State<NewUserRecipeView> {
         "duration": int.parse(_durationController.text),
         "difficulty": _difficultyController.text,
         "published": false,
+        "submitted": false,
         "userId": widget.user.data.id,
         "date": DateTime.now(),
         "role": widget.user.data.role,
@@ -330,14 +329,13 @@ class _NewUserRecipeViewState extends State<NewUserRecipeView> {
       _recipeController.uploadImage(_imageFile, recipe.url).then((value) =>
           _recipeController.updateUserRecipe(recipe.id, data, true).then(
             (value) {
-              _key.currentState!.showSnackBar(
+              ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
                   duration: const Duration(seconds: 1),
                   backgroundColor: ColorTheme.lightOrange,
                   content: Text(
                     "Uw recept is toegevoegd",
-                    style: TextStyle(
-                        color: Theme.of(context).primaryColor, fontSize: 18),
+                    style: TextStyle(color: ColorTheme.darkGrey, fontSize: 18),
                   ),
                 ),
               );

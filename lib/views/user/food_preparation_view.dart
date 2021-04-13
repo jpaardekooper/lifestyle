@@ -1,25 +1,17 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:lifestylescreening/controllers/recipe_controller.dart';
 import 'package:lifestylescreening/healthpoint_icons.dart';
-import 'package:lifestylescreening/models/ingredients_model.dart';
-import 'package:lifestylescreening/models/method_model.dart';
-import 'package:lifestylescreening/models/nutritional_value_model.dart';
 import 'package:lifestylescreening/models/recipe_model.dart';
-import 'package:lifestylescreening/widgets/cards/ingredients_card.dart';
-import 'package:lifestylescreening/widgets/cards/method_card.dart';
-import 'package:lifestylescreening/widgets/cards/nutritional_card.dart';
+import 'package:lifestylescreening/views/user/recipe/recipe_feed_buildup.dart';
 import 'package:lifestylescreening/widgets/colors/color_theme.dart';
-import 'package:lifestylescreening/widgets/dialog/edit_ingredient_dialog.dart';
-import 'package:lifestylescreening/widgets/dialog/edit_method_dialog.dart';
-import 'package:lifestylescreening/widgets/dialog/edit_nutritional_dialog.dart';
-import 'package:lifestylescreening/widgets/dialog/remove_recipe.dialog.dart';
 import 'package:lifestylescreening/widgets/inherited/inherited_widget.dart';
 import 'package:lifestylescreening/widgets/painter/bottom_large_wave_painter.dart';
-import 'package:lifestylescreening/widgets/text/body_text.dart';
+import 'package:lifestylescreening/widgets/text/intro_grey_text.dart';
+import 'package:lifestylescreening/widgets/text/lifestyle_text.dart';
 
 import '../../widgets/text/h1_text.dart';
-import '../../widgets/text/h2_text.dart';
 
 class FoodPreparationView extends StatefulWidget {
   FoodPreparationView({required this.recipe, this.userNewRecipe});
@@ -33,181 +25,137 @@ class FoodPreparationView extends StatefulWidget {
 class _FoodPreparationViewState extends State<FoodPreparationView> {
   RecipeController _recipeController = RecipeController();
   String? imageUrl;
-
-  void onTap() {
-    Navigator.pop(context);
-  }
+  bool? submitted;
+  String? collection;
 
   @override
   void initState() {
-    getImage();
+    submitted = widget.recipe.submittedForReview;
+    collection = widget.userNewRecipe! ? "createdRecipes" : "recipes";
     super.initState();
   }
 
-  void addIngredientsData() {
+  void cancelUpload() {
     showDialog(
-      barrierDismissible: false,
-      context: context,
-      builder: (BuildContext context) {
-        return EditIngredient(
-          recipeId: widget.recipe.id,
-          ingredient: IngredientsModel(),
-          newIngredient: true,
-        );
-      },
-    );
-  }
-
-  void addMethodData() {
-    showDialog(
-      barrierDismissible: false,
-      context: context,
-      builder: (BuildContext context) {
-        return EditMethod(
-          recipeId: widget.recipe.id,
-          method: MethodModel(),
-          newMethod: true,
-        );
-      },
-    );
-  }
-
-  void addNutritionalData() {
-    showDialog(
-      barrierDismissible: false,
-      context: context,
-      builder: (BuildContext context) {
-        return EditNutritional(
-          recipeId: widget.recipe.id,
-          nutritionalValue: NutritionalValueModel(),
-          newNutritional: true,
-        );
-      },
-    );
-  }
-
-  Widget headerOverview() {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.start,
-      children: [
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.end,
+        barrierDismissible: false,
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: H1Text(text: "Review van Recept annuleren"),
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Icon(
-                  Icons.timer,
-                  color: Theme.of(context).primaryColor,
-                ),
-                BodyText(text: widget.recipe.duration.toString() + " minuten"),
+                LifestyleText(text: "Uw recept is opgestuurd voor review!"),
+                SizedBox(height: 10),
+                LifestyleText(
+                    text:
+                        // ignore: lines_longer_than_80_chars
+                        'Als u de review van uw recept wilt annuleren, kan dit gedaan worden door op "Review annuleren" te klikken.')
               ],
             ),
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.end,
-              children: [
-                Icon(
-                  Icons.signal_cellular_alt,
-                  color: Theme.of(context).primaryColor,
-                ),
-                BodyText(
-                  text: widget.recipe.difficulty,
-                ),
-              ],
-            ),
-          ],
-        ),
-        SizedBox(width: 20),
-        Expanded(
-          child: Wrap(
-            spacing: 10,
-            runSpacing: 10,
-            alignment: WrapAlignment.end,
-            direction: Axis.horizontal,
-            children: getTagWidgets(),
-          ),
-        )
-      ],
-    );
-  }
-
-  List<Widget> getTagWidgets() {
-    List<Widget> widgetList = [];
-
-    for (var i = 0; i < widget.recipe.tags!.length; i++) {
-      widgetList.add(
-        Container(
-          margin: const EdgeInsets.only(top: 2.0),
-          padding: const EdgeInsets.all(5.0),
-          decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(5.0),
-              border: Border.all(color: Theme.of(context).primaryColor)),
-          child: Text(
-            widget.recipe.tags![i],
-            style: TextStyle(
-              color: ColorTheme.grey,
-              fontSize: MediaQuery.of(context).size.height * 0.025,
-            ),
-          ),
-        ),
-      );
-    }
-    return widgetList;
-  }
-
-  Widget headerIngredients() {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        H2Text(text: "Ingrediënten"),
-        role == "user" && widget.userNewRecipe == false
-            ? Container()
-            : IconButton(
-                icon: Icon(Icons.add),
-                onPressed: addIngredientsData,
-              )
-      ],
-    );
-  }
-
-  Widget headerMethods() {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        H2Text(text: "Methode"),
-        role == "user" && widget.userNewRecipe == false
-            ? Container()
-            : IconButton(
-                icon: Icon(Icons.add),
-                onPressed: addMethodData,
-              )
-      ],
-    );
-  }
-
-  Widget headerNutritionalValue() {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        H2Text(text: "Voedingswaarde per portie"),
-        role == "user" && widget.userNewRecipe == false
-            ? Container()
-            : IconButton(
-                icon: Icon(Icons.add),
-                onPressed: addNutritionalData,
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.of(context).pop(),
+                child: IntroGreyText(text: "Cancel"),
               ),
-      ],
-    );
+              ElevatedButton(
+                child: Text('Review annuleren'),
+                style: ElevatedButton.styleFrom(
+                    primary: Theme.of(context).accentColor),
+                onPressed: () {
+                  setState(() {
+                    submitted = false;
+                  });
+                  Map<String, dynamic> data = {
+                    'submitted': false,
+                  };
+                  _recipeController
+                      .updateUserRecipe(widget.recipe.id, data, false)
+                      .then(
+                          (value) => ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  duration: const Duration(seconds: 1),
+                                  backgroundColor: ColorTheme.lightOrange,
+                                  content: Text(
+                                    "Review geannuleerd!",
+                                    style: TextStyle(
+                                        color: ColorTheme.darkGrey,
+                                        fontSize: 18),
+                                  ),
+                                ),
+                              ));
+                  Future.delayed(Duration(milliseconds: 1500), () {
+                    Navigator.pop(context);
+                  });
+                },
+              ),
+            ],
+          );
+        });
   }
 
-  void _removeRecipe(RecipeModel recipe, String? role) {
+  void confirmUpload() {
     showDialog(
-      context: context,
-      barrierDismissible: false,
-      builder: (BuildContext context) {
-        return RemoveRecipe(recipe: recipe, role: role);
-      },
-    ).then((Navigator.of(context).pop));
+        barrierDismissible: false,
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: H1Text(text: "Recept opsturen voor review"),
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                LifestyleText(
+                    text:
+                        // ignore: lines_longer_than_80_chars
+                        "Als u er van overtuigd bent dat uw recept een gezond alternatief is, stuur deze dan op voor review!"),
+                SizedBox(height: 10),
+                LifestyleText(
+                    text:
+                        // ignore: lines_longer_than_80_chars
+                        "Als uw recept wordt goedgekeurd, wordt het recept openbaar gezet zodat deze voor iedereen zichtbaar is.")
+              ],
+            ),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.of(context).pop(),
+                child: IntroGreyText(text: "Cancel"),
+              ),
+              ElevatedButton(
+                child: Text('Indienen'),
+                style: ElevatedButton.styleFrom(
+                    primary: Theme.of(context).accentColor),
+                onPressed: () {
+                  setState(() {
+                    submitted = true;
+                  });
+                  Map<String, dynamic> data = {
+                    'submitted': true,
+                  };
+                  _recipeController
+                      .updateUserRecipe(widget.recipe.id, data, false)
+                      .then(
+                          (value) => ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  duration: const Duration(seconds: 1),
+                                  backgroundColor: ColorTheme.lightOrange,
+                                  content: Text(
+                                    "Recept opgestuurd voor review!",
+                                    style: TextStyle(
+                                        color: ColorTheme.darkGrey,
+                                        fontSize: 18),
+                                  ),
+                                ),
+                              ));
+                  Future.delayed(Duration(milliseconds: 1500), () {
+                    Navigator.pop(context);
+                  });
+                },
+              ),
+            ],
+          );
+        });
   }
 
   String? role;
@@ -219,145 +167,98 @@ class _FoodPreparationViewState extends State<FoodPreparationView> {
     Size size = MediaQuery.of(context).size;
 
     return Scaffold(
-      body: DefaultTabController(
-        length: 1,
-        child: NestedScrollView(
-          headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
-            return <Widget>[
-              SliverAppBar(
-                leading: IconButton(
-                  padding: EdgeInsets.zero,
-                  icon: Icon(HealthpointIcons.arrowLeftIcon),
-                  color: Theme.of(context).primaryColor,
-                  onPressed: () {
-                    FocusScope.of(context).unfocus();
-                    Navigator.of(context).pop();
-                  },
-                ),
-                actions: [
-                  widget.userNewRecipe == false && role == "user"
-                      ? Container()
-                      : RawMaterialButton(
-                          child:
-                              Icon(Icons.delete, color: Colors.red, size: 35),
-                          onPressed: () async {
-                            _removeRecipe(widget.recipe, role);
-                          },
-                          constraints: const BoxConstraints(
-                              minWidth: 1.0, minHeight: 1.0),
-                          elevation: 2.0,
-                          fillColor: ColorTheme.extraLightGreen,
-                          shape: CircleBorder(),
-                        ),
-                ],
-                expandedHeight: 250.0,
-                floating: false,
-                pinned: true,
-                backgroundColor: ColorTheme.extraLightGreen,
-                flexibleSpace: FlexibleSpaceBar(
-                  centerTitle: true,
-                  title: Container(
-                    padding: EdgeInsets.symmetric(
-                      horizontal: 8,
-                      vertical: 2,
-                    ),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(8.0),
-                      color: ColorTheme.extraLightGreen,
-                    ),
-                    child: H1Text(text: widget.recipe.title),
-                  ),
-                  background: imageUrl == null
-                      ? CircularProgressIndicator()
-                      : CachedNetworkImage(
-                          placeholder: (context, url) => Center(
-                            child: CircularProgressIndicator(),
+      floatingActionButton: widget.userNewRecipe == true && role == "user"
+          ? FloatingActionButton(
+              backgroundColor: submitted!
+                  ? Theme.of(context).accentColor
+                  : Theme.of(context).primaryColor,
+              onPressed: () => submitted! ? cancelUpload() : confirmUpload(),
+              child: Icon(
+                Icons.upload_rounded,
+                color: Colors.white,
+              ),
+            )
+          : Container(),
+      body: FutureBuilder<String>(
+          future: _recipeController.getImage(widget.recipe.url),
+          builder: (context, snapshot) {
+            if (snapshot.data != null) {
+              imageUrl = snapshot.data.toString();
+            }
+            return DefaultTabController(
+              length: 1,
+              child: NestedScrollView(
+                headerSliverBuilder:
+                    (BuildContext context, bool innerBoxIsScrolled) {
+                  return <Widget>[
+                    SliverAppBar(
+                      leading: IconButton(
+                        padding: EdgeInsets.zero,
+                        icon: Icon(HealthpointIcons.arrowLeftIcon),
+                        color: Theme.of(context).primaryColor,
+                        onPressed: () {
+                          FocusScope.of(context).unfocus();
+                          ScaffoldMessenger.of(context).removeCurrentSnackBar();
+                          Navigator.of(context).pop();
+                        },
+                      ),
+                      expandedHeight: kIsWeb ? 500 : 250.0,
+                      floating: false,
+                      pinned: true,
+                      backgroundColor: ColorTheme.extraLightGreen,
+                      flexibleSpace: FlexibleSpaceBar(
+                        centerTitle: true,
+                        title: Container(
+                          padding: EdgeInsets.symmetric(
+                            horizontal: 8,
+                            vertical: 2,
                           ),
-                          imageUrl: imageUrl!,
-                          fit: BoxFit.cover,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(8.0),
+                            color: ColorTheme.extraLightGreen,
+                          ),
+                          child: H1Text(text: widget.recipe.title),
                         ),
-                ),
-              ),
-            ];
-          },
-          body: Stack(
-            children: [
-              Positioned.fill(
-                child: Align(
-                  alignment: Alignment.bottomCenter,
-                  child: CustomPaint(
-                    size: Size(size.width, size.height),
-                    painter: BottomLargeWavePainter(
-                      color: ColorTheme.extraLightGreen,
+                        background: snapshot.data == null
+                            ? Center(child: CircularProgressIndicator())
+                            : CachedNetworkImage(
+                                placeholder: (context, url) => Center(
+                                  child: CircularProgressIndicator(),
+                                ),
+                                imageUrl: imageUrl!,
+                                fit: BoxFit.cover,
+                              ),
+                      ),
                     ),
-                  ),
+                  ];
+                },
+                body: Stack(
+                  children: [
+                    Positioned.fill(
+                      child: Align(
+                        alignment: Alignment.bottomCenter,
+                        child: CustomPaint(
+                          size: Size(size.width, size.height),
+                          painter: BottomLargeWavePainter(
+                            color: ColorTheme.extraLightGreen,
+                          ),
+                        ),
+                      ),
+                    ),
+                    SingleChildScrollView(
+                      child: RecipeBuildUp(
+                        recipe: widget.recipe,
+                        user: _userData.data,
+                        userNewRecipe: widget.userNewRecipe,
+                        collection: collection,
+                        imageUrl: imageUrl,
+                      ),
+                    ),
+                  ],
                 ),
               ),
-              SingleChildScrollView(
-                child: Container(
-                  padding: EdgeInsets.fromLTRB(20, 40, 20, 20),
-                  child: Column(
-                    mainAxisSize: MainAxisSize.max,
-                    children: [
-                      headerOverview(),
-                      SizedBox(
-                        height: 50,
-                        child: Divider(
-                          thickness: 2.0,
-                          color: Colors.black,
-                        ),
-                      ),
-                      headerIngredients(),
-                      InheritedDataProvider(
-                        data: _userData.data,
-                        child: IngredientsStream(
-                          recipeId: widget.recipe.id,
-                          userNewRecipe: widget.userNewRecipe,
-                        ),
-                      ),
-                      SizedBox(
-                        height: 50,
-                        child: Divider(
-                          thickness: 2.0,
-                          color: Colors.black,
-                        ),
-                      ),
-                      headerMethods(),
-                      InheritedDataProvider(
-                        data: _userData.data,
-                        child: MethodStream(
-                          recipeId: widget.recipe.id,
-                          userNewRecipe: widget.userNewRecipe,
-                        ),
-                      ),
-                      SizedBox(
-                        height: 50,
-                        child: Divider(
-                          thickness: 2.0,
-                          color: Colors.black,
-                        ),
-                      ),
-                      headerNutritionalValue(),
-                      InheritedDataProvider(
-                        data: _userData.data,
-                        child: NutrionStream(
-                          recipeId: widget.recipe.id,
-                          userNewRecipe: widget.userNewRecipe,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
+            );
+          }),
     );
-  }
-
-  getImage() async {
-    imageUrl = (await _recipeController.getImage(widget.recipe.url)).toString();
-    setState(() {});
   }
 }
