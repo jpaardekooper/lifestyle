@@ -24,13 +24,11 @@ class RecipeController {
     return _recipeRepository.getUserRecipeList(snapshot);
   }
 
-  Future<void> updateUserRecipe(
-      String? recipeId, Map data, bool newItem) {
+  Future<void> updateUserRecipe(String? recipeId, Map data, bool newItem) {
     return _recipeRepository.updateUserRecipe(recipeId, data, newItem);
   }
 
-  Future<void> updateRecipe(
-      String? recipeId, Map data, bool newItem) {
+  Future<void> updateRecipe(String? recipeId, Map data, bool newItem) {
     return _recipeRepository.updateRecipe(recipeId, data, newItem);
   }
 
@@ -44,6 +42,10 @@ class RecipeController {
 
   Future<List<RecipeModel>> getRecipeListOnce() {
     return _recipeRepository.getRecipeListOnce();
+  }
+
+  Future<List<RecipeModel>> getSubmittedRecipeListOnce() {
+    return _recipeRepository.getSubmittedRecipeListOnce();
   }
 
   Future<List<RecipeModel>> getUserFavoriteRecipe(String? userId) {

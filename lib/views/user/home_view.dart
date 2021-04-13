@@ -81,7 +81,7 @@ class _HomeState extends State<Home> {
                   BottomNavigationBarItem(
                     icon: BottomNavigationLogo(
                       bottomAppIcon: HealthpointIcons.messageIcon,
-                      bottomAppName: 'Stel een vraag',
+                      bottomAppName: 'Vragen',
                       visible: counter.value == 2,
                     ),
                     label: 'stel een vraag',

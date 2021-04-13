@@ -311,7 +311,8 @@ class _ScreeningViewState extends State<ScreeningView> {
     return FutureBuilder<List<SurveyResultModel>>(
         //fetching data from the corresponding questionId
         future: _questionnaireController.checkSurveyResult(
-            widget.surveyTitle, widget.user.email) as Future<List<SurveyResultModel>>?,
+                widget.surveyTitle, widget.user.email)
+            as Future<List<SurveyResultModel>>?,
         builder: (context, snapshot) {
           _surveyResult = snapshot.data;
           //while loading

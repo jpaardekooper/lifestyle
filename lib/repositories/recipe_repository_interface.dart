@@ -6,6 +6,8 @@ import 'package:lifestylescreening/models/recipe_model.dart';
 abstract class IRecipeRepository {
   Future<List<RecipeModel>> getRecipeListOnce();
 
+  Future<List<RecipeModel>> getSubmittedRecipeListOnce();
+
   Stream<QuerySnapshot> streamAllRecipes();
 
   Stream<QuerySnapshot> streamUserRecipes(String? userId);

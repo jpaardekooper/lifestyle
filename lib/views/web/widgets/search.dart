@@ -99,7 +99,7 @@ class Search extends StatelessWidget {
                                   : Row(
                                       children: [
                                         Text(
-                                          "Aboneren",
+                                          "Abonneren",
                                           style: TextStyle(
                                             color: Colors.white,
                                             fontSize: 16,

@@ -20,8 +20,7 @@ class SurveyAnswerModel {
   final DocumentReference? reference;
 
   SurveyAnswerModel.fromSnapshot(DocumentSnapshot snapshot)
-      : assert(snapshot != null),
-        id = snapshot.id,
+      : id = snapshot.id,
         answer = List.from(snapshot.data()!['answer']),
         question = List.from(snapshot.data()!['question']),
         date = snapshot.data()!['date'],

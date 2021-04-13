@@ -5,6 +5,8 @@ import 'package:lifestylescreening/widgets/dialog/remove_category.dart';
 import 'package:lifestylescreening/widgets/forms/custom_textformfield.dart';
 import 'dart:math' as math;
 
+import 'package:lifestylescreening/widgets/text/intro_grey_text.dart';
+
 class EditCategoryDialog extends StatefulWidget {
   EditCategoryDialog({this.categoryModel, this.newItem});
   final CategoryModel? categoryModel;
@@ -84,7 +86,7 @@ class _EditCategoryDialogState extends State<EditCategoryDialog> {
                 widget.newItem!
                     ? Container()
                     : Center(
-                        child: RaisedButton(
+                        child: ElevatedButton(
                             child: Text('Verwijderen'),
                             onPressed: () => _removeCategory()),
                       )
@@ -94,12 +96,21 @@ class _EditCategoryDialogState extends State<EditCategoryDialog> {
         ),
       ),
       actions: <Widget>[
-        FlatButton(
-          child: Text('CANCEL'),
-          onPressed: () => Navigator.pop(context),
+        TextButton(
+          child: IntroGreyText(
+            text: 'Cancel',
+          ),
+          onPressed: () => Navigator.of(context).pop(),
         ),
-        RaisedButton(
-            child: Text('Opslaan'),
+        ElevatedButton(
+            child: Text(
+              'Opslaan',
+              style: TextStyle(
+                fontSize: MediaQuery.of(context).size.height * 0.020,
+              ),
+            ),
+            style: ElevatedButton.styleFrom(
+                primary: Theme.of(context).accentColor),
             onPressed: () => saveCategoryChanges(context))
       ],
     );

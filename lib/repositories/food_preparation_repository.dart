@@ -31,18 +31,19 @@ class FoodPreparationRepository extends IFoodPreparationRepository {
   }
 
   @override
-  Stream<QuerySnapshot> streamIngredients(String? recipeId) {
+  Stream<QuerySnapshot> streamIngredients(
+      String? recipeId, String? collection) {
     return FirebaseFirestore.instance
-        .collection("recipes")
+        .collection(collection!)
         .doc(recipeId)
         .collection("ingredients")
         .snapshots();
   }
 
   @override
-  Stream<QuerySnapshot> streamMethod(String? recipeId) {
+  Stream<QuerySnapshot> streamMethod(String? recipeId, String? collection) {
     return FirebaseFirestore.instance
-        .collection("recipes")
+        .collection(collection!)
         .doc(recipeId)
         .collection("method")
         .orderBy('step', descending: false)
@@ -50,20 +51,21 @@ class FoodPreparationRepository extends IFoodPreparationRepository {
   }
 
   @override
-  Stream<QuerySnapshot> streamNutritionalValue(String? recipeId) {
+  Stream<QuerySnapshot> streamNutritionalValue(
+      String? recipeId, String? collection) {
     return FirebaseFirestore.instance
-        .collection("recipes")
+        .collection(collection!)
         .doc(recipeId)
         .collection("nutritionalValue")
         .snapshots();
   }
 
   @override
-  Future<void> updateIngredient(String? recipeId, String? ingredientId, Map data,
-      bool? newIngriendient) async {
+  Future<void> updateIngredient(String? recipeId, String? ingredientId,
+      Map data, bool? newIngriendient, String? collection) async {
     if (newIngriendient!) {
       await FirebaseFirestore.instance
-          .collection("recipes")
+          .collection(collection!)
           .doc(recipeId)
           .collection('ingredients')
           .doc()
@@ -71,7 +73,7 @@ class FoodPreparationRepository extends IFoodPreparationRepository {
           .catchError((e) {});
     } else {
       await FirebaseFirestore.instance
-          .collection("recipes")
+          .collection(collection!)
           .doc(recipeId)
           .collection('ingredients')
           .doc(ingredientId)
@@ -81,11 +83,11 @@ class FoodPreparationRepository extends IFoodPreparationRepository {
   }
 
   @override
-  Future<void> updateMethod(
-      String? recipeId, String? methodId, Map data, bool? newMethod) async {
+  Future<void> updateMethod(String? recipeId, String? methodId, Map data,
+      bool? newMethod, String? collection) async {
     if (newMethod!) {
       await FirebaseFirestore.instance
-          .collection("recipes")
+          .collection(collection!)
           .doc(recipeId)
           .collection('method')
           .doc()
@@ -93,7 +95,7 @@ class FoodPreparationRepository extends IFoodPreparationRepository {
           .catchError((e) {});
     } else {
       await FirebaseFirestore.instance
-          .collection("recipes")
+          .collection(collection!)
           .doc(recipeId)
           .collection('method')
           .doc(methodId)
@@ -104,10 +106,10 @@ class FoodPreparationRepository extends IFoodPreparationRepository {
 
   @override
   Future<void> updateNutritionalValue(String? recipeId, String? nutritionalId,
-      Map data, bool? newNutritional) async {
+      Map data, bool? newNutritional, String? collection) async {
     if (newNutritional!) {
       await FirebaseFirestore.instance
-          .collection("recipes")
+          .collection(collection!)
           .doc(recipeId)
           .collection('nutritionalValue')
           .doc()
@@ -115,7 +117,7 @@ class FoodPreparationRepository extends IFoodPreparationRepository {
           .catchError((e) {});
     } else {
       await FirebaseFirestore.instance
-          .collection("recipes")
+          .collection(collection!)
           .doc(recipeId)
           .collection('nutritionalValue')
           .doc(nutritionalId)
@@ -125,9 +127,10 @@ class FoodPreparationRepository extends IFoodPreparationRepository {
   }
 
   @override
-  Future<void> deleteIngredient(String? recipeId, String? ingredientId) async {
+  Future<void> deleteIngredient(
+      String? recipeId, String? ingredientId, String? collection) async {
     await FirebaseFirestore.instance
-        .collection("recipes")
+        .collection(collection!)
         .doc(recipeId)
         .collection('ingredients')
         .doc(ingredientId)
@@ -136,9 +139,10 @@ class FoodPreparationRepository extends IFoodPreparationRepository {
   }
 
   @override
-  Future<void> deleteMethod(String? recipeId, String? methodId) async {
+  Future<void> deleteMethod(
+      String? recipeId, String? methodId, String? collection) async {
     await FirebaseFirestore.instance
-        .collection("recipes")
+        .collection(collection!)
         .doc(recipeId)
         .collection('method')
         .doc(methodId)
@@ -147,14 +151,79 @@ class FoodPreparationRepository extends IFoodPreparationRepository {
   }
 
   @override
-  Future<void> deleteNutritrionalValue(
-      String? recipeId, String? nutritionalId) async {
+  Future<void> deleteNutritionalValue(
+      String? recipeId, String? nutritionalId, String? collection) async {
     await FirebaseFirestore.instance
-        .collection("recipes")
+        .collection(collection!)
         .doc(recipeId)
         .collection('nutritionalValue')
         .doc(nutritionalId)
         .delete()
         .catchError((e) {});
+  }
+
+  @override
+  Future<void> transferRecipe(String? recipeId) async {
+    var snapshotIngredients = await FirebaseFirestore.instance
+        .collection('createdRecipes')
+        .doc(recipeId)
+        .collection('ingredients')
+        .get();
+
+    var snapshotMethods = await FirebaseFirestore.instance
+        .collection('createdRecipes')
+        .doc(recipeId)
+        .collection('method')
+        .get();
+
+    var snapshotNutritrional = await FirebaseFirestore.instance
+        .collection('createdRecipes')
+        .doc(recipeId)
+        .collection('nutritionalValue')
+        .get();
+
+    List<IngredientsModel> ingredientsTransfer =
+        snapshotIngredients.docs.map((DocumentSnapshot doc) {
+      return IngredientsModel.fromSnapshot(doc);
+    }).toList();
+
+    List<MethodModel> methodsTransfer =
+        snapshotMethods.docs.map((DocumentSnapshot doc) {
+      return MethodModel.fromSnapshot(doc);
+    }).toList();
+
+    List<NutritionalValueModel> nutritionalTransfer =
+        snapshotNutritrional.docs.map((DocumentSnapshot doc) {
+      return NutritionalValueModel.fromSnapshot(doc);
+    }).toList();
+
+    for (var i = 0; i < ingredientsTransfer.length; i++) {
+      Map<String, dynamic> ingredientsData = {
+        "amount": ingredientsTransfer[i].amount,
+        "product": ingredientsTransfer[i].product,
+        "unit": ingredientsTransfer[i].unit,
+      };
+      await updateIngredient(recipeId, ingredientsTransfer[i].id,
+          ingredientsData, true, 'recipes');
+    }
+
+    for (var i = 0; i < methodsTransfer.length; i++) {
+      Map<String, dynamic> methodData = {
+        "instruction": methodsTransfer[i].instruction,
+        "step": methodsTransfer[i].step,
+      };
+      await updateMethod(
+          recipeId, methodsTransfer[i].id, methodData, true, 'recipes');
+    }
+
+    for (var i = 0; i < nutritionalTransfer.length; i++) {
+      Map<String, dynamic> nutritionData = {
+        "amount": nutritionalTransfer[i].amount,
+        "name": nutritionalTransfer[i].name,
+        "unit": nutritionalTransfer[i].unit,
+      };
+      await updateNutritionalValue(
+          recipeId, nutritionalTransfer[i].id, nutritionData, true, 'recipes');
+    }
   }
 }

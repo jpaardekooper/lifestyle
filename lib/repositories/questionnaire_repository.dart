@@ -353,6 +353,7 @@ class QuestionnaireRepository implements IQuestionnaireRepository {
           .get();
     });
 
+    // ignore: unnecessary_null_comparison
     if (snapshot == null) {
       return result;
     } else {

@@ -12,7 +12,8 @@ import 'package:lifestylescreening/widgets/text/h1_text.dart';
 import 'package:lifestylescreening/widgets/transitions/route_transition.dart';
 
 class SelectGoalsView extends StatefulWidget {
-  SelectGoalsView({Key? key, this.username, this.bmi, this.selectedInterestList})
+  SelectGoalsView(
+      {Key? key, this.username, this.bmi, this.selectedInterestList})
       : super(key: key);
   final String? username;
   final BMI? bmi;

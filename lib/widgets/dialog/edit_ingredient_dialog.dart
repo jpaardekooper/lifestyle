@@ -2,13 +2,18 @@ import 'package:flutter/material.dart';
 import 'package:lifestylescreening/controllers/food_preparation_controller.dart';
 import 'package:lifestylescreening/models/ingredients_model.dart';
 import 'package:lifestylescreening/widgets/forms/custom_textformfield.dart';
+import 'package:lifestylescreening/widgets/text/intro_grey_text.dart';
 
 class EditIngredient extends StatefulWidget {
   EditIngredient(
-      {required this.recipeId, required this.ingredient, this.newIngredient});
+      {required this.recipeId,
+      required this.ingredient,
+      this.newIngredient,
+      this.collection});
   final String? recipeId;
   final IngredientsModel ingredient;
   final bool? newIngredient;
+  final String? collection;
 
   @override
   _EditIngredientState createState() => _EditIngredientState();
@@ -60,7 +65,7 @@ class _EditIngredientState extends State<EditIngredient> {
               SizedBox(
                 height: 25,
               ),
-              Text("type unit (gram etc..)"),
+              Text("Type unit (gram etc..)"),
               CustomTextFormField(
                 keyboardType: TextInputType.name,
                 textcontroller: _unitController,
@@ -71,11 +76,11 @@ class _EditIngredientState extends State<EditIngredient> {
               SizedBox(
                 height: 25,
               ),
-              Text("naam van het product:"),
+              Text("Naam van het product:"),
               CustomTextFormField(
                 keyboardType: TextInputType.name,
                 textcontroller: _productController,
-                errorMessage: "Geen geldige product naamt",
+                errorMessage: "Geen geldige product naam",
                 validator: 1,
                 secureText: false,
               ),
@@ -84,12 +89,21 @@ class _EditIngredientState extends State<EditIngredient> {
         ),
       ),
       actions: <Widget>[
-        FlatButton(
-          child: Text('Annuleren'),
-          onPressed: () => Navigator.pop(context, null),
-        ),
-        RaisedButton(
-          child: Text('Opslaan'),
+       TextButton(
+              child: IntroGreyText(
+                text: 'Cancel',
+              ),
+              onPressed: () => Navigator.of(context).pop(),
+            ),
+        ElevatedButton(
+          child: Text(
+            'Opslaan',
+            style: TextStyle(
+              fontSize: MediaQuery.of(context).size.height * 0.020,
+            ),
+          ),
+          style:
+              ElevatedButton.styleFrom(primary: Theme.of(context).accentColor),
           onPressed: () => saveIngredientChanges(context),
         )
       ],
@@ -105,8 +119,8 @@ class _EditIngredientState extends State<EditIngredient> {
       };
 
       _foodPreparationController
-          .updateIngredient(
-              widget.recipeId, widget.ingredient.id, data, widget.newIngredient)
+          .updateIngredient(widget.recipeId, widget.ingredient.id, data,
+              widget.newIngredient, widget.collection)
           .then((value) => Navigator.pop(context));
     }
   }

@@ -12,8 +12,7 @@ class UserMessageModel {
   final DocumentReference? reference;
 
   UserMessageModel.fromSnapshot(DocumentSnapshot snapshot)
-      : assert(snapshot != null),
-        id = snapshot.id,
+      : id = snapshot.id,
         expert = snapshot.data()!['expert'] ?? "",
         open = snapshot.data()!['open'] ?? false,
         ref = snapshot.data()!['ref'] ?? "",

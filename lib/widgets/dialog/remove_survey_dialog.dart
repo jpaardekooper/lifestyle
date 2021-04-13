@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:lifestylescreening/controllers/survey_controller.dart';
 import 'package:lifestylescreening/models/survey_model.dart';
+import 'package:lifestylescreening/widgets/text/intro_grey_text.dart';
 
 class RemoveSurvey extends StatelessWidget {
   RemoveSurvey({this.survey});
@@ -19,7 +20,8 @@ class RemoveSurvey extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text("id: " + survey!.id!, style: TextStyle(color: Colors.white)),
-          Text("Titel: " + survey!.title!, style: TextStyle(color: Colors.white)),
+          Text("Titel: " + survey!.title!,
+              style: TextStyle(color: Colors.white)),
           SizedBox(
             height: 10,
           ),
@@ -28,12 +30,21 @@ class RemoveSurvey extends StatelessWidget {
         ],
       ),
       actions: <Widget>[
-        FlatButton(
-          child: Text('CANCEL'),
-          onPressed: () => Navigator.pop(context, null),
+        TextButton(
+          child: IntroGreyText(
+            text: 'Cancel',
+          ),
+          onPressed: () => Navigator.of(context).pop(false),
         ),
-        RaisedButton(
-          child: Text('Opslaan'),
+        ElevatedButton(
+          child: Text(
+            'Verwijderen',
+            style: TextStyle(
+              fontSize: MediaQuery.of(context).size.height * 0.020,
+            ),
+          ),
+          style:
+              ElevatedButton.styleFrom(primary: Theme.of(context).accentColor),
           onPressed: () => _surveyController
               .removeSurvey(survey!.id)
               .then((value) => Navigator.of(context).pop()),

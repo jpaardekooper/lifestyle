@@ -16,10 +16,12 @@ class ConfirmOrangeButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return RaisedButton(
+    return ElevatedButton(
       onPressed: onTap,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
-      padding: const EdgeInsets.all(0.0),
+      style: ElevatedButton.styleFrom(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
+        padding: const EdgeInsets.all(0.0),
+      ),
       child: Ink(
         decoration: BoxDecoration(
           gradient: LinearGradient(

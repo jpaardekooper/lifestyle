@@ -4,6 +4,7 @@ import 'package:lifestylescreening/models/category_model.dart';
 import 'package:lifestylescreening/widgets/colors/color_theme.dart';
 
 import 'package:lifestylescreening/widgets/text/h2_text.dart';
+import 'package:lifestylescreening/widgets/text/intro_grey_text.dart';
 
 class RemoveCategory extends StatelessWidget {
   RemoveCategory({this.category});
@@ -37,12 +38,21 @@ class RemoveCategory extends StatelessWidget {
         ],
       ),
       actions: <Widget>[
-        FlatButton(
-          child: Text('CANCEL'),
-          onPressed: () => Navigator.pop(context, false),
+        TextButton(
+          child: IntroGreyText(
+            text: 'Cancel',
+          ),
+          onPressed: () => Navigator.of(context).pop(false),
         ),
-        RaisedButton(
-          child: Text('Opslaan'),
+        ElevatedButton(
+          child: Text(
+            'Verwijderen',
+            style: TextStyle(
+              fontSize: MediaQuery.of(context).size.height * 0.020,
+            ),
+          ),
+          style:
+              ElevatedButton.styleFrom(primary: Theme.of(context).accentColor),
           onPressed: () => _surveyController
               .removeCategory(category!.id)
               .then((value) => Navigator.pop(context)),

@@ -1,24 +1,29 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:lifestylescreening/controllers/food_preparation_controller.dart';
 import 'package:lifestylescreening/models/ingredients_model.dart';
+import 'package:lifestylescreening/widgets/colors/color_theme.dart';
 import 'package:lifestylescreening/widgets/dialog/edit_ingredient_dialog.dart';
 import 'package:lifestylescreening/widgets/inherited/inherited_widget.dart';
+import 'package:lifestylescreening/widgets/text/intro_grey_text.dart';
 
 import '../text/body_text.dart';
 
 // ignore: must_be_immutable
 class IngredientsStream extends StatelessWidget {
-  IngredientsStream({required this.recipeId, this.userNewRecipe});
+  IngredientsStream(
+      {required this.recipeId, this.userNewRecipe, this.collection});
 
   final String? recipeId;
   final bool? userNewRecipe;
+  final String? collection;
 
   final FoodPreparationController _foodPreparationController =
       FoodPreparationController();
 
-  late List<IngredientsModel> _ingredientsList;
+  List<IngredientsModel> _ingredientsList = [];
   String? role;
 
   @override
@@ -26,48 +31,31 @@ class IngredientsStream extends StatelessWidget {
     final _userData = InheritedDataProvider.of(context)!;
     role = _userData.data.role;
     return StreamBuilder<QuerySnapshot>(
-      stream: _foodPreparationController.streamIngredients(recipeId),
+      stream:
+          _foodPreparationController.streamIngredients(recipeId, collection),
       builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
         if (!snapshot.hasData) {
-          return Text("geen ingredienten gevonden");
+          return IntroGreyText(text: "Geen ingredienten gevonden");
         } else {
           _ingredientsList =
               _foodPreparationController.fetchIngredients(snapshot);
-
-          return ListView.builder(
-            shrinkWrap: true,
-            physics: NeverScrollableScrollPhysics(),
-            itemCount: _ingredientsList.length,
-            itemBuilder: (BuildContext ctxt, int index) {
-              IngredientsModel _ingredient = _ingredientsList[index];
-              return IngredientsCard(
-                recipeId: recipeId,
-                ingredient: _ingredient,
-                role: role,
-                userNewRecipe: userNewRecipe,
-              );
-            },
-          );
+          if (_ingredientsList.isNotEmpty) {
+            return Table(
+              defaultColumnWidth:
+                  kIsWeb ? const FlexColumnWidth(1.0) : IntrinsicColumnWidth(),
+              border: TableBorder.all(color: ColorTheme.orange, width: 3.0),
+              defaultVerticalAlignment: TableCellVerticalAlignment.middle,
+              children: fillTable(_ingredientsList, context),
+            );
+          } else {
+            return IntroGreyText(text: "Nog geen toegevoegde ingrediënten");
+          }
         }
       },
     );
   }
-}
 
-class IngredientsCard extends StatelessWidget {
-  IngredientsCard(
-      {required this.recipeId,
-      required this.ingredient,
-      required this.role,
-      this.userNewRecipe});
-  final String? recipeId;
-  final IngredientsModel ingredient;
-  final String? role;
-  final bool? userNewRecipe;
-  final FoodPreparationController _foodPreparationController =
-      FoodPreparationController();
-
-  void onTapEdit(BuildContext context) {
+  void onTapEdit(IngredientsModel ingredient, BuildContext context) {
     showDialog(
       barrierDismissible: false,
       context: context,
@@ -76,53 +64,71 @@ class IngredientsCard extends StatelessWidget {
           recipeId: recipeId,
           ingredient: ingredient,
           newIngredient: false,
+          collection: collection,
         );
       },
     );
   }
 
-  void onTapDelete() {
-    _foodPreparationController.removeIngredient(recipeId, ingredient.id);
+  void onTapDelete(IngredientsModel ingredient) {
+    _foodPreparationController.removeIngredient(
+        recipeId, ingredient.id, collection);
   }
 
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(top: 8, bottom: 8),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Row(
-            children: [
-              BodyText(text: "• "),
-              BodyText(text: ingredient.amount.toString()),
-              BodyText(text: " "),
-              BodyText(text: ingredient.unit),
-              BodyText(text: " "),
-              BodyText(text: ingredient.product),
-            ],
+  List<TableRow> fillTable(List<IngredientsModel> ingredient, context) {
+    List<TableRow>? tableRows = [];
+    List<TableCell>? tableCells;
+
+    for (var i = 0; i < ingredient.length; i++) {
+      tableCells = [];
+      tableCells.add(
+        TableCell(
+            child: Container(
+                alignment: Alignment.centerRight,
+                padding:
+                    EdgeInsets.only(right: 10, top: 5, bottom: 5, left: 10),
+                child: BodyText(
+                    text: ingredient[i].amount! + " " + ingredient[i].unit!))),
+      );
+      tableCells.add(
+        TableCell(
+            child: Container(
+                padding:
+                    EdgeInsets.only(left: 10, top: 5, bottom: 5, right: 10),
+                child: BodyText(text: ingredient[i].product))),
+      );
+      if ((role == 'user' && userNewRecipe == false) ||
+          (role == 'admin' && userNewRecipe == true)) {
+      } else {
+        tableCells.add(
+          TableCell(
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                IconButton(
+                  icon: Icon(Icons.edit),
+                  onPressed: () {
+                    onTapEdit(ingredient[i], context);
+                  },
+                ),
+                IconButton(
+                  icon: Icon(Icons.remove_circle),
+                  color: Colors.red,
+                  onPressed: () {
+                    onTapDelete(ingredient[i]);
+                  },
+                ),
+              ],
+            ),
           ),
-          role == 'user' && userNewRecipe == false
-              ? Container()
-              : Row(
-                  children: [
-                    IconButton(
-                      icon: Icon(Icons.edit),
-                      onPressed: () {
-                        onTapEdit(context);
-                      },
-                    ),
-                    IconButton(
-                      icon: Icon(Icons.remove_circle),
-                      color: Colors.red,
-                      onPressed: () {
-                        onTapDelete();
-                      },
-                    ),
-                  ],
-                )
-        ],
-      ),
-    );
+        );
+      }
+      tableRows.add(
+        TableRow(
+          children: tableCells,
+        ),
+      );
+    }
+    return tableRows;
   }
 }

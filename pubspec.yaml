@@ -29,11 +29,12 @@ dependencies:
   firebase_auth: ^1.0.0
   image_picker: ^0.7.2
   permission_handler: ^6.0.1
-  cloud_firestore: ^1.0.0
+  cloud_firestore: ^1.0.2
   firebase_storage: ^8.0.0
+  # firebase: ^9.0.1
+  firebase_storage_web: ^1.0.2
   shared_preferences: ^2.0.3
   provider: ^5.0.0
-  material_floating_search_bar: ^0.3.0
   # hovering: ^1.0.2
   uuid: 3.0.1
   # The following adds the Cupertino Icons font to your application.
@@ -50,7 +51,7 @@ dev_dependencies:
 
 
 flutter_icons:
-  #  image_path: "assets/images/icon-128x128.png"
+  #  image_path: "assets/images/icon-128x128.png" 
   image_path_android: "assets/images/logo_large.png"
   image_path_ios: "assets/images/logo_large.png"
   android: true # can specify file name here e.g. "ic_launcher"

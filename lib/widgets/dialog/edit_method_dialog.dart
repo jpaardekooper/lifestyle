@@ -2,12 +2,18 @@ import 'package:flutter/material.dart';
 import 'package:lifestylescreening/controllers/food_preparation_controller.dart';
 import 'package:lifestylescreening/models/method_model.dart';
 import 'package:lifestylescreening/widgets/forms/custom_textformfield.dart';
+import 'package:lifestylescreening/widgets/text/intro_grey_text.dart';
 
 class EditMethod extends StatefulWidget {
-  EditMethod({required this.recipeId, required this.method, this.newMethod});
+  EditMethod(
+      {required this.recipeId,
+      required this.method,
+      this.newMethod,
+      this.collection});
   final String? recipeId;
   final MethodModel method;
   final bool? newMethod;
+  final String? collection;
 
   @override
   _EditMethodState createState() => _EditMethodState();
@@ -50,7 +56,7 @@ class _EditMethodState extends State<EditMethod> {
               CustomTextFormField(
                 keyboardType: TextInputType.number,
                 textcontroller: _stepController,
-                errorMessage: "Geen geldige getal",
+                errorMessage: "Geen geldig getal",
                 validator: 1,
                 secureText: false,
               ),
@@ -70,12 +76,21 @@ class _EditMethodState extends State<EditMethod> {
         ),
       ),
       actions: <Widget>[
-        FlatButton(
-          child: Text('Annuleren'),
-          onPressed: () => Navigator.pop(context, null),
-        ),
-        RaisedButton(
-          child: Text('Opslaan'),
+        TextButton(
+              child: IntroGreyText(
+                text: 'Cancel',
+              ),
+              onPressed: () => Navigator.of(context).pop(),
+            ),
+       ElevatedButton(
+          child: Text(
+            'Opslaan',
+            style: TextStyle(
+              fontSize: MediaQuery.of(context).size.height * 0.020,
+            ),
+          ),
+          style:
+              ElevatedButton.styleFrom(primary: Theme.of(context).accentColor),
           onPressed: () => saveSurveyChanges(context),
         )
       ],
@@ -90,8 +105,8 @@ class _EditMethodState extends State<EditMethod> {
       };
 
       _foodPreparationController
-          .updateMethod(
-              widget.recipeId, widget.method.id, data, widget.newMethod)
+          .updateMethod(widget.recipeId, widget.method.id, data,
+              widget.newMethod, widget.collection)
           .then((value) => Navigator.pop(context));
     }
   }

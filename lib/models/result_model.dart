@@ -9,8 +9,7 @@ class ResultModel {
   final DocumentReference? reference;
 
   ResultModel.fromSnapshot(DocumentSnapshot snapshot)
-      : assert(snapshot != null),
-        id = snapshot.id,
+      : id = snapshot.id,
         title = snapshot.data()!['title'],
         reference = snapshot.reference;
 }
