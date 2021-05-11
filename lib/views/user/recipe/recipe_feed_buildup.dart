@@ -106,6 +106,18 @@ class RecipeBuildUp extends StatelessWidget {
                 ),
               ],
             ),
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: [
+                Icon(
+                  Icons.food_bank_outlined,
+                  color: Theme.of(context).primaryColor,
+                ),
+                BodyText(
+                  text: recipe.portion.toString() + " porties",
+                ),
+              ],
+            ),
           ],
         ),
         SizedBox(width: 20),
@@ -183,10 +195,13 @@ class RecipeBuildUp extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         H2Text(text: "Ingrediënten"),
-        IconButton(
-          icon: Icon(Icons.add),
-          onPressed: () => addIngredientsData(context),
-        )
+        (user!.role == 'user' && userNewRecipe == false) ||
+                (user!.role == 'admin' && userNewRecipe == true)
+            ? Container()
+            : IconButton(
+                icon: Icon(Icons.add),
+                onPressed: () => addIngredientsData(context),
+              ),
       ],
     );
   }
@@ -196,10 +211,13 @@ class RecipeBuildUp extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         H2Text(text: "Methode"),
-        IconButton(
-          icon: Icon(Icons.add),
-          onPressed: () => addMethodData(context),
-        )
+        (user!.role == 'user' && userNewRecipe == false) ||
+                (user!.role == 'admin' && userNewRecipe == true)
+            ? Container()
+            : IconButton(
+                icon: Icon(Icons.add),
+                onPressed: () => addMethodData(context),
+              ),
       ],
     );
   }
@@ -208,11 +226,14 @@ class RecipeBuildUp extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        H2Text(text: "Voedingswaarde per portie"),
-        IconButton(
-          icon: Icon(Icons.add),
-          onPressed: () => addNutritionalData(context),
-        ),
+        H2Text(text: "Voedingswaarde"),
+        (user!.role == 'user' && userNewRecipe == false) ||
+                (user!.role == 'admin' && userNewRecipe == true)
+            ? Container()
+            : IconButton(
+                icon: Icon(Icons.add),
+                onPressed: () => addNutritionalData(context),
+              ),
       ],
     );
   }
@@ -306,7 +327,7 @@ class RecipeBuildUp extends StatelessWidget {
                                 InheritedDataProvider(
                                   data: user!,
                                   child: NutrionStream(
-                                    recipeId: recipe.id,
+                                    recipe: recipe,
                                     userNewRecipe: userNewRecipe,
                                     collection: collection,
                                   ),
@@ -323,7 +344,7 @@ class RecipeBuildUp extends StatelessWidget {
                           InheritedDataProvider(
                             data: user!,
                             child: NutrionStream(
-                              recipeId: recipe.id,
+                              recipe: recipe,
                               userNewRecipe: userNewRecipe,
                               collection: collection,
                             ),
@@ -406,7 +427,7 @@ class RecipeBuildUp extends StatelessWidget {
                           InheritedDataProvider(
                             data: user!,
                             child: NutrionStream(
-                              recipeId: recipe.id,
+                              recipe: recipe,
                               userNewRecipe: userNewRecipe,
                               collection: collection,
                             ),

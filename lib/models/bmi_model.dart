@@ -3,6 +3,6 @@ class BMI {
 
   final int? age;
   final int? height;
-  final int? weight;
+  final double? weight;
   final String? gender;
 }

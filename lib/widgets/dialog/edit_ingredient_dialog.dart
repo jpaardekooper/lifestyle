@@ -70,7 +70,7 @@ class _EditIngredientState extends State<EditIngredient> {
                 keyboardType: TextInputType.name,
                 textcontroller: _unitController,
                 errorMessage: "Geen geldige unit",
-                validator: 1,
+                validator: 5,
                 secureText: false,
               ),
               SizedBox(

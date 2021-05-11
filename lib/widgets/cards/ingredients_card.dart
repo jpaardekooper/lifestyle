@@ -39,10 +39,12 @@ class IngredientsStream extends StatelessWidget {
         } else {
           _ingredientsList =
               _foodPreparationController.fetchIngredients(snapshot);
+          _ingredientsList.sort((a, b) => a.unit!.compareTo(b.unit!));
           if (_ingredientsList.isNotEmpty) {
             return Table(
-              defaultColumnWidth:
-                  kIsWeb ? const FlexColumnWidth(1.0) : IntrinsicColumnWidth(),
+              defaultColumnWidth: kIsWeb
+                  ? const FlexColumnWidth(1.0)
+                  : IntrinsicColumnWidth(),
               border: TableBorder.all(color: ColorTheme.orange, width: 3.0),
               defaultVerticalAlignment: TableCellVerticalAlignment.middle,
               children: fillTable(_ingredientsList, context),

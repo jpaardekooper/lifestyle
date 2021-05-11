@@ -21,7 +21,8 @@ class RecipeRepository implements IRecipeRepository {
   }
 
   @override
-  Future<void> removeRecipe(String? recipeId, String? url) async {
+  Future<void> removeRecipe(
+      String? recipeId, String? url, bool? userUploaded) async {
     await FirebaseFirestore.instance
         .collection('recipes')
         .doc(recipeId)
@@ -69,12 +70,13 @@ class RecipeRepository implements IRecipeRepository {
           .delete()
           .catchError((e) {
         //    print(e);
-      }).then((value) => deleteImage(url));
+      }).then((value) => deleteImage(url, userUploaded!));
     });
   }
 
   @override
-  Future<void> removeUserRecipe(String? recipeId, String? url) async {
+  Future<void> removeUserRecipe(
+      String? recipeId, String? url, bool? userUploaded) async {
     await FirebaseFirestore.instance
         .collection('createdRecipes')
         .doc(recipeId)
@@ -122,7 +124,7 @@ class RecipeRepository implements IRecipeRepository {
           .delete()
           .catchError((e) {
         //    print(e);
-      }).then((value) => deleteImage(url));
+      }).then((value) => deleteImage(url, userUploaded!));
     });
   }
 
@@ -271,7 +273,7 @@ class RecipeRepository implements IRecipeRepository {
       TaskSnapshot taskSnapshot = await uploadTask;
       await taskSnapshot.ref.getDownloadURL();
 
-      if (oldImg != null) await deleteImage(oldImg);
+      if (oldImg != null) await deleteImage(oldImg, true);
     }
   }
 
@@ -285,12 +287,14 @@ class RecipeRepository implements IRecipeRepository {
     return imageUrl;
   }
 
-  Future<void> deleteImage(String? image) async {
+  Future<void> deleteImage(String? image, bool userRecipe) async {
     if (image != "placeholder.png") {
-      await FirebaseStorage.instance
-          .ref()
-          .child('recipeImages/$image')
-          .delete();
+      if (!userRecipe) {
+        await FirebaseStorage.instance
+            .ref()
+            .child('recipeImages/$image')
+            .delete();
+      }
     }
   }
 }

@@ -5,7 +5,7 @@ class NutritionalValueModel {
       : reference = null;
 
   final String? id;
-  final String? amount;
+  final double? amount;
   final String? unit;
   final String? name;
 
@@ -13,7 +13,7 @@ class NutritionalValueModel {
 
   NutritionalValueModel.fromSnapshot(DocumentSnapshot snapshot)
       : id = snapshot.id,
-        amount = snapshot.data()!['amount'],
+        amount = (snapshot.data()!['amount']).toDouble(),
         unit = snapshot.data()!['unit'],
         name = snapshot.data()!['name'],
         reference = snapshot.reference;

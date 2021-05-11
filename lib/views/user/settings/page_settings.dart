@@ -53,13 +53,13 @@ class PageSettings extends StatelessWidget {
         centerTitle: true,
         actions: [
           TextButton(
-              child: H3OrangeText(text: "Wijzigen"),
-              onPressed: () => Navigator.of(context).push(
-                    MaterialPageRoute(
-                      builder: (context) =>
-                          EditSettingsView(user: _userData.data),
-                    ),
-                  ))
+            child: H3OrangeText(text: "Wijzigen"),
+            onPressed: () => Navigator.of(context).push(
+              MaterialPageRoute(
+                builder: (context) => EditSettingsView(user: _userData.data),
+              ),
+            ),
+          )
         ],
       ),
       body: SingleChildScrollView(
@@ -96,7 +96,7 @@ class PageSettings extends StatelessWidget {
                     margin: EdgeInsets.only(top: 50, bottom: 50),
                     padding: EdgeInsets.all(20),
                     decoration: BoxDecoration(
-                        color: Color(0xFFFFDFB9),
+                        color: ColorTheme.extraLightOrange,
                         borderRadius: BorderRadius.circular(30.0)),
                     height: 100,
                     child: Row(

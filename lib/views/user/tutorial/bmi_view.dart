@@ -30,7 +30,7 @@ class _BMIViewState extends State<BMIView> {
       BMI bmi = BMI(
         age: int.parse(_ageController.text),
         height: int.parse(_heightController.text),
-        weight: int.parse(_weightController.text),
+        weight: double.parse(_weightController.text),
         gender: _gender,
       );
       //removes existing keyboard

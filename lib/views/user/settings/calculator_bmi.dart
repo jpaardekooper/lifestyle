@@ -2,7 +2,7 @@ import 'dart:math';
 
 class CalculatorBMI {
   final int? height;
-  final int? weight;
+  final double? weight;
   late double _bmi;
 
   CalculatorBMI({this.height, this.weight});

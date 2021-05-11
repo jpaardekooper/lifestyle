@@ -31,6 +31,7 @@ class _NewUserRecipeViewState extends State<NewUserRecipeView> {
   TextEditingController _recipenameController = TextEditingController();
   TextEditingController _durationController = TextEditingController();
   TextEditingController _difficultyController = TextEditingController();
+  TextEditingController _portionController = TextEditingController();
 
   File? _imageFile;
 
@@ -166,22 +167,25 @@ class _NewUserRecipeViewState extends State<NewUserRecipeView> {
             border: Border.all(color: Theme.of(context).primaryColor, width: 2),
             borderRadius: BorderRadius.circular(15),
           ),
-          child: DropdownButton(
-            dropdownColor: ColorTheme.extraLightGreen,
-            hint: BodyText(text: 'Selecteer de moeilijkheidsgraad'),
-            value: _selectedLocation,
-            onChanged: (dynamic newValue) {
-              setState(() {
-                _selectedLocation = newValue;
-                _difficultyController.text = newValue;
-              });
-            },
-            items: _locations.map((location) {
-              return DropdownMenuItem(
-                child: Text(location),
-                value: location,
-              );
-            }).toList(),
+          child: FittedBox(
+            fit: BoxFit.contain,
+            child: DropdownButton(
+              dropdownColor: ColorTheme.extraLightGreen,
+              hint: BodyText(text: 'Selecteer de moeilijkheidsgraad'),
+              value: _selectedLocation,
+              onChanged: (dynamic newValue) {
+                setState(() {
+                  _selectedLocation = newValue;
+                  _difficultyController.text = newValue;
+                });
+              },
+              items: _locations.map((location) {
+                return DropdownMenuItem(
+                  child: Text(location),
+                  value: location,
+                );
+              }).toList(),
+            ),
           ),
         ),
       ],
@@ -204,8 +208,23 @@ class _NewUserRecipeViewState extends State<NewUserRecipeView> {
     );
   }
 
+  Widget showRecipePortion(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        BodyText(text: "Aantal porties:"),
+        CustomTextFormField(
+          keyboardType: TextInputType.number,
+          textcontroller: _portionController,
+          errorMessage: "Geen geldig getal",
+          validator: 6,
+          secureText: false,
+        ),
+      ],
+    );
+  }
+
   Widget showRecipeTags(BuildContext context) {
-    getTags();
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -256,54 +275,56 @@ class _NewUserRecipeViewState extends State<NewUserRecipeView> {
     );
   }
 
-  getTags() async {
-    await _tagsController.getTagsList().then((value) {
-      if (mounted) {
-        setState(() {
-          _tags = value;
-        });
-      }
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(title: Text("Nieuw recept toevoegen")),
-        body: SingleChildScrollView(
-          child: Container(
-            padding: EdgeInsets.all(20),
-            child: Form(
-              key: _formKey,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  showRecipeName(context),
-                  SizedBox(height: 25),
-                  showRecipeUrl(context),
-                  SizedBox(height: 25),
-                  showRecipeDuration(context),
-                  SizedBox(height: 25),
-                  showRecipeDifficulty(context),
-                  SizedBox(height: 30),
-                  showRecipeTags(context),
-                  SizedBox(height: 30),
-                  loading
-                      ? Center(child: LinearProgressIndicator())
-                      : Row(
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          children: [
-                            ConfirmOrangeButton(
-                              text: 'Opslaan',
-                              onTap: () => saveRecipeChanges(context),
-                            ),
-                          ],
-                        ),
-                ],
+      appBar: AppBar(title: Text("Nieuw recept toevoegen")),
+      body: FutureBuilder<List<TagsModel>>(
+        future: _tagsController.getTagsList(),
+        initialData: [],
+        builder: (BuildContext context, AsyncSnapshot snapshot) {
+          if (snapshot.data != null) {
+            _tags = snapshot.data;
+          }
+          return SingleChildScrollView(
+            child: Container(
+              padding: EdgeInsets.all(20),
+              child: Form(
+                key: _formKey,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    showRecipeName(context),
+                    SizedBox(height: 25),
+                    showRecipeUrl(context),
+                    SizedBox(height: 25),
+                    showRecipeDuration(context),
+                    SizedBox(height: 25),
+                    showRecipePortion(context),
+                    SizedBox(height: 25),
+                    showRecipeDifficulty(context),
+                    SizedBox(height: 30),
+                    showRecipeTags(context),
+                    SizedBox(height: 30),
+                    loading
+                        ? Center(child: LinearProgressIndicator())
+                        : Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: [
+                              ConfirmOrangeButton(
+                                text: 'Opslaan',
+                                onTap: () => saveRecipeChanges(context),
+                              ),
+                            ],
+                          ),
+                  ],
+                ),
               ),
             ),
-          ),
-        ));
+          );
+        },
+      ),
+    );
   }
 
   saveRecipeChanges(context) {
@@ -317,6 +338,7 @@ class _NewUserRecipeViewState extends State<NewUserRecipeView> {
         "url":
             _imageFile == null ? "placeholder.png" : basename(_imageFile!.path),
         "duration": int.parse(_durationController.text),
+        "portion": int.parse(_portionController.text),
         "difficulty": _difficultyController.text,
         "published": false,
         "submitted": false,
