@@ -33,7 +33,9 @@ class AppUser {
         gender = snapshot.data()!['gender'] ?? "",
         age = snapshot.data()!['age'] ?? 0,
         height = snapshot.data()!['height'] ?? 0,
-        weight = (snapshot.data()!['weight']).toDouble() ?? 0,
+        weight = snapshot.data()!['weight'] != null
+            ? (snapshot.data()!['weight']).toDouble()
+            : 0,
         favorite_recipes =
             List.from(snapshot.data()!['favorite_recipes'] ?? []),
         reference = snapshot.reference;

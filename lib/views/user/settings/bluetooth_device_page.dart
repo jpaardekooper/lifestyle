@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_blue/flutter_blue.dart';
 import 'package:lifestylescreening/healthpoint_icons.dart';
 import 'package:lifestylescreening/models/firebase_user.dart';
@@ -30,9 +31,18 @@ class _BluetoothDevicePageState extends State<BluetoothDevicePage> {
   }
 
   _setNotify(BluetoothCharacteristic characteristic, bool value) async {
-    await characteristic.setNotifyValue(value).then((v) {
-      isNotifying = value;
-    });
+    if (!characteristic.isNotifying) {
+      try {
+        await characteristic.setNotifyValue(value).then((v) {
+          isNotifying = value;
+        });
+      } on PlatformException catch (e) {
+        if(e.code == 'set_notification_error'){
+          // print("iets heeft gefaalt");
+        }
+        // print(e.toString());
+      }
+    }
   }
 
   _getValue(List<BluetoothService> serviceList) {
@@ -64,9 +74,7 @@ class _BluetoothDevicePageState extends State<BluetoothDevicePage> {
         stream: _characteristic.value,
         initialData: _characteristic.lastValue,
         builder: (context, snapshot) {
-          if (!_characteristic!.isNotifying) {
-            _setNotify(_characteristic, true);
-          }
+          _setNotify(_characteristic!, true);
           return Container(
             height: MediaQuery.of(context).size.height / 2.5,
             width: MediaQuery.of(context).size.width,
