@@ -91,7 +91,7 @@ class _EditNutritionalState extends State<EditNutritional> {
       actions: <Widget>[
         TextButton(
           child: IntroGreyText(
-            text: 'Cancel',
+            text: 'Annuleren',
           ),
           onPressed: () => Navigator.pop(context),
         ),

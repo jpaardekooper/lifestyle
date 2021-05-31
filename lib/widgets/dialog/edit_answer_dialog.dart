@@ -464,7 +464,7 @@ class _EditAnswerDialogState extends State<EditAnswerDialog> {
       actions: <Widget>[
         TextButton(
               child: IntroGreyText(
-                text: 'Cancel',
+                text: 'Annuleren',
               ),
               onPressed: () => Navigator.of(context).pop(),
             ),

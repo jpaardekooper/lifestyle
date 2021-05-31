@@ -10,6 +10,7 @@ import 'package:lifestylescreening/widgets/dialog/feedback_recipe_dialog.dart';
 import 'package:lifestylescreening/widgets/colors/color_theme.dart';
 import 'package:lifestylescreening/widgets/inherited/inherited_widget.dart';
 import 'package:lifestylescreening/widgets/painter/bottom_large_wave_painter.dart';
+import 'package:lifestylescreening/widgets/text/body_text.dart';
 import 'package:lifestylescreening/widgets/text/h1_text.dart';
 import 'package:lifestylescreening/widgets/text/h2_text.dart';
 import 'package:lifestylescreening/widgets/text/intro_grey_text.dart';
@@ -27,6 +28,8 @@ class _RecipeEvaluationViewState extends State<RecipeEvaluationView> {
   String? imageUrl;
   String? collection;
 
+  GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+
   Map<String, bool> generalInfoCheckList = {
     'Klopt de bereidingstijd?': false,
     'Is de aangegeven moeilijkheidsgraad een goede indicatie?': false,
@@ -42,7 +45,7 @@ class _RecipeEvaluationViewState extends State<RecipeEvaluationView> {
   Map<String, bool> ingredientCheckList = {
     'Zijn alle ingrediënten die gebruikt worden opgesomd?': false,
     // ignore: lines_longer_than_80_chars
-    'Is er een ingrediënt vergeten te benoemen terwijl het wel in de methode staat? ingrediënten opstellen in de volgorde van het gebruiken (dus het eerste ingrediënt dat je gebruikt zet je als eerst in de lijst neer, het laatste ingrediënt dat je gebruikt als laatst = overzichtelijker)':
+    '•	Zijn er geen ingrediënten vergeten te benoemen terwijl deze wel in de methode staan? ingrediënten opstellen in de volgorde van het gebruiken (dus het eerste ingrediënt dat je gebruikt zet je als eerst in de lijst neer, het laatste ingrediënt dat je gebruikt als laatst = overzichtelijker)':
         false,
   };
 
@@ -52,7 +55,7 @@ class _RecipeEvaluationViewState extends State<RecipeEvaluationView> {
     'Het werkmateriaal en apparatuur worden in overeenstemming met de bereidingstechniek vermeld.':
         false,
     'Is het specifieke van de apparatuur of het materiaal benoemd?': false,
-    'Staat er een stap dubbel/ontbreekt er een stap?': false,
+    'Staan er geen stappen dubbel/ontbreken er stappen?': false,
   };
 
   Map<String, bool> nutritionCheckList = {
@@ -113,6 +116,7 @@ class _RecipeEvaluationViewState extends State<RecipeEvaluationView> {
     Size size = MediaQuery.of(context).size;
 
     return Scaffold(
+        key: _scaffoldKey,
         body: FutureBuilder<String>(
             future: _recipeController.getImage(widget.recipe.url),
             builder: (context, snapshot) {
@@ -396,15 +400,17 @@ class _RecipeEvaluationViewState extends State<RecipeEvaluationView> {
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
               Container(
-                padding: EdgeInsets.all(6),
                 decoration: BoxDecoration(
                   color: Theme.of(context).primaryColor,
-                  shape: BoxShape.circle,
+                  shape: BoxShape.rectangle,
                 ),
-                child: IconButton(
-                  icon: Icon(Icons.close, size: 25, color: Colors.white),
+                child: TextButton(
+                  child: Text(
+                    "Afkeuren",
+                    style: TextStyle(color: Colors.white),
+                  ),
                   onPressed: () {
-                    if (Scaffold.of(context).isEndDrawerOpen) {
+                    if (_scaffoldKey.currentState!.isEndDrawerOpen) {
                       Navigator.pop(context);
                     }
                     denied();
@@ -416,25 +422,52 @@ class _RecipeEvaluationViewState extends State<RecipeEvaluationView> {
               ),
               Container(
                 alignment: Alignment.center,
-                padding: EdgeInsets.all(6),
                 decoration: BoxDecoration(
                   color: checkpoints == validator
                       ? Theme.of(context).accentColor
                       : ColorTheme.lightGrey,
-                  shape: BoxShape.circle,
+                  shape: BoxShape.rectangle,
                 ),
-                child: IconButton(
-                    icon: Icon(
-                      Icons.check,
-                      size: 25,
-                      color: ColorTheme.grey,
+                child: TextButton(
+                    child: Text(
+                      "Goedkeuren",
+                      style: TextStyle(color: Colors.white),
                     ),
                     onPressed: () {
                       if (checkpoints == validator) {
-                        if (Scaffold.of(context).isEndDrawerOpen) {
+                        if (_scaffoldKey.currentState!.isEndDrawerOpen) {
                           Navigator.pop(context);
                         }
                         approved();
+                      } else {
+                        showDialog(
+                          context: context,
+                          builder: (BuildContext context) {
+                            return AlertDialog(
+                              content: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  BodyText(
+                                      text: "Niet genoeg punten aangevinkt"),
+                                  SizedBox(
+                                    height: 20,
+                                  ),
+                                  TextButton(
+                                      style: TextButton.styleFrom(
+                                          backgroundColor:
+                                              ColorTheme.accentOrange),
+                                      onPressed: () =>
+                                          Navigator.of(context).pop(),
+                                      child: Text(
+                                        "Oke",
+                                        style: TextStyle(color: Colors.white),
+                                      )),
+                                ],
+                              ),
+                            );
+                          },
+                        );
                       }
                       ;
                     }),

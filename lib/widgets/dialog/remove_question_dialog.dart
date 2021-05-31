@@ -34,7 +34,7 @@ class RemoveQuestion extends StatelessWidget {
       actions: <Widget>[
         TextButton(
           child: IntroGreyText(
-            text: 'Cancel',
+            text: 'Annuleren',
           ),
           onPressed: () => Navigator.of(context).pop(false),
         ),

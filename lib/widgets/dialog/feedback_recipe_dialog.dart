@@ -47,7 +47,7 @@ class _FeedbackRecipeState extends State<FeedbackRecipe> {
       actions: <Widget>[
         TextButton(
           child: IntroGreyText(
-            text: 'Cancel',
+            text: 'Annuleren',
           ),
           onPressed: () => Navigator.of(context).pop(false),
         ),

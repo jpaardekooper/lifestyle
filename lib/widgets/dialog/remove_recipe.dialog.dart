@@ -30,7 +30,7 @@ class RemoveRecipe extends StatelessWidget {
       actions: [
         TextButton(
           child: IntroGreyText(
-            text: 'Cancel',
+            text: 'Annuleren',
           ),
           onPressed: () => Navigator.of(context).pop(false),
         ),

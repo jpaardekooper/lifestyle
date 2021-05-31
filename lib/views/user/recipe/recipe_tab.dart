@@ -63,7 +63,7 @@ class _RecipeTabState extends State<RecipeTab>
           controller: _tabController,
           physics: NeverScrollableScrollPhysics(),
           tabs: [
-            Tab(text: 'Feed'),
+            Tab(text: 'Overzicht'),
             Tab(text: 'Eigen recepten'),
             Tab(text: 'Favorieten'),
           ],

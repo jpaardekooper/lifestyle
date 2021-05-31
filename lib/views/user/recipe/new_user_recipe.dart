@@ -286,38 +286,44 @@ class _NewUserRecipeViewState extends State<NewUserRecipeView> {
           if (snapshot.data != null) {
             _tags = snapshot.data;
           }
-          return SingleChildScrollView(
-            child: Container(
-              padding: EdgeInsets.all(20),
-              child: Form(
-                key: _formKey,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    showRecipeName(context),
-                    SizedBox(height: 25),
-                    showRecipeUrl(context),
-                    SizedBox(height: 25),
-                    showRecipeDuration(context),
-                    SizedBox(height: 25),
-                    showRecipePortion(context),
-                    SizedBox(height: 25),
-                    showRecipeDifficulty(context),
-                    SizedBox(height: 30),
-                    showRecipeTags(context),
-                    SizedBox(height: 30),
-                    loading
-                        ? Center(child: LinearProgressIndicator())
-                        : Row(
-                            mainAxisAlignment: MainAxisAlignment.end,
-                            children: [
-                              ConfirmOrangeButton(
-                                text: 'Opslaan',
-                                onTap: () => saveRecipeChanges(context),
-                              ),
-                            ],
-                          ),
-                  ],
+          return GestureDetector(
+            behavior: HitTestBehavior.opaque,
+            onPanDown: (_) {
+              FocusScope.of(context).requestFocus(FocusNode());
+            },
+            child: SingleChildScrollView(
+              child: Container(
+                padding: EdgeInsets.all(20),
+                child: Form(
+                  key: _formKey,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      showRecipeName(context),
+                      SizedBox(height: 25),
+                      showRecipeUrl(context),
+                      SizedBox(height: 25),
+                      showRecipeDuration(context),
+                      SizedBox(height: 25),
+                      showRecipePortion(context),
+                      SizedBox(height: 25),
+                      showRecipeDifficulty(context),
+                      SizedBox(height: 30),
+                      showRecipeTags(context),
+                      SizedBox(height: 30),
+                      loading
+                          ? Center(child: LinearProgressIndicator())
+                          : Row(
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              children: [
+                                ConfirmOrangeButton(
+                                  text: 'Opslaan',
+                                  onTap: () => saveRecipeChanges(context),
+                                ),
+                              ],
+                            ),
+                    ],
+                  ),
                 ),
               ),
             ),

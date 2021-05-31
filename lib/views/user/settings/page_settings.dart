@@ -11,9 +11,7 @@ import 'package:lifestylescreening/widgets/inherited/inherited_widget.dart';
 import 'package:lifestylescreening/widgets/painter/bottom_small_wave_painer.dart';
 import 'package:lifestylescreening/widgets/text/h1_text.dart';
 import 'package:lifestylescreening/widgets/text/h2_text.dart';
-import 'package:lifestylescreening/widgets/text/h3_orange_text.dart';
 import 'package:lifestylescreening/widgets/text/intro_grey_text.dart';
-import 'package:lifestylescreening/widgets/text/intro_light_grey_text.dart';
 
 class PageSettings extends StatelessWidget {
   final AuthController _authController = AuthController();
@@ -47,13 +45,16 @@ class PageSettings extends StatelessWidget {
       key: _scaffoldKey,
       appBar: AppBar(
         title: H1Text(
-          text: "Instellingen",
+          text: "Persoonlijke gegevens",
         ),
         backgroundColor: Colors.white,
         centerTitle: true,
         actions: [
-          TextButton(
-            child: H3OrangeText(text: "Wijzigen"),
+          IconButton(
+            icon: Icon(
+              Icons.edit,
+              color: ColorTheme.grey,
+            ),
             onPressed: () => Navigator.of(context).push(
               MaterialPageRoute(
                 builder: (context) => EditSettingsView(user: _userData.data),
@@ -83,17 +84,14 @@ class PageSettings extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  H1Text(text: "Persoonlijke instellingen"),
-                  SizedBox(
-                    height: 20,
-                  ),
-                  IntroLightGreyText(
-                    text: "Verander hier uw gegevens",
-                  ),
+                  IntroGreyText(
+                      text:
+                          // ignore: lines_longer_than_80_chars
+                          "Zie hier uw gegevens in en wijzig deze door het potlood rechtsboven in het scherm aan te klikken"),
+                  SizedBox(height: 20),
 
                   /// ORANGE BLOCK
                   Container(
-                    margin: EdgeInsets.only(top: 50, bottom: 50),
                     padding: EdgeInsets.all(20),
                     decoration: BoxDecoration(
                         color: ColorTheme.extraLightOrange,

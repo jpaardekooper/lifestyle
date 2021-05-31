@@ -37,8 +37,8 @@ class _BluetoothDevicePageState extends State<BluetoothDevicePage> {
           isNotifying = value;
         });
       } on PlatformException catch (e) {
-        if(e.code == 'set_notification_error'){
-          // print("iets heeft gefaalt");
+        if (e.code == 'set_notification_error') {
+          // print(e.toString());
         }
         // print(e.toString());
       }
@@ -146,41 +146,42 @@ class _BluetoothDevicePageState extends State<BluetoothDevicePage> {
         ),
       ),
       body: StreamBuilder<BluetoothDeviceState>(
-          stream: widget.device.state,
-          initialData: BluetoothDeviceState.connecting,
-          builder: (context, snapshot) {
-            if (snapshot.data == BluetoothDeviceState.connected ||
-                weightConfirmed == true) {
-              connected = snapshot.data == BluetoothDeviceState.connected;
-              return FutureBuilder<List<BluetoothService>>(
-                future: widget.device.discoverServices(),
-                initialData: [],
-                builder: (context, snapshot) {
-                  if (snapshot.data != null) {
-                    services = snapshot.data!;
-                  }
-                  return Padding(
-                    padding: const EdgeInsets.all(20.0),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Container(
-                          padding: EdgeInsets.all(15.0),
-                          alignment: Alignment.bottomLeft,
-                          child: H1Text(
-                            text: 'Uw resultaat',
-                          ),
+        stream: widget.device.state,
+        initialData: BluetoothDeviceState.connecting,
+        builder: (context, snapshot) {
+          if (snapshot.data == BluetoothDeviceState.connected ||
+              weightConfirmed == true) {
+            connected = snapshot.data == BluetoothDeviceState.connected;
+            return FutureBuilder<List<BluetoothService>>(
+              future: widget.device.discoverServices(),
+              initialData: [],
+              builder: (context, snapshot) {
+                if (snapshot.data != null) {
+                  services = snapshot.data!;
+                }
+                return Padding(
+                  padding: const EdgeInsets.all(20.0),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Container(
+                        padding: EdgeInsets.all(15.0),
+                        alignment: Alignment.bottomLeft,
+                        child: H1Text(
+                          text: 'Uw resultaat',
                         ),
-                        _getValue(services),
-                      ],
-                    ),
-                  );
-                },
-              );
-            }
-            return Center(child: CircularProgressIndicator());
-          }),
+                      ),
+                      _getValue(services),
+                    ],
+                  ),
+                );
+              },
+            );
+          }
+          return Center(child: CircularProgressIndicator());
+        },
+      ),
     );
   }
 }

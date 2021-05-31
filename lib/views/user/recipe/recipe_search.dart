@@ -28,25 +28,28 @@ class RecipeSearch extends SearchDelegate<String> {
   }
 
   filterRecipes() {
+    // If there are no tags selected
     if (index == null) {
+      // If the search bar has an input
       if (query.isNotEmpty) {
+        //Get the recipes that start with the input
         _filteredList = _recipeList
             .where((element) => element.title!
                 .toLowerCase()
                 .startsWith(query.toLowerCase().trim()))
             .toList();
+      //If input and tags are empty return all the recipes
       } else {
         _filteredList = _recipeList;
       }
+    //If there is a tag selected
     } else {
-      if (query.isEmpty) {
-        _filteredList = _recipeList
-            .where((element) => element.tags!.contains(_tagsList[index!].tag!))
-            .toList();
-      } else {
-        _filteredList = _recipeList
-            .where((element) => element.tags!.contains(_tagsList[index!].tag!))
-            .toList();
+      //Get the recipes that contain the selected tag
+      _filteredList = _recipeList
+          .where((element) => element.tags!.contains(_tagsList[index!].tag!))
+          .toList();
+      //If the input is not empty, filter the recipes again with the input
+      if (query.isNotEmpty) {
         _filteredList = _filteredList
             .where((element) => element.title!
                 .toLowerCase()

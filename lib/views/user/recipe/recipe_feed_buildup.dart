@@ -159,34 +159,68 @@ class RecipeBuildUp extends StatelessWidget {
   }
 
   Widget headerFeedback(context) {
-    return Container(
-      padding: EdgeInsets.all(8),
-      color: ColorTheme.lightOrange,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          IntroGreyText(
+    return Column(
+      children: [
+        Container(
+          padding: EdgeInsets.all(8),
+          color: ColorTheme.lightOrange,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              IntroGreyText(
+                text:
+                    // ignore: lines_longer_than_80_chars
+                    "Uw recept is helaas niet goedgekeurd door een van onze beheerders. Dit is gedaan volgens de volgende rede: ",
+              ),
+              SizedBox(
+                height: 10,
+              ),
+              BodyText(
+                  text:
+                      // ignore: lines_longer_than_80_chars
+                      recipe.feedback),
+              SizedBox(
+                height: 10,
+              ),
+              IntroGreyText(
+                text:
+                    // ignore: lines_longer_than_80_chars
+                    "Laat dit u niet ontmoedigen om het nog een keer te proberen. Probeer het recept zo goed mogelijk te verbeteren gebaseerd op de feedback en stuur hem opnieuw in!",
+              ),
+            ],
+          ),
+        ),
+        SizedBox(
+          height: 50,
+          child: Divider(
+            thickness: 2.0,
+            color: Colors.black,
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget headerFeedbackInfo(context) {
+    return Column(
+      children: [
+        Container(
+          padding: EdgeInsets.all(8),
+          color: ColorTheme.lightGreen,
+          child: IntroGreyText(
             text:
                 // ignore: lines_longer_than_80_chars
-                "Uw recept is helaas niet goedgekeurd door een van onze beheerders. Dit is gedaan volgens de volgende rede: ",
+                "Als u er van overtuigd bent dat uw recept een gezond alternatief is, stuur deze dan op voor review! Dit kan gedaan worden door het knopje rechtsonder in het scherm aan te klikken.",
           ),
-          SizedBox(
-            height: 10,
+        ),
+        SizedBox(
+          height: 50,
+          child: Divider(
+            thickness: 2.0,
+            color: Colors.black,
           ),
-          BodyText(
-              text:
-                  // ignore: lines_longer_than_80_chars
-                  recipe.feedback),
-          SizedBox(
-            height: 10,
-          ),
-          IntroGreyText(
-            text:
-                // ignore: lines_longer_than_80_chars
-                "Laat dit uw niet ontmoedigen om het nog een keer te proberen! Probeer het recept zo goed mogelijk te verbeteren gebaseerd op de feedback en stuur hem opnieuw in!",
-          ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 
@@ -210,7 +244,7 @@ class RecipeBuildUp extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        H2Text(text: "Methode"),
+        H2Text(text: "Bereidingswijze"),
         (user!.role == 'user' && userNewRecipe == false) ||
                 (user!.role == 'admin' && userNewRecipe == true)
             ? Container()
@@ -262,18 +296,11 @@ class RecipeBuildUp extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisSize: MainAxisSize.max,
               children: [
-                (recipe.feedback == null || recipe.feedback!.isEmpty)
-                    ? Container()
-                    : headerFeedback(context),
-                (recipe.feedback == null || recipe.feedback!.isEmpty)
-                    ? Container()
-                    : SizedBox(
-                        height: 50,
-                        child: Divider(
-                          thickness: 2.0,
-                          color: Colors.black,
-                        ),
-                      ),
+                (user!.role == "user" && userNewRecipe!)
+                    ? (recipe.feedback == null || recipe.feedback!.isEmpty)
+                        ? headerFeedbackInfo(context)
+                        : headerFeedback(context)
+                    : Container(),
                 headerOverview(context),
                 SizedBox(
                   height: 50,

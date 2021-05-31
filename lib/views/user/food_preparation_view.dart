@@ -57,7 +57,7 @@ class _FoodPreparationViewState extends State<FoodPreparationView> {
             actions: [
               TextButton(
                 onPressed: () => Navigator.of(context).pop(),
-                child: IntroGreyText(text: "Cancel"),
+                child: IntroGreyText(text: "Annuleren"),
               ),
               ElevatedButton(
                 child: Text('Review annuleren'),
@@ -120,7 +120,7 @@ class _FoodPreparationViewState extends State<FoodPreparationView> {
             actions: [
               TextButton(
                 onPressed: () => Navigator.of(context).pop(),
-                child: IntroGreyText(text: "Cancel"),
+                child: IntroGreyText(text: "Annuleren"),
               ),
               ElevatedButton(
                 child: Text('Indienen'),
@@ -168,14 +168,19 @@ class _FoodPreparationViewState extends State<FoodPreparationView> {
 
     return Scaffold(
       floatingActionButton: widget.userNewRecipe == true && role == "user"
-          ? FloatingActionButton(
-              backgroundColor: submitted!
-                  ? Theme.of(context).accentColor
-                  : Theme.of(context).primaryColor,
-              onPressed: () => submitted! ? cancelUpload() : confirmUpload(),
-              child: Icon(
-                Icons.upload_rounded,
-                color: Colors.white,
+          ? Container(
+              height: 40,
+              child: TextButton(
+                style: TextButton.styleFrom(
+                  backgroundColor: submitted!
+                      ? Theme.of(context).accentColor
+                      : Theme.of(context).primaryColor,
+                ),
+                onPressed: () => submitted! ? cancelUpload() : confirmUpload(),
+                child: Text(
+                  submitted! ? "Review annuleren" : "Opsturen voor review",
+                  style: TextStyle(color: Colors.white),
+                ),
               ),
             )
           : Container(),

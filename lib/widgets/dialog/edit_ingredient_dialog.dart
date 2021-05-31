@@ -91,7 +91,7 @@ class _EditIngredientState extends State<EditIngredient> {
       actions: <Widget>[
        TextButton(
               child: IntroGreyText(
-                text: 'Cancel',
+                text: 'Annuleren',
               ),
               onPressed: () => Navigator.of(context).pop(),
             ),

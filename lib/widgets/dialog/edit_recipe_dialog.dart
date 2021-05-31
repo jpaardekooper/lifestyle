@@ -39,11 +39,7 @@ class _EditRecipeState extends State<EditRecipe> {
   TextEditingController _portionController = TextEditingController();
   bool? _published;
 
-  List<String> _locations = [
-    'Moeilijk',
-    'Middel',
-    'Makkelijk'
-  ]; // Option 2
+  List<String> _locations = ['Moeilijk', 'Middel', 'Makkelijk']; // Option 2
   String? _selectedLocation;
 
   List<TagsModel> _tags = [];
@@ -327,33 +323,43 @@ class _EditRecipeState extends State<EditRecipe> {
           if (snapshot.data != null) {
             _tags = snapshot.data;
           }
-          return SingleChildScrollView(
-            child: Form(
-              key: _formKey,
-              child: Column(
-                children: [
-                  widget.user!.role == "user"
-                      ? Container()
-                      : isRecipePublished(context),
-                  showRecipeName(context),
-                  SizedBox(height: 25),
-                  showRecipeUrl(context),
-                  SizedBox(height: 25),
-                  showRecipeDuration(context),
-                  SizedBox(height: 25),
-                  showRecipePortion(context),
-                  SizedBox(height: 25),
-                  showRecipeDifficulty(context),
-                  SizedBox(height: 25),
-                  showRecipeTags(context),
-                  ElevatedButton(
-                    child: Text('Recept verwijderen'),
-                    style: ElevatedButton.styleFrom(primary: Colors.red),
-                    onPressed: () {
-                      _removeRecipe(widget.recipe, widget.user!.role, context);
-                    },
-                  )
-                ],
+          return GestureDetector(
+            behavior: HitTestBehavior.opaque,
+            onPanDown: (_) {
+              FocusScope.of(context).requestFocus(FocusNode());
+            },
+            child: SingleChildScrollView(
+              child: Form(
+                key: _formKey,
+                child: Column(
+                  children: [
+                    widget.user!.role == "user"
+                        ? Container()
+                        : isRecipePublished(context),
+                    showRecipeName(context),
+                    SizedBox(height: 25),
+                    showRecipeUrl(context),
+                    SizedBox(height: 25),
+                    showRecipeDuration(context),
+                    SizedBox(height: 25),
+                    showRecipePortion(context),
+                    SizedBox(height: 25),
+                    showRecipeDifficulty(context),
+                    SizedBox(height: 25),
+                    showRecipeTags(context),
+                    widget.isNewRecipe
+                        ? Container()
+                        : ElevatedButton(
+                            child: Text('Recept verwijderen'),
+                            style:
+                                ElevatedButton.styleFrom(primary: Colors.red),
+                            onPressed: () {
+                              _removeRecipe(
+                                  widget.recipe, widget.user!.role, context);
+                            },
+                          )
+                  ],
+                ),
               ),
             ),
           );
@@ -362,7 +368,7 @@ class _EditRecipeState extends State<EditRecipe> {
       actions: <Widget>[
         TextButton(
           child: IntroGreyText(
-            text: 'Cancel',
+            text: 'Annuleren',
           ),
           onPressed: () => Navigator.pop(context, null),
         ),
