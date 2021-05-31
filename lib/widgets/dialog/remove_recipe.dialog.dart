@@ -30,7 +30,7 @@ class RemoveRecipe extends StatelessWidget {
       actions: [
         TextButton(
           child: IntroGreyText(
-            text: 'Cancel',
+            text: 'Annuleren',
           ),
           onPressed: () => Navigator.of(context).pop(false),
         ),
@@ -45,11 +45,13 @@ class RemoveRecipe extends StatelessWidget {
               ElevatedButton.styleFrom(primary: Theme.of(context).accentColor),
           onPressed: () async {
             if (role == "user") {
-              await _recipeController.removeUserRecipe(recipe!.id, recipe!.url);
+              await _recipeController.removeUserRecipe(
+                  recipe!.id, recipe!.url, recipe!.userUploaded);
 
               Navigator.pop(context);
             } else {
-              await _recipeController.removeRecipe(recipe!.id, recipe!.url);
+              await _recipeController.removeRecipe(
+                  recipe!.id, recipe!.url, recipe!.userUploaded);
               Navigator.pop(context);
             }
           },

@@ -88,8 +88,8 @@ class _HomeState extends State<Home> {
                   ),
                   BottomNavigationBarItem(
                     icon: BottomNavigationLogo(
-                      bottomAppIcon: HealthpointIcons.settingsIcon,
-                      bottomAppName: 'Instellingen',
+                      bottomAppIcon: HealthpointIcons.filterIcon,
+                      bottomAppName: 'Gegevens',
                       visible: counter.value == 3,
                     ),
                     label: 'instellingen',

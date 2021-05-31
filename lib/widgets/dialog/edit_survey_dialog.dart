@@ -206,7 +206,7 @@ class _EditSurveyViewState extends State<EditSurveyView> {
       actions: <Widget>[
         TextButton(
           child: IntroGreyText(
-            text: 'Cancel',
+            text: 'Annuleren',
           ),
           onPressed: () => Navigator.of(context).pop(false),
         ),

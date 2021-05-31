@@ -36,14 +36,10 @@ class _EditRecipeState extends State<EditRecipe> {
   TextEditingController _urlController = TextEditingController();
   TextEditingController _durationController = TextEditingController();
   TextEditingController _difficultyController = TextEditingController();
+  TextEditingController _portionController = TextEditingController();
   bool? _published;
 
-  List<String> _locations = [
-    'Selecteer de moeilijkheidsgraad',
-    'Moeilijk',
-    'Middel',
-    'Makkelijk'
-  ]; // Option 2
+  List<String> _locations = ['Moeilijk', 'Middel', 'Makkelijk']; // Option 2
   String? _selectedLocation;
 
   List<TagsModel> _tags = [];
@@ -58,6 +54,7 @@ class _EditRecipeState extends State<EditRecipe> {
     _urlController.text = widget.recipe.url ?? "placeholder.png";
     _durationController.text = (widget.recipe.duration ?? "0").toString();
     _difficultyController.text = widget.recipe.difficulty ?? "";
+    _portionController.text = (widget.recipe.portion ?? "0").toString();
     _published = widget.recipe.published ?? false;
     _selectedLocation = _difficultyController.text.isEmpty
         ? _locations[0]
@@ -175,27 +172,30 @@ class _EditRecipeState extends State<EditRecipe> {
             border: Border.all(color: Theme.of(context).primaryColor, width: 2),
             borderRadius: BorderRadius.circular(15),
           ),
-          child: DropdownButton(
-            dropdownColor: ColorTheme.extraLightGreen,
-            hint: BodyText(text: 'Selecteer de moeilijkheidsgraad'),
-            value: _selectedLocation,
-            onChanged: (dynamic newValue) {
-              setState(() {
-                if (newValue == _locations[0]) {
-                  _selectedLocation = _locations[1];
-                } else {
-                  _selectedLocation = newValue;
-                }
+          child: FittedBox(
+            fit: BoxFit.contain,
+            child: DropdownButton(
+              dropdownColor: ColorTheme.extraLightGreen,
+              hint: BodyText(text: 'Selecteer de moeilijkheidsgraad'),
+              value: _selectedLocation,
+              onChanged: (dynamic newValue) {
+                setState(() {
+                  if (newValue == _locations[0]) {
+                    _selectedLocation = _locations[1];
+                  } else {
+                    _selectedLocation = newValue;
+                  }
 
-                _difficultyController.text = _selectedLocation!;
-              });
-            },
-            items: _locations.map((location) {
-              return DropdownMenuItem(
-                child: Text(location),
-                value: location,
-              );
-            }).toList(),
+                  _difficultyController.text = _selectedLocation!;
+                });
+              },
+              items: _locations.map((location) {
+                return DropdownMenuItem(
+                  child: Text(location),
+                  value: location,
+                );
+              }).toList(),
+            ),
           ),
         ),
       ],
@@ -210,6 +210,22 @@ class _EditRecipeState extends State<EditRecipe> {
         CustomTextFormField(
           keyboardType: TextInputType.number,
           textcontroller: _durationController,
+          errorMessage: "Geen geldig getal",
+          validator: 6,
+          secureText: false,
+        ),
+      ],
+    );
+  }
+
+  Widget showRecipePortion(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        BodyText(text: "Aantal porties:"),
+        CustomTextFormField(
+          keyboardType: TextInputType.number,
+          textcontroller: _portionController,
           errorMessage: "Geen geldig getal",
           validator: 6,
           secureText: false,
@@ -240,8 +256,6 @@ class _EditRecipeState extends State<EditRecipe> {
   }
 
   Widget showRecipeTags(BuildContext context) {
-    getTags();
-    setState(() {});
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -294,15 +308,6 @@ class _EditRecipeState extends State<EditRecipe> {
     );
   }
 
-  getTags() async {
-    await _tagsController.getTagsList().then((value) {
-      if (!mounted) return;
-      setState(() {
-        _tags = value;
-      });
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
@@ -312,38 +317,58 @@ class _EditRecipeState extends State<EditRecipe> {
               "ID: ${widget.recipe.id}",
               style: TextStyle(fontSize: 11),
             ),
-      content: SingleChildScrollView(
-        child: Form(
-          key: _formKey,
-          child: Column(
-            children: [
-              widget.user!.role == "user"
-                  ? Container()
-                  : isRecipePublished(context),
-              showRecipeName(context),
-              SizedBox(height: 25),
-              showRecipeUrl(context),
-              SizedBox(height: 25),
-              showRecipeDuration(context),
-              SizedBox(height: 25),
-              showRecipeDifficulty(context),
-              SizedBox(height: 25),
-              showRecipeTags(context),
-              ElevatedButton(
-                child: Text('Recept verwijderen'),
-                style: ElevatedButton.styleFrom(primary: Colors.red),
-                onPressed: () {
-                  _removeRecipe(widget.recipe, widget.user!.role, context);
-                },
-              )
-            ],
-          ),
-        ),
+      content: FutureBuilder(
+        future: _tagsController.getTagsList(),
+        builder: (BuildContext context, AsyncSnapshot snapshot) {
+          if (snapshot.data != null) {
+            _tags = snapshot.data;
+          }
+          return GestureDetector(
+            behavior: HitTestBehavior.opaque,
+            onPanDown: (_) {
+              FocusScope.of(context).requestFocus(FocusNode());
+            },
+            child: SingleChildScrollView(
+              child: Form(
+                key: _formKey,
+                child: Column(
+                  children: [
+                    widget.user!.role == "user"
+                        ? Container()
+                        : isRecipePublished(context),
+                    showRecipeName(context),
+                    SizedBox(height: 25),
+                    showRecipeUrl(context),
+                    SizedBox(height: 25),
+                    showRecipeDuration(context),
+                    SizedBox(height: 25),
+                    showRecipePortion(context),
+                    SizedBox(height: 25),
+                    showRecipeDifficulty(context),
+                    SizedBox(height: 25),
+                    showRecipeTags(context),
+                    widget.isNewRecipe
+                        ? Container()
+                        : ElevatedButton(
+                            child: Text('Recept verwijderen'),
+                            style:
+                                ElevatedButton.styleFrom(primary: Colors.red),
+                            onPressed: () {
+                              _removeRecipe(
+                                  widget.recipe, widget.user!.role, context);
+                            },
+                          )
+                  ],
+                ),
+              ),
+            ),
+          );
+        },
       ),
       actions: <Widget>[
         TextButton(
           child: IntroGreyText(
-            text: 'Cancel',
+            text: 'Annuleren',
           ),
           onPressed: () => Navigator.pop(context, null),
         ),
@@ -375,6 +400,7 @@ class _EditRecipeState extends State<EditRecipe> {
         "difficulty": _difficultyController.text,
         "published": _published,
         "date": widget.isNewRecipe ? DateTime.now() : widget.recipe.date,
+        "portion": int.parse(_portionController.text),
         "tags": _selectedTags,
         "userId": widget.user!.id,
       };

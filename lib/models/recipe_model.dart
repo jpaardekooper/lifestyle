@@ -10,8 +10,10 @@ class RecipeModel {
     this.review,
     this.published,
     this.date,
+    this.portion,
     this.tags,
     this.submittedForReview,
+    this.userUploaded,
     this.userId,
     this.feedback,
   }) : reference = null;
@@ -24,8 +26,10 @@ class RecipeModel {
   final int? review;
   final bool? published;
   final Timestamp? date;
+  final int? portion;
   final List<String>? tags;
   final bool? submittedForReview;
+  final bool? userUploaded;
   final String? userId;
   final String? feedback;
 
@@ -40,10 +44,11 @@ class RecipeModel {
         review = snapshot.data()!['review'],
         published = snapshot.data()!['published'],
         date = snapshot.data()!['date'],
+        portion = snapshot.data()!['portion'],
         tags = List.from(snapshot.data()!['tags']),
         submittedForReview = snapshot.data()!['submitted'] ?? false,
+        userUploaded = snapshot.data()!['userUploaded'] ?? false,
         userId = snapshot.data()!['userId'],
         feedback = snapshot.data()!['feedback'],
         reference = snapshot.reference;
-
 }

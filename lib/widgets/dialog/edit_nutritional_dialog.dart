@@ -32,7 +32,7 @@ class _EditNutritionalState extends State<EditNutritional> {
   void initState() {
     super.initState();
     _nameController.text = widget.nutritionalValue.name ?? "";
-    _amountController.text = widget.nutritionalValue.amount ?? "";
+    _amountController.text = (widget.nutritionalValue.amount ?? "").toString();
     _unitController.text = widget.nutritionalValue.unit ?? "";
   }
 
@@ -40,7 +40,7 @@ class _EditNutritionalState extends State<EditNutritional> {
   Widget build(BuildContext context) {
     return AlertDialog(
       title: widget.newNutritional!
-          ? Text("Voeg een ingrediënt toe")
+          ? Text("Voeg een voedingswaarde toe")
           : Text(
               "ID: ${widget.nutritionalValue.name}",
               style: TextStyle(fontSize: 11),
@@ -54,7 +54,7 @@ class _EditNutritionalState extends State<EditNutritional> {
               SizedBox(
                 height: 25,
               ),
-              Text("Naam van het product:"),
+              Text("Naam van de voedingswaarde:"),
               CustomTextFormField(
                 keyboardType: TextInputType.name,
                 textcontroller: _nameController,
@@ -70,7 +70,7 @@ class _EditNutritionalState extends State<EditNutritional> {
                 keyboardType: TextInputType.name,
                 textcontroller: _amountController,
                 errorMessage: "Geen geldig recept getal",
-                validator: 1,
+                validator: 6,
                 secureText: false,
               ),
               SizedBox(
@@ -91,7 +91,7 @@ class _EditNutritionalState extends State<EditNutritional> {
       actions: <Widget>[
         TextButton(
           child: IntroGreyText(
-            text: 'Cancel',
+            text: 'Annuleren',
           ),
           onPressed: () => Navigator.pop(context),
         ),
@@ -112,8 +112,8 @@ class _EditNutritionalState extends State<EditNutritional> {
 
   void saveIngredientChanges(BuildContext context) {
     if (_formKey.currentState!.validate()) {
-      Map<String, String> data = {
-        "amount": _amountController.text,
+      Map<String, dynamic> data = {
+        "amount": double.parse(_amountController.text),
         "name": _nameController.text,
         "unit": _unitController.text,
       };

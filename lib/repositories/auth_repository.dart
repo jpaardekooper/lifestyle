@@ -36,7 +36,7 @@ class AuthRepository extends IAuthRepository {
   @override
   Future signInWithEmailAndPassword(String? email, String? password) async {
     try {
-      UserCredential authResult = await _auth.signInWithEmailAndPassword(
+      UserCredential authResult =  await _auth.signInWithEmailAndPassword(
           email: email!, password: password!);
       User? firebaseUser = authResult.user;
 

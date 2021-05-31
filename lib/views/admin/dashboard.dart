@@ -127,7 +127,10 @@ class _DashboardState extends State<Dashboard>
               padding: EdgeInsets.only(top: 22, bottom: 22, right: 22),
               child: Row(
                 children: [
-                  Icon(Icons.fact_check),
+                  Icon(
+                    Icons.fact_check,
+                    color: Colors.black,
+                  ),
                   SizedBox(
                     width: 8,
                   ),
@@ -136,6 +139,7 @@ class _DashboardState extends State<Dashboard>
                     style: TextStyle(
                       fontSize: 18,
                       fontFamily: 'HelveticaNeue',
+                      color: Colors.black,
                     ),
                   ),
                 ],
@@ -158,7 +162,10 @@ class _DashboardState extends State<Dashboard>
             child: Container(
               padding: EdgeInsets.only(top: 22, bottom: 22, right: 22),
               child: Row(children: [
-                Icon(Icons.dashboard),
+                Icon(
+                  Icons.dashboard,
+                  color: Colors.black,
+                ),
                 SizedBox(
                   width: 8,
                 ),
@@ -167,6 +174,7 @@ class _DashboardState extends State<Dashboard>
                   style: TextStyle(
                     fontSize: 18,
                     fontFamily: 'HelveticaNeue',
+                    color: Colors.black,
                   ),
                 ),
               ]),
@@ -188,7 +196,10 @@ class _DashboardState extends State<Dashboard>
             child: Container(
               padding: EdgeInsets.only(top: 22, bottom: 22, right: 22),
               child: Row(children: [
-                Icon(Icons.exit_to_app),
+                Icon(
+                  Icons.exit_to_app,
+                  color: Colors.black,
+                ),
                 SizedBox(
                   width: 8,
                 ),
@@ -197,6 +208,7 @@ class _DashboardState extends State<Dashboard>
                   style: TextStyle(
                     fontSize: 18,
                     fontFamily: 'HelveticaNeue',
+                    color: Colors.black,
                   ),
                 ),
               ]),
@@ -218,7 +230,10 @@ class _DashboardState extends State<Dashboard>
             child: Container(
               padding: EdgeInsets.only(top: 22, bottom: 22, right: 22),
               child: Row(children: [
-                Icon(Icons.upload_rounded),
+                Icon(
+                  Icons.upload_rounded,
+                  color: Colors.black,
+                ),
                 SizedBox(
                   width: 8,
                 ),
@@ -227,6 +242,7 @@ class _DashboardState extends State<Dashboard>
                   style: TextStyle(
                     fontSize: 18,
                     fontFamily: 'HelveticaNeue',
+                    color: Colors.black,
                   ),
                 ),
               ]),
@@ -249,7 +265,10 @@ class _DashboardState extends State<Dashboard>
               padding: EdgeInsets.only(top: 22, bottom: 22, right: 22),
               child: Row(
                 children: [
-                  Icon(Icons.category),
+                  Icon(
+                    Icons.category,
+                    color: Colors.black,
+                  ),
                   SizedBox(
                     width: 8,
                   ),
@@ -258,6 +277,7 @@ class _DashboardState extends State<Dashboard>
                     style: TextStyle(
                       fontSize: 18,
                       fontFamily: 'HelveticaNeue',
+                      color: Colors.black,
                     ),
                   ),
                 ],
@@ -281,7 +301,10 @@ class _DashboardState extends State<Dashboard>
               padding: EdgeInsets.only(top: 22, bottom: 22, right: 22),
               child: Row(
                 children: [
-                  Icon(Icons.category),
+                  Icon(
+                    Icons.category,
+                    color: Colors.black,
+                  ),
                   SizedBox(
                     width: 8,
                   ),
@@ -290,6 +313,7 @@ class _DashboardState extends State<Dashboard>
                     style: TextStyle(
                       fontSize: 18,
                       fontFamily: 'HelveticaNeue',
+                      color: Colors.black,
                     ),
                   ),
                 ],

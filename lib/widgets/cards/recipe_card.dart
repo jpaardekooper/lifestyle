@@ -62,7 +62,7 @@ class _RecipeCardState extends State<RecipeCard> {
               SizedBox(
                 height: kIsWeb
                     ? MediaQuery.of(context).size.width / 3.5
-                    : MediaQuery.of(context).size.height / 6,
+                    : MediaQuery.of(context).size.height / 6.8,
                 width: MediaQuery.of(context).size.width,
                 child: FutureBuilder<String>(
                   future: _recipeController.getImage(widget._recipe.url),
@@ -96,13 +96,15 @@ class _RecipeCardState extends State<RecipeCard> {
               padding: EdgeInsets.only(left: 10, top: 5),
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      SizedBox(
-                        width: MediaQuery.of(context).size.width / 3.5,
-                        child: Text(
+                  SizedBox(
+                    width: MediaQuery.of(context).size.width / 4.5,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        Text(
                           widget._recipe.title!,
                           style: TextStyle(
                             color: Theme.of(context).primaryColor,
@@ -113,30 +115,32 @@ class _RecipeCardState extends State<RecipeCard> {
                           overflow: TextOverflow.ellipsis,
                           maxLines: 1,
                         ),
-                      ),
-                      widget._recipe.tags!.isEmpty
-                          ? Container()
-                          : Container(
-                              margin: const EdgeInsets.only(top: 2.0),
-                              padding: const EdgeInsets.all(5.0),
-                              decoration: BoxDecoration(
+                        widget._recipe.tags!.isEmpty
+                            ? Container()
+                            : Container(
+                                margin: const EdgeInsets.only(top: 2.0),
+                                padding: const EdgeInsets.all(5.0),
+                                decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(5.0),
                                   border: Border.all(
-                                      color: Theme.of(context).primaryColor)),
-                              child: Text(
-                                widget._recipe.tags!.first,
-                                style: TextStyle(
-                                  color: ColorTheme.grey,
-                                  fontSize:
-                                      MediaQuery.of(context).size.height *
-                                          0.012,
+                                    color: Theme.of(context).primaryColor,
+                                  ),
                                 ),
-                              ),
-                            )
-                    ],
-                  ),
-                  Spacer(
-                    flex: 1,
+                                child: Text(
+                                  widget._recipe.tags!.first,
+                                  style: TextStyle(
+                                    color: ColorTheme.grey,
+                                    fontSize:
+                                        MediaQuery.of(context).size.height *
+                                            0.012,
+                                  ),
+                                  maxLines: 1,
+                                  overflow: TextOverflow.fade,
+                                  softWrap: false,
+                                ),
+                              )
+                      ],
+                    ),
                   ),
                   widget.userRecipe == false && widget._user.role == "user"
                       ? FutureBuilder<bool>(
@@ -155,13 +159,14 @@ class _RecipeCardState extends State<RecipeCard> {
                                   color: alreadySaved!
                                       ? Colors.red
                                       : Theme.of(context).primaryColor,
-                                  size: 30,
+                                  size:
+                                      MediaQuery.of(context).size.width * 0.07,
                                 ),
                                 onPressed: () async {
                                   if (alreadySaved!) {
                                     await _recipeController
-                                        .removeFavoriteRecipe(widget._user.id,
-                                            widget._recipe.id);
+                                        .removeFavoriteRecipe(
+                                            widget._user.id, widget._recipe.id);
 
                                     if (widget.on_Tap != null) {
                                       widget.on_Tap!();
@@ -181,28 +186,18 @@ class _RecipeCardState extends State<RecipeCard> {
                       : widget.userRecipe == true &&
                               widget._user.role == "admin"
                           ? Container()
-                          : Row(
-                              mainAxisAlignment: MainAxisAlignment.end,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                RawMaterialButton(
-                                  child: Icon(
-                                    Icons.edit,
-                                    color: ColorTheme.grey,
-                                  ),
-                                  onPressed: () {
-                                    _editRecipeName(
-                                      widget._recipe,
-                                      widget._user.role,
-                                    );
-                                  },
-                                  constraints: const BoxConstraints(
-                                      minWidth: 30.0, minHeight: 30.0),
-                                  elevation: 2.0,
-                                  fillColor: Colors.white,
-                                  shape: CircleBorder(),
-                                ),
-                              ],
+                          : IconButton(
+                              color: ColorTheme.grey,
+                              icon: Icon(
+                                Icons.edit,
+                                size: MediaQuery.of(context).size.width * 0.06,
+                              ),
+                              onPressed: () {
+                                _editRecipeName(
+                                  widget._recipe,
+                                  widget._user.role,
+                                );
+                              },
                             ),
                 ],
               ),

@@ -109,10 +109,10 @@ class CustomTextFormField extends StatelessWidget {
             case 2:
               return validateEmail(val!)
                   ? null
-                  : errorMessage ?? "gebruik een geldige email";
+                  : errorMessage ?? "Gebruik een geldige email";
             case 3:
               return val != passwordChecker
-                  ? "wachtwoord komt niet overeen"
+                  ? "Wachtwoord komt niet overeen"
                   : null;
             case 4:
               return val!.isEmpty

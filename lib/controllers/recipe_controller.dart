@@ -32,12 +32,13 @@ class RecipeController {
     return _recipeRepository.updateRecipe(recipeId, data, newItem);
   }
 
-  Future<void> removeRecipe(String? recipeId, String? url) {
-    return _recipeRepository.removeRecipe(recipeId, url);
+  Future<void> removeRecipe(String? recipeId, String? url, bool? userUploaded) {
+    return _recipeRepository.removeRecipe(recipeId, url, userUploaded);
   }
 
-  Future<void> removeUserRecipe(String? recipeId, String? url) {
-    return _recipeRepository.removeUserRecipe(recipeId, url);
+  Future<void> removeUserRecipe(
+      String? recipeId, String? url, bool? userUploaded) {
+    return _recipeRepository.removeUserRecipe(recipeId, url, userUploaded);
   }
 
   Future<List<RecipeModel>> getRecipeListOnce() {

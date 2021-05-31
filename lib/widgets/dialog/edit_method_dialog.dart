@@ -78,7 +78,7 @@ class _EditMethodState extends State<EditMethod> {
       actions: <Widget>[
         TextButton(
               child: IntroGreyText(
-                text: 'Cancel',
+                text: 'Annuleren',
               ),
               onPressed: () => Navigator.of(context).pop(),
             ),

@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:lifestylescreening/controllers/food_preparation_controller.dart';
 import 'package:lifestylescreening/controllers/recipe_controller.dart';
@@ -32,7 +33,7 @@ class _ApproveRecipeState extends State<ApproveRecipe> {
       actions: [
         TextButton(
           child: IntroGreyText(
-            text: 'Cancel',
+            text: 'Annuleren',
           ),
           onPressed: () => Navigator.of(context).pop(false),
         ),
@@ -52,6 +53,8 @@ class _ApproveRecipeState extends State<ApproveRecipe> {
               "duration": widget.recipe.duration,
               "difficulty": widget.recipe.difficulty,
               "published": false,
+              "portion": widget.recipe.portion,
+              "userUploaded": true,
               "date": DateTime.now(),
               "tags": widget.recipe.tags,
               "userId": widget.recipe.userId,
@@ -68,10 +71,66 @@ class _ApproveRecipeState extends State<ApproveRecipe> {
                 .updateRecipe(widget.recipe.id, data, true)
                 .then((value) =>
                     _foodPreparationController.transferRecipe(widget.recipe.id))
-                .whenComplete(() => Navigator.of(context).pop(true));
+                .whenComplete(() => 
+                // kIsWeb
+                //     ? saveRecipeDialog()
+                //     : 
+                    Navigator.of(context).pop(true));
           },
         ),
       ],
     );
   }
+
+  // void saveRecipeDialog() {
+  //   showDialog(
+  //     barrierDismissible: false,
+  //     context: context,
+  //     builder: (BuildContext context) {
+  //       return AlertDialog(
+  //         title: H1Text(text: "Recept opslaan"),
+  //         content: Column(
+  //           mainAxisSize: MainAxisSize.min,
+  //           crossAxisAlignment: CrossAxisAlignment.start,
+  //           children: [
+  //             LifestyleText(
+  //                 text:
+                      // ignore: lines_longer_than_80_chars
+  //                     "Wilt u ${widget.recipe.title} opslaan als tekstbestand?"),
+  //           ],
+  //         ),
+  //         actions: [
+  //           TextButton(
+  //             child: IntroGreyText(
+  //               text: 'Cancel',
+  //             ),
+  //             onPressed: () => Navigator.of(context).pop(),
+  //           ),
+  //           ElevatedButton(
+  //             child: Text(
+  //               'Opslaan',
+  //               style: TextStyle(
+  //                 fontSize: MediaQuery.of(context).size.height * 0.020,
+  //               ),
+  //             ),
+  //             style: ElevatedButton.styleFrom(
+  //                 primary: Theme.of(context).accentColor),
+  //             onPressed: () => saveRecipe(),
+  //           ),
+  //         ],
+  //       );
+  //     },
+  //   ).then((value) {
+  //     if (value) Navigator.of(context).pop(true);
+  //   });
+  // }
+
+  // Future<void> saveRecipe() async {
+  //   final directory = await getApplicationDocumentsDirectory();
+  //   // String recipeString = jsonEncode(widget.recipe);
+  //   String recipeString = "test";
+
+  //   File file = File('Downloads/${widget.recipe.title}');
+  //   await file.writeAsString(recipeString);
+  // }
 }

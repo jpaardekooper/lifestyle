@@ -16,15 +16,14 @@ abstract class IRecipeRepository {
 
   List<RecipeModel> getRecipeList(QuerySnapshot snapshot);
 
-  Future<void> updateUserRecipe(
-      String? recipeId, Map data, bool newItem);
+  Future<void> updateUserRecipe(String? recipeId, Map data, bool newItem);
 
-  Future<void> updateRecipe(
-      String? recipeId, Map data, bool newItem);
+  Future<void> updateRecipe(String? recipeId, Map data, bool newItem);
 
-  Future<void> removeRecipe(String? recipeId, String? url);
+  Future<void> removeRecipe(String? recipeId, String? url, bool? userUploaded);
 
-  Future<void> removeUserRecipe(String? recipeId, String? url);
+  Future<void> removeUserRecipe(
+      String? recipeId, String? url, bool? userUploaded);
 
   Future<List<RecipeModel>> getUserFavoriteRecipe(String? userId);
 

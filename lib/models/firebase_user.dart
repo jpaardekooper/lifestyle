@@ -20,7 +20,7 @@ class AppUser {
   final String? gender;
   final int? age;
   final int? height;
-  final int? weight;
+  final double? weight;
   final List<String>? favorite_recipes;
 
   final DocumentReference? reference;
@@ -33,7 +33,9 @@ class AppUser {
         gender = snapshot.data()!['gender'] ?? "",
         age = snapshot.data()!['age'] ?? 0,
         height = snapshot.data()!['height'] ?? 0,
-        weight = snapshot.data()!['weight'] ?? 0,
+        weight = snapshot.data()!['weight'] != null
+            ? (snapshot.data()!['weight']).toDouble()
+            : 0,
         favorite_recipes =
             List.from(snapshot.data()!['favorite_recipes'] ?? []),
         reference = snapshot.reference;

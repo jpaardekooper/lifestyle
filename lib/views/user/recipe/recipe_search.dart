@@ -25,30 +25,32 @@ class RecipeSearch extends SearchDelegate<String> {
 
   getValues() async {
     _recipeList = await _recipeController.getRecipeListOnce();
-    _tagsList = await _tagsController.getTagsList();
   }
 
   filterRecipes() {
+    // If there are no tags selected
     if (index == null) {
+      // If the search bar has an input
       if (query.isNotEmpty) {
-        _filteredList = _recipeList.reversed
+        //Get the recipes that start with the input
+        _filteredList = _recipeList
             .where((element) => element.title!
                 .toLowerCase()
                 .startsWith(query.toLowerCase().trim()))
             .toList();
+      //If input and tags are empty return all the recipes
       } else {
         _filteredList = _recipeList;
       }
+    //If there is a tag selected
     } else {
-      if (query.isEmpty) {
-        _filteredList = _recipeList.reversed
-            .where((element) => element.tags!.contains(_tagsList[index!].tag!))
-            .toList();
-      } else {
-        _filteredList = _recipeList.reversed
-            .where((element) => element.tags!.contains(_tagsList[index!].tag!))
-            .toList();
-        _filteredList = _filteredList.reversed
+      //Get the recipes that contain the selected tag
+      _filteredList = _recipeList
+          .where((element) => element.tags!.contains(_tagsList[index!].tag!))
+          .toList();
+      //If the input is not empty, filter the recipes again with the input
+      if (query.isNotEmpty) {
+        _filteredList = _filteredList
             .where((element) => element.title!
                 .toLowerCase()
                 .startsWith(query.toLowerCase().trim()))
@@ -83,7 +85,7 @@ class RecipeSearch extends SearchDelegate<String> {
             _tagsList[i].tag!,
             style: TextStyle(
               color: index == i ? Colors.white : ColorTheme.grey,
-              fontSize: MediaQuery.of(context).size.height * 0.025,
+              fontSize: MediaQuery.of(context).size.height * 0.02,
             ),
           ),
         ),
@@ -125,58 +127,67 @@ class RecipeSearch extends SearchDelegate<String> {
     return StatefulBuilder(
       builder: (BuildContext context, setState) {
         filterRecipes();
-        return SingleChildScrollView(
-          child: Column(
-            children: [
-              SizedBox(
-                height: 10,
-                child: Container(
-                  color: ColorTheme.extraLightGreen,
-                ),
-              ),
-              Container(
-                width: MediaQuery.of(context).size.width,
-                alignment: Alignment.center,
-                color: ColorTheme.extraLightGreen,
-                child: Wrap(
-                  spacing: 5,
-                  // runSpacing: 5,
-                  alignment: WrapAlignment.start,
-                  direction: Axis.horizontal,
-                  children: getTagWidgets(context, setState),
-                ),
-              ),
-              SizedBox(
-                height: 10,
-                child: Container(
-                  color: ColorTheme.extraLightGreen,
-                ),
-              ),
-              Container(
-                color: ColorTheme.extraLightGreen,
-                child: Divider(
-                  thickness: 1.0,
-                  height: 0,
-                  // indent: 20,
-                  // endIndent: 20,
-                  color: ColorTheme.darkGreen,
-                ),
-              ),
-              _filteredList.isNotEmpty
-                  ? RecipeGrid(
-                      recipeList: _filteredList,
-                      userData: user,
-                      userRecipe: false,
-                      onTap: null,
-                    )
-                  : Center(
-                      child: H1Text(
-                        text: "Geen recepten gevonden",
-                      ),
-                      heightFactor: 10,
+        return FutureBuilder<List<TagsModel>>(
+          future: _tagsController.getTagsList(),
+          initialData: [],
+          builder: (BuildContext context, AsyncSnapshot snapshot) {
+            if (snapshot.data != null) {
+              _tagsList = snapshot.data;
+            }
+            return SingleChildScrollView(
+              child: Column(
+                children: [
+                  SizedBox(
+                    height: 10,
+                    child: Container(
+                      color: ColorTheme.extraLightGreen,
                     ),
-            ],
-          ),
+                  ),
+                  Container(
+                    width: MediaQuery.of(context).size.width,
+                    alignment: Alignment.center,
+                    color: ColorTheme.extraLightGreen,
+                    child: Wrap(
+                      spacing: 5,
+                      // runSpacing: 5,
+                      alignment: WrapAlignment.start,
+                      direction: Axis.horizontal,
+                      children: getTagWidgets(context, setState),
+                    ),
+                  ),
+                  SizedBox(
+                    height: 10,
+                    child: Container(
+                      color: ColorTheme.extraLightGreen,
+                    ),
+                  ),
+                  Container(
+                    color: ColorTheme.extraLightGreen,
+                    child: Divider(
+                      thickness: 1.0,
+                      height: 0,
+                      // indent: 20,
+                      // endIndent: 20,
+                      color: ColorTheme.darkGreen,
+                    ),
+                  ),
+                  _filteredList.isNotEmpty
+                      ? RecipeGrid(
+                          recipeList: _filteredList,
+                          userData: user,
+                          userRecipe: false,
+                          onTap: null,
+                        )
+                      : Center(
+                          child: H1Text(
+                            text: "Geen recepten gevonden",
+                          ),
+                          heightFactor: 10,
+                        ),
+                ],
+              ),
+            );
+          },
         );
       },
     );

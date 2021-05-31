@@ -98,7 +98,7 @@ class _EditCategoryDialogState extends State<EditCategoryDialog> {
       actions: <Widget>[
         TextButton(
           child: IntroGreyText(
-            text: 'Cancel',
+            text: 'Annuleren',
           ),
           onPressed: () => Navigator.of(context).pop(),
         ),
